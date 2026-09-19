@@ -1,0 +1,15 @@
+name = "plataforma-total-web"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+# 🗄️ Base de datos D1 (SQLite serverless, tier gratis: 5M lecturas/día)
+#   Crear: npx wrangler d1 create plataforma  → pegar el database_id aquí
+[[d1_databases]]
+binding = "DB"
+database_name = "plataforma"
+database_id = "REEMPLAZAR-AL-CREAR"
+
+# 🤖 Workers AI (tier gratis: 10.000 neuronas/día) — modelo Llama en el edge
+[ai]
+binding = "AI"

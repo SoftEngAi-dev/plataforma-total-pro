@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.3.0] - 2026-09-18
+### 🌐🤖 NUEVA PLATAFORMA WEB (Astro + backend real) — fiel a la app, no una demo
+- **Rebuild total de la web con Astro**: sidebar fiel al escritorio, tabs 🏠📚🤖🔥🏆📜💎, tema oscuro customtkinter
+- **Tutor IA estilo ChatGPT** (contexto de tu lección actual, chips rápidos, historial) — backend Cloudflare Workers AI gratis
+- **Backend real listo**: login alias+PIN (PBKDF2-100k), progreso sincronizado en la nube (D1 SQLite), APIs /api/chat /api/auth /api/progreso + web/DESPLIEGUE.md (10 min, $0)
+- **Aprender**: progreso por curso con barras, lecciones leídas ✅, XP por lección/quiz, completado +50 XP
+- **Pomodoro** 25/5 con XP y racha · **Progreso** con niveles, emblemas y precisión · **Certificados PNG** con código verificable generados en el navegador
+- Frontend estático sirviéndose YA en GitHub Pages (degrada a modo local si el backend aún no se despliega)
+- La versión web simplificada anterior se conserva como legacy (`app-legacy-v1.js`, `legacy-index-v1.html`); service worker viejo auto-purgado
 ## [4.2.0] - 2026-09-18
 ### 🚚 Mudanza — nuevo repo canónico: SoftEngAi-dev/plataforma-total-pro
 - Todo el proyecto (historial completo, releases, web/PWA, marketing) migrado a **github.com/SoftEngAi-dev/plataforma-total-pro**

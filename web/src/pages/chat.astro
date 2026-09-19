@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="IA Chat" activo="chat">
+  <div class="chatwrap">
+    <h1 style="text-align:center">🤖 Tutor IA</h1>
+    <p class="sub" style="text-align:center">Estilo ChatGPT — con contexto de lo que estás estudiando. Gratis (Workers AI).</p>
+    <div class="chips" id="chips"></div>
+    <div class="msgs" id="msgs"></div>
+    <div class="inputbar">
+      <textarea id="inp" rows="1" placeholder="Preguntame lo que quieras: código, dudas, ejercicios…"></textarea>
+      <button class="btn" id="send">Enviar ➤</button>
+    </div>
+    <p style="color:var(--muted);font-size:.75rem;text-align:center;margin-top:.4rem">El tutor puede equivocarse: verificá el código. Conversión contexto: se incluye tu última lección automáticamente.</p>
+  </div>
+  <script is:inline>
+    PT.cargar();
+    const msgs = document.getElementById('msgs');
+    const inp = document.getElementById('inp');
+    const H = JSON.parse(localStorage.getItem('pt_chat') || '[]');   // historial {role, content}
+    const pintar = () => {
+      msgs.innerHTML = H.length ? H.map(m =>
+        `<div class="msg ${m.role === 'user' ? 'user' : 'ai'}"><span class="who">${m.role === 'user' ? 'Vos' : '🤖 Tutor'}</span>${PT.esc(m.content)}</div>`
+      ).join('') : `<div class="msg ai"><span class="who">🤖 Tutor</span>¡Hola! Soy tu tutor de Plataforma Total. ${PT.s.ultima ? 'Veo que estás con «' + PT.esc(PT.s.ultima.t) + '» — ¿te explico algo de esa lección o arrancamos con otra duda?' : '¿Por dónde empezamos? Podés preguntarme cualquier cosa de programación.'}</div>`;
+      msgs.scrollTop = msgs.scrollHeight;
+    };
+    const chips = [
+      ['📖 Explicame mi lección actual', 'Explicame de forma simple la lección que estoy viendo, con un ejemplo de código.'],
+      ['🧠 Haceme un quiz', 'Haceme 3 preguntas de opción múltiple sobre lo que estoy estudiando y corregime.'],
+      ['💻 Dame un ejercicio', 'Dame un mini-ejercicio de código sobre mi tema actual y esperá mi respuesta para corregirla.'],
+      ['🗺️ ¿Qué estudio después?', 'Decime qué conviene estudiar después según mi progreso.'],
+      ['🐛 Revisá mi código', 'Revisá este código y decime qué mejorar:\n\n'],
+    ];
+    document.getElementById('chips').innerHTML = chips.map((c, i) => `<span class="chip" data-i="${i}">${c[0]}</span>`).join('');
+    document.querySelectorAll('.chip').forEach(ch => ch.onclick = () => { inp.value = chips[+ch.dataset.i][1]; inp.focus(); });
+
+    function sistema() {
+      let ctx = 'Sos el Tutor IA de Plataforma Total, escuela de programación en español. Respondé SIEMPRE en español, claro y con ejemplos de código cuando ayuden. Sé alentador pero preciso.';
+      if (PT.s.ultima) ctx += ` El alumno está estudiando la lección «${PT.s.ultima.t}» (curso nº ${PT.s.ultima.c + 1}).`;
+      ctx += ` Su progreso: ${PT.s.xp} XP, nivel ${PT.nivel()}, racha ${PT.s.racha.n} días.`;
+      return { role: 'system', content: ctx };
+    }
+    async function enviar() {
+      const t = inp.value.trim(); if (!t) return;
+      inp.value = ''; autoGrow();
+      H.push({ role: 'user', content: t }); pintar();
+      const think = document.createElement('div');
+      think.className = 'msg ai typing'; think.textContent = '🤖 pensando…'; msgs.appendChild(think); msgs.scrollTop = msgs.scrollHeight;
+      try {
+        const r = await fetch('api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
+        const d = await r.json();
+        think.remove();
+        const txt = d.respuesta || d.error || '⚠ Respuesta vacía.';
+        H.push({ role: 'assistant', content: txt });
+      } catch (e) {
+        think.remove();
+        H.push({ role: 'assistant', content: '⚠ El tutor en la nube todavía no está desplegado (falta conectar Cloudflare — ver web/DESPLIEGUE.md). Mientras tanto: revisá la lección, probá el quiz, o preguntame de nuevo cuando esté activo 🙌' });
+      }
+      localStorage.setItem('pt_chat', JSON.stringify(H.slice(-40)));
+      pintar();
+    }
+    document.getElementById('send').onclick = enviar;
+    const autoGrow = () => { inp.style.height = 'auto'; inp.style.height = Math.min(160, inp.scrollHeight) + 'px'; };
+    inp.addEventListener('input', autoGrow);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } });
+    pintar();
+  </script>
+</Base>

@@ -1,0 +1,19 @@
+{
+  "name": "plataforma-total-web",
+  "version": "4.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  },
+  "devDependencies": {
+    "@astrojs/cloudflare": "^11.2.0",
+    "wrangler": "^3.99.0"
+  }
+}

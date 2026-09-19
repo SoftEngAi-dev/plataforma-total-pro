@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="Progreso" activo="progreso">
+  <h1>🏆 Tu progreso</h1>
+  <p class="sub">Se sincroniza con la nube cuando iniciás sesión (sidebar ↙) — y convive con la app de escritorio.</p>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))">
+    <div class="card"><h3>Nivel</h3><p style="font-size:2rem;font-weight:800" id="n">1</p></div>
+    <div class="card"><h3>XP total</h3><p style="font-size:2rem;font-weight:800" id="xp">0</p></div>
+    <div class="card"><h3>🔥 Racha</h3><p style="font-size:2rem;font-weight:800" id="r">0 días</p></div>
+    <div class="card"><h3>Precisión quiz</h3><p style="font-size:2rem;font-weight:800" id="acc">—</p></div>
+  </div>
+  <h2>📊 Por curso</h2>
+  <div id="cursos"></div>
+  <h2>🏅 Emblemas</h2>
+  <div class="grid" id="emblemas"></div>
+  <script is:inline>
+    PT.cargar(); PT.syncPull();
+    const s = PT.s;
+    document.getElementById('n').textContent = PT.nivel();
+    document.getElementById('xp').textContent = s.xp;
+    document.getElementById('r').textContent = s.racha.n + ' día' + (s.racha.n === 1 ? '' : 's');
+    document.getElementById('acc').textContent = s.quiz_tot ? Math.round(100 * s.quiz_ok / s.quiz_tot) + '%' : '—';
+    fetch('data/indice.json').then(r => r.json()).then(IND => {
+      document.getElementById('cursos').innerHTML = IND.map((c, i) => {
+        const l = (s.leidas[i] || []).length, pct = c.l ? Math.round(100 * l / c.l) : 0;
+        if (!pct) return '';
+        return `<div style="margin:.45rem 0"><div style="display:flex;justify-content:space-between;font-size:.88rem"><span>${PT.esc(c.n)}</span><span style="color:var(--muted)">${l}/${c.l}</span></div>
+          <div class="barra" style="height:8px"><div style="width:${pct}%"></div></div></div>`;
+      }).join('') || '<p style="color:var(--muted)">Todavía no empezaste ningún curso — <a href="../aprender/">▶ arrancá acá</a></p>';
+      const emb = [
+        ['🌱', 'Primera lección', Object.keys(s.leidas).length > 0],
+        ['🔥', 'Racha de 3 días', s.racha.n >= 3],
+        ['⚡', 'Racha de 7 días', s.racha.n >= 7],
+        ['🧠', '10 quizzes bien', s.quiz_ok >= 10],
+        ['🏆', 'Primer curso completo', s.completados.length >= 1],
+        ['💯', '100 XP', s.xp >= 100],
+        ['🚀', 'Nivel 5', PT.nivel() >= 5],
+        ['🎓', '5 cursos completos', s.completados.length >= 5],
+      ];
+      document.getElementById('emblemas').innerHTML = emb.map(([e, t, ok]) =>
+        `<div class="card" style="text-align:center;${ok ? '' : 'opacity:.35'}"><div style="font-size:1.8rem">${e}</div><p style="font-size:.85rem;font-weight:700">${t}</p><p style="font-size:.75rem;color:var(--muted)">${ok ? '✅ conseguido' : '🔒'}</p></div>`).join('');
+    });
+  </script>
+</Base>

@@ -1,0 +1,61 @@
+---
+import '../styles/main.css';
+const { titulo = 'Plataforma Total', activo = '' } = Astro.props;
+const B = import.meta.env.BASE_URL; // "/plataforma-total-pro/app/"
+const NAV = [
+  ['🏠 Inicio', B + '/', 'inicio'],
+  ['📚 Aprender', B + '/aprender/', 'aprender'],
+  ['🤖 IA Chat', B + '/chat/', 'chat'],
+  ['🔥 Pomodoro', B + '/pomo/', 'pomo'],
+  ['🏆 Progreso', B + '/progreso/', 'progreso'],
+  ['📜 Certificados', B + '/certificados/', 'certificados'],
+  ['💎 PRO', B + '/pro/', 'pro'],
+];
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111318" />
+  <title>🎓 {titulo} — Plataforma Total</title>
+  <link rel="manifest" href={B + '/manifest.webmanifest'} />
+  <link rel="icon" type="image/png" href={B + '/icon-192.png'} />
+  <link rel="apple-touch-icon" href={B + '/icon-192.png'} />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+</head>
+<body>
+  <button class="hamb" id="hamb" aria-label="menú">☰</button>
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="brand">
+        <img src={B + '/icon-192.png'} alt="logo" />
+        <b>PLATAFORMA<br />TOTAL <span class="badge-pro">WEB</span></b>
+      </div>
+      <nav>
+        {NAV.map(([label, href, key]) => (
+          <a href={href} class={activo === key ? 'activo' : ''}>{label}</a>
+        ))}
+      </nav>
+      <div class="foot">
+        <div class="estado" id="estado-sesion">🆓 Modo local · <a href="#" id="lnk-login">iniciar sesión</a></div>
+        <div class="loginbox" id="loginbox" hidden>
+          <input id="lg-alias" placeholder="👤 alias (ej: dev_ana)" autocomplete="off" />
+          <input id="lg-pin" placeholder="🔑 PIN (4+ dígitos)" inputmode="numeric" type="password" />
+          <button class="btn big" id="btn-login" style="padding:.45rem">Entrar / Crear cuenta</button>
+          <div id="lg-msg" style="color:var(--muted);margin-top:.3rem"></div>
+        </div>
+        <div>v4.3.0 · <span id="estado-nube">nube: desconectado</span></div>
+        <div style="margin-top:.3rem"><a href="https://softengai-dev.github.io/plataforma-total-pro/">🌐 Portada</a> · <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">🪟 .exe</a></div>
+      </div>
+    </aside>
+    <main><slot /></main>
+  </div>
+  <script src={B + '/pt.js'} is:inline></script>
+  <script is:inline>
+    document.getElementById('hamb').onclick = () =>
+      document.getElementById('sidebar').classList.toggle('abierto');
+    PT.initSesionUI();
+  </script>
+</body>
+</html>
