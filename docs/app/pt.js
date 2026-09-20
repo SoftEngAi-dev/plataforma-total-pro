@@ -39,10 +39,13 @@
     },
 
     /* ── sesión / nube ── */
+    apiBase() {  // si estamos en GitHub Pages, el backend vive en Cloudflare
+      return location.hostname.endsWith('github.io') ? 'https://plataforma-total-web.pages.dev/' : '';
+    },
     api(path, opts) {
       const h = { 'Content-Type': 'application/json' };
       if (this.s.token) h['X-Token'] = this.s.token;
-      return fetch('api/' + path, { ...opts, headers: h }).then(r => r.json());
+      return fetch(this.apiBase() + 'api/' + path, { ...opts, headers: h }).then(r => r.json());
     },
     nubeOn: false,
     syncPush() {

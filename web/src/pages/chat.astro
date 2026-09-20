@@ -66,7 +66,8 @@ export const prerender = true;
       const think = document.createElement('div');
       think.className = 'msg ai typing'; think.textContent = '🤖 pensando…'; msgs.appendChild(think); msgs.scrollTop = msgs.scrollHeight;
       try {
-        const r = await fetch('api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
+        const APIB = location.hostname.endsWith('github.io') ? 'https://plataforma-total-web.pages.dev/' : '';
+        const r = await fetch(APIB + 'api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
         const d = await r.json();
         think.remove();
         const txt = d.respuesta || d.error || '⚠ Respuesta vacía.';

@@ -1,3 +1,17 @@
+## [4.5.0 (web)] — 2026-09-20 — ☁️ BACKEND REAL EN PRODUCCIÓN (Cloudflare)
+
+### Infraestructura viva
+- **Despliegue Cloudflare completo** (`plataforma-total-web.pages.dev`): Pages + Functions (hybrid SSR), **Workers AI** vinculado y **D1** `plataforma` con esquema aplicado (users / sessions / progreso / certificados).
+- **Chat con IA real en producción**: `@cf/meta/llama-3.3-70b-instruct-fp8-fast` (3.1-8b deprecado por CF en 2026) con fallback automático a `llama-3.2-3b-instruct`. Verificado en vivo respondiendo en español.
+- **Auth real**: alias+PIN (PBKDF2-SHA256 100k iter, WebCrypto edge) → token sesión 30 días; verificado registro + rechazo de sesión inválida.
+- **Progreso en la nube**: GET/POST `/api/progreso` con upsert D1 verificado (save+load round-trip OK).
+- **CORS habilitado** en los 3 endpoints (`OPTIONS` 204 preflight verificado desde origen github.io) → la web estática de GitHub Pages consume el backend CF cross-origin.
+- **Frontend dual-origin**: `pt.js`/`chat.astro` detectan host `github.io` y apuntan a `https://plataforma-total-web.pages.dev` (fallback same-origin en pages.dev/local).
+
+### Notas
+- 100% dentro del free tier de Cloudflare (Pages ilimitado, Workers AI 10k neurons/día, D1 5M reads/día).
+- Deploy reproducible: `cd web && ASTRO_BASE=/ npm run build && wrangler pages deploy dist --project-name plataforma-total-web`.
+
 # Changelog
 
 ## [4.4.0] - 2026-09-20 (web)
