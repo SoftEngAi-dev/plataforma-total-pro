@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="Inglés técnico" activo="ingles">
+  <h1>🇬🇧 Inglés técnico</h1>
+  <p class="sub">Spec §33/§34: el vocabulario que usa todo dev, integrado a tu aprendizaje. Tocá 🔊 para oír la pronunciación (voz del navegador, gratis) y hacé el quiz.</p>
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+    <button class="btn" id="quiz">🧠 Quiz de 5 términos (+2 XP c/u)</button>
+  </div>
+  <div id="quizout"></div>
+  <div id="temas"></div>
+  <script is:inline>
+    const TEMAS = [
+      ['💻 Programación básica', [['variable', 'variable'], ['función', 'function'], ['bucle', 'loop'], ['condición', 'condition'], ['arreglo', 'array'], ['objeto', 'object'], ['clase', 'class'], ['cadena de texto', 'string'], ['número entero', 'integer'], ['booleano', 'boolean'], ['devolver', 'return'], ['depurar', 'debug']]],
+      ['🌐 Web', [['navegador', 'browser'], ['servidor', 'server'], ['petición', 'request'], ['respuesta', 'response'], ['punto de acceso', 'endpoint'], ['despliegue', 'deployment'], ['interfaz', 'interface'], ['marco de trabajo', 'framework'], ['biblioteca', 'library'], ['plantilla', 'template']]],
+      ['🗄️ Datos', [['base de datos', 'database'], ['tabla', 'table'], ['fila', 'row'], ['columna', 'column'], ['consulta', 'query'], ['índice', 'index'], ['migración', 'migration'], ['respaldo', 'backup']]],
+      ['🛠️ Herramientas dev', [['repositorio', 'repository'], ['rama', 'branch'], ['fusión', 'merge'], ['confirmación (commit)', 'commit'], ['entorno', 'environment'], ['paquete', 'package'], ['terminal', 'terminal'], ['.editor de código', 'code editor'], ['versión', 'version'], ['lanzamiento', 'release']]],
+      ['🤖 IA & avanzado', [['modelo', 'model'], ['instrucción (prompt)', 'prompt'], ['incrustación vectorial', 'embedding'], ['agente', 'agent'], ['memoria', 'memory'], ['canalización (pipeline)', 'pipeline'], ['escalabilidad', 'scalability'], ['latencia', 'latency']]],
+    ];
+    const $ = s => document.querySelector(s);
+    const hablar = t => { try {
+      const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = .85;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (e) {} };
+    $('#temas').innerHTML = TEMAS.map(([cat, ts]) =>
+      `<h2>${cat}</h2><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+        ${ts.map(([es, en]) => `<div class="card" style="padding:.7rem">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><b style="color:#a78bfa">${PT.esc(en)}</b><br><span style="color:var(--muted);font-size:.85rem">${PT.esc(es)}</span></div>
+            <button class="btn ghost" style="padding:.3rem .5rem" onclick="hablar('${en.replace(/'/g, '')}')">🔊</button>
+          </div></div>`).join('')}</div>`).join('');
+    $('#quiz').onclick = () => {
+      const todos = TEMAS.flatMap(([c, ts]) => ts);
+      const pick = [...todos].sort(() => Math.random() - .5).slice(0, 5);
+      let i = 0, ok = 0;
+      const paso = () => {
+        if (i >= pick.length) {
+          PT.actividad(ok * 2);
+          $('#quizout').innerHTML = `<div class="card" style="border-left:4px solid var(--acc)"><h3>${ok === 5 ? '🏆 ¡Perfecto!' : '💪 ' + ok + '/5'}</h3><p style="color:var(--muted)">+${ok * 2} XP</p></div>`;
+          return;
+        }
+        const [es, en] = pick[i];
+        const distract = [...todos.filter(([e2, n2]) => n2 !== en)].sort(() => Math.random() - .5).slice(0, 3).map(x => x[1]);
+        const ops = [...distract, en].sort(() => Math.random() - .5);
+        $('#quizout').innerHTML = `<div class="card"><p style="color:var(--muted);font-size:.85rem">${i + 1}/5 — ¿cómo se dice en inglés?</p>
+          <h3>«${PT.esc(es)}»</h3>
+          ${ops.map(o => `<button class="op" data-i="${o === en ? 1 : 0}">${PT.esc(o)}</button>`).join('')}</div>`;
+        document.querySelectorAll('.op').forEach(b => b.onclick = () => {
+          document.querySelectorAll('.op').forEach(x => x.disabled = true);
+          if (b.dataset.i === '1') { b.classList.add('right'); ok++; hablar(en); } else b.classList.add('wrong');
+          i++; setTimeout(paso, 800);
+        });
+      };
+      paso();
+    };
+  </script>
+</Base>

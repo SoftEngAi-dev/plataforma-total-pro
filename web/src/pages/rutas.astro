@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="Rutas" activo="rutas">
+  <h1>🗺️ Rutas profesionales</h1>
+  <p class="sub">Spec §19/§35/§67: caminos guiados que encadenan los 47 cursos en carreras completas. Tu progreso se calcula en vivo.</p>
+  <div id="rutas"></div>
+  <script is:inline>
+    PT.cargar();
+    // índices 0-based según data/indice.json
+    const RUTAS = [
+      { e: '🌐', n: 'Full Stack Developer', d: 'Del HTML al despliegue: la web completa.',
+        pasos: [1, 2, 3, 4, 5, 6, 8, 9, 36, 44, 10, 33, 13] },
+      { e: '🤖', n: 'AI Engineer', d: 'Python → datos → ML → LLMs en producción.',
+        pasos: [7, 34, 8, 28, 29, 30, 31, 36, 32, 10, 12] },
+      { e: '🐍', n: 'Python Profesional', d: 'El lenguaje a fondo con proyectos.',
+        pasos: [0, 1, 7, 8, 9, 33, 29, 36, 10] },
+      { e: '🏗️', n: 'Arquitecto de Software', d: 'Diseño, seguridad y sistemas que escalan.',
+        pasos: [35, 36, 32, 33, 21, 12, 13, 18, 19, 40] },
+    ];
+    fetch('data/indice.json').then(r => r.json()).then(IND => {
+      document.getElementById('rutas').innerHTML = RUTAS.map(r => {
+        const total = r.pasos.reduce((a, i) => a + (IND[i] ? IND[i].l : 0), 0);
+        const hecho = r.pasos.reduce((a, i) => a + Math.min((PT.s.leidas[i] || []).length, IND[i] ? IND[i].l : 0), 0);
+        const pct = total ? Math.round(100 * hecho / total) : 0;
+        const siguiente = r.pasos.find(i => (PT.s.leidas[i] || []).length < IND[i].l);
+        return `<div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.4rem">
+            <h3 style="font-size:1.15rem">${r.e} ${r.n}</h3><b style="color:#a78bfa">${pct}%</b>
+          </div>
+          <p style="color:var(--muted);font-size:.9rem">${r.d} · ${hecho}/${total} lecciones</p>
+          <div class="barra" style="margin:.5rem 0"><div style="width:${pct}%"></div></div>
+          ${siguiente !== undefined
+            ? `<a class="btn" href="../aprender/#/c/${siguiente}">▶ Siguiente misión: ${PT.esc(IND[siguiente].n).slice(0, 38)}</a>`
+            : '<span class="badge b-free">🎓 ¡Ruta completada!</span>'}
+          <details style="margin-top:.7rem"><summary style="cursor:pointer;color:var(--muted);font-size:.85rem">Ver ${r.pasos.length} pasos</summary>
+            ${r.pasos.map((i, k) => {
+              const l = (PT.s.leidas[i] || []).length, c = IND[i];
+              const done = c && l >= c.l;
+              return `<div style="display:flex;justify-content:space-between;font-size:.85rem;padding:.25rem 0;border-bottom:1px dashed var(--borde)">
+                <span>${done ? '✅' : `${k + 1}.`} ${PT.esc(c.n)}</span><span style="color:var(--muted)">${l}/${c.l}</span></div>`;
+            }).join('')}
+          </details>
+        </div>`;
+      }).join('');
+    });
+  </script>
+</Base>

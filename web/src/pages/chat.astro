@@ -6,6 +6,7 @@ export const prerender = true;
   <div class="chatwrap">
     <h1 style="text-align:center">🤖 Tutor IA</h1>
     <p class="sub" style="text-align:center">Estilo ChatGPT — con contexto de lo que estás estudiando. Gratis (Workers AI).</p>
+    <div class="chips" id="modos" style="margin-bottom:.2rem"></div>
     <div class="chips" id="chips"></div>
     <div class="msgs" id="msgs"></div>
     <div class="inputbar">
@@ -35,10 +36,27 @@ export const prerender = true;
     document.getElementById('chips').innerHTML = chips.map((c, i) => `<span class="chip" data-i="${i}">${c[0]}</span>`).join('');
     document.querySelectorAll('.chip').forEach(ch => ch.onclick = () => { inp.value = chips[+ch.dataset.i][1]; inp.focus(); });
 
+    // 🎚️ Modos del tutor (spec §7): cambian el system prompt y el estilo de enseñanza
+    const MODOS = [
+      ['🎓 Aprendizaje', 'MODO APRENDIZAJE: explicá prácticamente todo, desde lo básico, con analogías del mundo real y mini-ejemplos. Asumí que estoy empezando.'],
+      ['🤝 Asistido', 'MODO ASISTIDO: dame primero PISTAS, no la solución completa. Si la pido explícitamente, dámela y explicame el porqué.'],
+      ['📝 Examen', 'MODO EXAMEN: NUNCA reveles la respuesta completa. Haceme preguntas socráticas, evaluá mi razonamiento paso a paso y al final dame una nota sobre 10 con feedback.'],
+    ];
+    let modo = +(localStorage.getItem('pt_chat_modo') || 0);
+    const pintarModos = () => {
+      document.getElementById('modos').innerHTML = '<span style="font-size:.75rem;color:var(--muted);align-self:center">modo:</span>' +
+        MODOS.map((m, i) => `<span class="chip" data-m="${i}" style="${i === modo ? 'border-color:var(--acc);background:var(--acc);color:#fff' : ''}">${m[0]}</span>`).join('');
+      document.querySelectorAll('#modos .chip').forEach(c => c.onclick = () => { modo = +c.dataset.m; localStorage.setItem('pt_chat_modo', modo); pintarModos(); });
+    };
+    pintarModos();
+    const prefill = localStorage.getItem('pt_chat_prefill');
+    if (prefill) { inp.value = prefill; localStorage.removeItem('pt_chat_prefill'); inp.focus(); }
+
     function sistema() {
-      let ctx = 'Sos el Tutor IA de Plataforma Total, escuela de programación en español. Respondé SIEMPRE en español, claro y con ejemplos de código cuando ayuden. Sé alentador pero preciso.';
+      let ctx = 'Sos el Tutor IA de Plataforma Total, escuela de programación en español. Respondé SIEMPRE en español, claro y con ejemplos de código cuando ayuden. Sé alentador pero preciso. ' + MODOS[modo][1];
       if (PT.s.ultima) ctx += ` El alumno está estudiando la lección «${PT.s.ultima.t}» (curso nº ${PT.s.ultima.c + 1}).`;
-      ctx += ` Su progreso: ${PT.s.xp} XP, nivel ${PT.nivel()}, racha ${PT.s.racha.n} días.`;
+      if (PT.s.evaluacion) ctx += ` Su nivel medido es ${PT.s.evaluacion.nivel}/5 (${PT.s.evaluacion.pct}%).`;
+      ctx += ` Su progreso: ${PT.s.xp} XP, nivel ${PT.nivel()}, racha ${PT.s.racha.n} días. Ante "no entiendo": revisá conocimientos previos, identificá el concepto, explicá, dá una analogía, proponé un ejercicio y comprobá comprensión (spec §37).`;
       return { role: 'system', content: ctx };
     }
     async function enviar() {

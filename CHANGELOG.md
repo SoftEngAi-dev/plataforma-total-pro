@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.0] - 2026-09-20 (web)
+### 🧬 Cumplimiento del SPEC maestro (VISION.md, 82 secciones)
+- **`VISION.md`**: documento maestro del producto guardado como fuente de verdad + **`CUMPLIMIENTO.md`**: mapa sección-por-sección (MVP §73 ≈ 90% ✅)
+- 💻 **Laboratorio de código** (spec §6/§49): editor + ejecución **Python real en el navegador (Pyodide/WASM, offline tras 1ª carga)** + JavaScript, ejemplos guiados con "error para diagnosticar" (§30), Tab=indent, botón 🤖 "Explicar/Mejorar con IA" que lleva el código al tutor
+- 🗺️ **Rutas profesionales** (§19/§35/§67/§66): Full Stack, AI Engineer, Python Pro, Arquitecto — progreso % en vivo y "siguiente misión" por usuario
+- 📝 **Evaluación inicial** (§65/§31): 12 preguntas → nivel 0-5 del spec → ruta personalizada +XP; el tutor IA recibe tu nivel
+- 🇬🇧 **Inglés técnico** (§33/§34): 41 términos dev con pronunciación 🔊 (TTS) + quiz ES→EN
+- 🎚️ **Modos del tutor IA** (§7): Aprendizaje / Asistido / Examen — cambian el system prompt (examen = socrático, sin soluciones) + protocolo "no entiendo" (§37)
 ## [4.3.0] - 2026-09-18
 ### 🌐🤖 NUEVA PLATAFORMA WEB (Astro + backend real) — fiel a la app, no una demo
 - **Rebuild total de la web con Astro**: sidebar fiel al escritorio, tabs 🏠📚🤖🔥🏆📜💎, tema oscuro customtkinter

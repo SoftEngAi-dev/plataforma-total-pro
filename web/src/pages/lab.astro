@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="Laboratorio" activo="lab">
+  <h1>💻 Laboratorio de código</h1>
+  <p class="sub">IDE educativo del spec §6/§73: escribí, ejecutá y entendé código <b>en tu navegador</b> (Python vía Pyodide/WASM, JS nativo) — gratis y sin instalar nada. +5 XP por ejecución.</p>
+  <div class="chips" id="ejemplos"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem" class="labgrid">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+        <b>📝 Editor</b>
+        <select id="lang" class="buscar" style="width:auto;margin:0;padding:.3rem .6rem">
+          <option value="python">🐍 Python</option>
+          <option value="js">🟨 JavaScript</option>
+        </select>
+      </div>
+      <textarea id="code" spellcheck="false" style="width:100%;height:380px;background:#0b0e14;color:#d6e2ff;border:1px solid var(--borde);border-radius:.7rem;padding:.8rem;font:13px/1.5 ui-monospace,Consolas,monospace;resize:vertical;tab-size:4"></textarea>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+        <button class="btn" id="run">▶ Ejecutar</button>
+        <button class="btn ghost" id="ai">🤖 Explicar/Mejorar con IA</button>
+        <button class="btn ghost" id="clear">🧹</button>
+      </div>
+    </div>
+    <div>
+      <b>🖥️ Salida</b>
+      <pre id="out" style="height:380px;overflow:auto;background:#0b0e14;border:1px solid var(--borde);border-radius:.7rem;padding:.8rem;font:13px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;margin:.3rem 0 0;color:#a5f3a1">▶ Elegí un ejemplo o escribí tu código y apretá Ejecutar…</pre>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:.4rem" id="status">Python: primera ejecución descarga el runtime (~10 MB, queda en caché y funciona offline después).</p>
+    </div>
+  </div>
+  <style>@media(max-width:760px){.labgrid{grid-template-columns:1fr!important}}</style>
+  <script is:inline>
+    const EJS = {
+      python_1: ['🐍 Hola Python', 'nombre = input_data = "Plataforma Total"\nprint(f"🎓 Bienvenido a {nombre}")\n\nfor i in range(1, 6):\n    print("⭐" * i)\n\n# Probá cambiar el range o el emoji'],
+      python_2: ['🐍 Lista + función', 'def promedio(nums):\n    """Devuelve el promedio de una lista."""\n    return sum(nums) / len(nums)\n\nnotas = [7, 8.5, 10, 6]\nprint("Promedio:", promedio(notas))\nprint("Aprobado" if promedio(notas) >= 7 else "A repasar")'],
+      python_3: ['🐍 Error para diagnosticar', '# El spec §30: los errores son parte del curso.\n# Este código FALLA a propósito — leé el traceback y corregilo:\ndef dividir(a, b):\n    return a / b\n\nprint(dividir(10, 2))\nprint(dividir(8, 0))  # ¿qué pasa acá?'],
+      js_1: ['🟨 Hola JS', 'const tech = ["HTML", "CSS", "JS", "Python", "SQL"];\nfor (const t of tech) console.log("📚", t);\nconsole.log(`Vas a dominar ${tech.length} tecnologías 🚀`);'],
+      js_2: ['🟨 Función + array', 'const notas = [7, 8.5, 10, 6];\nconst promedio = ns => ns.reduce((a, b) => a + b, 0) / ns.length;\nconsole.log("Promedio:", promedio(notas).toFixed(1));\nconsole.log(promedio(notas) >= 7 ? "✅ Aprobado" : "📖 A repasar");'],
+    };
+    const $ = s => document.querySelector(s);
+    PT.cargar();
+    let pyodide = null;
+    const out = $('#out'), st = $('#status');
+
+    $('#ejemplos').innerHTML = Object.entries(EJS).map(([k, [t]]) => `<span class="chip" data-k="${k}">${t}</span>`).join('');
+    document.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+      const [t, code] = EJS[c.dataset.k];
+      $('#code').value = code;
+      $('#lang').value = c.dataset.k.startsWith('js') ? 'js' : 'python';
+    });
+
+    async function runPy(code) {
+      st.textContent = '⏳ Cargando Python (Pyodide)…';
+      if (!pyodide) {
+        await new Promise((res, rej) => { const s = document.createElement('script');
+          s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+        pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+        st.textContent = '✅ Python listo (cacheado — la próxima corre offline).';
+      }
+      let buf = [];
+      pyodide.setStdout({ batched: l => buf.push(l) });
+      pyodide.setStderr({ batched: l => buf.push('⚠ ' + l) });
+      try { await pyodide.runPythonAsync(code); return buf.join('\n') || '(sin salida)'; }
+      catch (e) { return buf.join('\n') + '\n' + String(e); }
+    }
+    function runJS(code) {
+      const buf = [];
+      const console2 = { log: (...a) => buf.push(a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ')),
+        error: (...a) => buf.push('❌ ' + a.join(' ')), warn: (...a) => buf.push('⚠ ' + a.join(' ')) };
+      try { (new Function('console', 'input_data', code))(console2, undefined); }
+      catch (e) { buf.push('❌ ' + e); }
+      return buf.join('\n') || '(sin salida)';
+    }
+
+    $('#run').onclick = async () => {
+      const code = $('#code').value; if (!code.trim()) return;
+      out.textContent = '⏳ ejecutando…';
+      const lang = $('#lang').value;
+      out.textContent = lang === 'python' ? await runPy(code) : runJS(code);
+      if (!out.textContent.startsWith('❌')) PT.actividad(5);
+    };
+    $('#clear').onclick = () => { $('#code').value = ''; out.textContent = '…'; };
+    $('#ai').onclick = () => {
+      const modo = $('#lang').value === 'python' ? 'Python' : 'JavaScript';
+      localStorage.setItem('pt_chat_prefill', `Explicame paso a paso qué hace este código ${modo}, cómo mejorarlo y proponeme un mini-ejercicio para practicarlo:\n\n${$('#code').value}`);
+      location.href = '../chat/';
+    };
+    $('#code').addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault();
+      const el = e.target, p = el.selectionStart; el.value = el.value.slice(0, p) + '    ' + el.value.slice(el.selectionEnd); el.selectionStart = el.selectionEnd = p + 4; } });
+    document.querySelector('.chip')?.click();
+  </script>
+</Base>
