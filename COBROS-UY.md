@@ -111,3 +111,35 @@ MiDinero **no recibe transferencias internacionales directas** (verificado en su
 7. ☐ A los ~U$S 500/mes: hora de contador.
 
 > 🎯 **Decisión rápida:** si querés cobrar ya sin pensar: **payout = PayPal** y retirás a Prex por $4. Si ya facturás $2.000+/mes: **payout = Santander** directo y dejás PayPal como backup.
+
+---
+
+## 🎯 ESTRATEGIA DEFINITIVA v1 (persona física, sin empresa — Sept 2026)
+
+### Los 2 rieles (ningún procesador internacional paga directo a Mercado Pago: MP UY es wallet doméstica)
+
+```
+RIEL GLOBAL (tarjetas del mundo, Apple/Google Pay):
+  Lemon Squeezy (MoR, cobra y gestiona impuestos)
+    └─ payouts 14/28 ─┬─ PayPal intl (3%, tope U$S 30) → Prex UY ($4+IVA) ─┐
+                      └─ wire bancario USD (1% LS) → Santander (1,5‰, mín $25) ─┤
+RIEL REGIONAL (Uruguay/LatAm, en pesos $U):                                        ▼
+  Mercado Pago (link de pago propio, ~5% tarjeta) → saldo MP → transferencia gratis a Santander y/o MiDinero (con nº de cuenta)
+                                  (MiDinero también recibe de MP directo ✔)
+```
+
+### Cuándo usar cada riel
+- Cliente de **EE.UU./Europa/global** → Riel GLOBAL (LS). Su tarjeta internacional no entra cómoda a MP.
+- Cliente de **Uruguay o región** → Riel REGIONAL (MP): paga en pesos con tarjeta local/cuenta MP, ~5% y dinero **instantáneo**, después MP→Santander/MiDinero sin costo.
+- Regla de costos LS→UY: montos chicos (< U$S 400) por PayPal→Prex (~$15-20 total); montos grandes por wire directo a Santander (~$25 fijos + 1% LS).
+
+### Operativa del riel regional ya instalada en la plataforma (v4.9.2)
+1. Owner crea **3 links de pago** en la app de Mercado Pago (mensual/anual/lifetime en $U) y los pega en `monetizacion.json` (`checkout_mp_*`) → el bloque 🇺🇾 aparece solo en /pro/.
+2. Cliente paga → avisa alias + email del pago → Owner otorga PRO desde el celular con:
+   `curl -X POST https://plataforma-total-web.pages.dev/api/admin -H 'Content-Type: application/json' -d '{"secret":"ADMIN_SECRET","email":"cliente@correo.com","nota":"MP mensual"}'`
+   → el cliente activa al instante en /pro/ con ese email (o se auto-activa en su próxima sync).
+3. Revocar: mismo call con `"accion":"quitar"`.
+4. Fase 2 (cuando haya volumen): webhook automático de MP → /api/pago_mp con validación de firma.
+
+### Nota honesta (no es asesoría fiscal)
+Ingresos recurrentes por venta de software como persona pueden requerir monotributo/unipersonal ante DGI/BPS cuando haya volumen — consultar con escribano/contador al pasar ~U$S 500/mes. Ocasionales y chicos suelen manejarse personal, pero la formalización barata (monotributo) abre facturación y baja riesgos de límites en MP/Prex (KYC por niveles).

@@ -1,9 +1,12 @@
 {
-  "tienda": "Plataforma Total PRO — Lemon Squeezy",
+  "tienda": "Plataforma Total PRO — Lemon Squeezy (global) + Mercado Pago (Uruguay/región)",
   "moneda": "USD",
   "checkout_mensual": "https://softengai-dev.github.io/plataforma-total-pro/#precios",
   "checkout_anual": "https://softengai-dev.github.io/plataforma-total-pro/#precios",
   "checkout_lifetime": "https://softengai-dev.github.io/plataforma-total-pro/#precios",
+  "checkout_mp_mensual": "",
+  "checkout_mp_anual": "",
+  "checkout_mp_lifetime": "",
   "precios": {
     "mensual_usd": 7.99,
     "anual_usd": 79,
@@ -11,5 +14,12 @@
     "pack_tematico_usd": 24,
     "estudiante_descuento": "-40%"
   },
-  "nota": "🔑 Tras el pago, tu clave de licencia llega a tu email en ~1 minuto. Actívala en la app: 💎 Ser PRO → pegar clave. (Owner: sustituye estos enlaces por tus checkout links — guía en MONETIZACION.md §8)"
+  "precios_uyu": {
+    "mensual_uyu": 320,
+    "anual_uyu": 3190,
+    "lifetime_uyu": 6790,
+    "referencia": "≈ U$S × $40 (ajustar al dólar del día; precio regional más amigable)"
+  },
+  "nota": "🔑 Lemon Squeezy (tarjetas del mundo): tras el pago tu clave llega al email. 🇺🇾 Mercado Pago (pesos uyu): tras pagar avisás tu alias/email del pago y se te otorga PRO manual en minutos (~fase 2: webhook automático).",
+  "riel_regional": "Pagos por Mercado Pago/Prex/efectivo se otorgan con POST /api/admin + ADMIN_SECRET del owner (ver COBROS-UY.md)"
 }

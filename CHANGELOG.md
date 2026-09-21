@@ -1,3 +1,10 @@
+## [4.9.2 (web)] — 2026-09-21 — 🇺🇾 RIEL REGIONAL: cobros en pesos por Mercado Pago
+
+- **Estrategia de 2 rieles documentada** en COBROS-UY.md ("Estrategia definitiva v1, persona física UY"): global = Lemon Squeezy→PayPal→Prex o wire→Santander; regional = Mercado Pago directo→MP→Santander/MiDinero (gratis).
+- **`POST /api/admin`**: alta/baja manual de PRO con `ADMIN_SECRET` (comparación constante, 401 si no coincide). Verificado e2e: otorgar → cliente activa con su email en /pro/ (normalizado a minúsculas) → revocar.
+- **pro.astro**: bloque 🇺🇾 “Pagá en pesos con Mercado Pago” con precios $U, visible SOLO si `monetizacion.json` tiene `checkout_mp_*` configurados (hoy: oculto hasta crear los links).
+- `monetizacion.json`: esquema dual con `checkout_mp_mensual/anual/lifetime` + `precios_uyu` sugeridos (tasa referencia $40) + nota de flujo MP.
+
 ## [4.9.1 (web)] — 2026-09-21 — 📱 PWA offline REAL restaurada
 
 - **Service Worker vuelve** (`public/sw.js`, se había perdido en un ciclo de builds): installación móvil fiable y, sobre todo, **modo 🏠 Propio 100% offline** — la currícula completa (corpus 620 KB) y el tutor propio se precachean; respondés dudas en el subte sin señal.
