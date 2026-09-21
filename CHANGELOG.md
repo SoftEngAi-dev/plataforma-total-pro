@@ -1,3 +1,18 @@
+## [4.6.0 (web)] — 2026-09-21 — 💎 ACTIVACIÓN PRO AUTOMÁTICA (infra de cobro lista)
+
+### Webhook Lemon Squeezy verificado end-to-end
+- **`POST /api/pago`**: verificación de firma HMAC-SHA256 en tiempo constante (header `X-Signature`, secreto `LS_SECRET` como Pages secret). Procesa `order_created/refunded` + eventos de suscripción (activa/desactiva PRO). Passthrough `checkout[custom][alias]` → vinculación automática.
+- **`/api/pro`**: GET (estado PRO de la sesión) y POST (activación manual con el email de compra, normalizado a minúsculas). D1: tablas `pro` + `pro_alias`.
+- **probado en vivo**: firma inválida→401 · order_created firmado→PRO activo · auto-detección por alias de checkout · activación manual por email (incluso en MAYÚSCULAS) · refund→PRO revocado. Filas de prueba eliminadas.
+- **pro.astro**: formulario ⚡ de activación instantánea, estado 💎 PRO ACTIVO, detección automática al entrar (si compraste con sesión iniciada, ni tenés que escribir el email), y los botones de checkout agregan `checkout[custom][alias]` solos.
+- `pt.js`: `PT.esPro()/proSinc()/proActivar()` — el estado PRO viaja en la sesión y se sincroniza al loguear.
+
+### 🔧 Fix crítico
+- **URLs rotas `//recurso` en pages.dev** (protocol-relative): `Base.astro`/`index.astro` ahora normalizan la base sin `/` final. El sitio raíz quedó 100% navegable (antes: enlaces, CSS y pt.js rotos desde el primer deploy). Canonical SEO → `plataforma-total-web.pages.dev`.
+
+### Pendiente externo (usuario)
+- Crear producto en Lemon Squeezy → pegar URLs de checkout en `monetizacion.json` → webhook URL: `https://plataforma-total-web.pages.dev/api/pago` y reemplazar el secret `LS_SECRET` de prueba por el real (`wrangler pages secret put LS_SECRET`).
+
 ## [4.5.0 (web)] — 2026-09-20 — ☁️ BACKEND REAL EN PRODUCCIÓN (Cloudflare)
 
 ### Infraestructura viva

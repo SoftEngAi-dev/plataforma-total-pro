@@ -69,10 +69,26 @@
         .then(d => {
           if (!d.ok) return d;
           this.s.alias = d.alias; this.s.token = d.token; this.guardar();
-          return this.syncPull().then(() => d);
+          return this.syncPull().then(() => this.proSinc()).then(() => d);
         });
     },
     logout() { this.s.alias = this.s.token = null; this.s.leidas = {}; this.guardar(); location.reload(); },
+    /* ── 💎 PRO (Lemon Squeezy vía /api/pro) ── */
+    esPro() { return !!this.s.pro; },
+    proSinc() {  // consulta al backend si esta sesión es PRO (auto al loguear)
+      if (!this.s.token) return Promise.resolve(false);
+      return this.api('pro').then(d => {
+        if (d.ok) { this.s.pro = !!d.pro; this.guardar(); }
+        return this.s.pro;
+      }).catch(() => false);
+    },
+    proActivar(email) {  // vincula el email de compra con esta sesión
+      if (!this.s.token) return Promise.resolve({ ok: false, error: 'Iniciá sesión primero (sidebar)' });
+      return this.api('pro', { method: 'POST', body: JSON.stringify({ email }) }).then(d => {
+        if (d.ok && d.pro) { this.s.pro = true; this.guardar(); }
+        return d;
+      }).catch(() => ({ ok: false, error: 'Error de red' }));
+    },
     pintarNube() {
       const el = document.getElementById('estado-nube'); if (!el) return;
       el.textContent = this.s.token ? (this.nubeOn ? 'nube: sincronizado ✅' : 'nube: sin backend (local)') : 'nube: desconectado';

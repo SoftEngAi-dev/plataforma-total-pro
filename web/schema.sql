@@ -26,3 +26,17 @@ CREATE TABLE IF NOT EXISTS certificados (
   curso  TEXT NOT NULL,
   fecha  TEXT NOT NULL
 );
+
+-- 💎 Monetización PRO (Lemon Squeezy webhooks)
+CREATE TABLE IF NOT EXISTS pro (
+  email TEXT PRIMARY KEY,
+  estado INTEGER DEFAULT 1,           -- 1=activo, 0=refund/cancelado
+  order_id TEXT,
+  evento TEXT,
+  actualizado TEXT
+);
+CREATE TABLE IF NOT EXISTS pro_alias ( -- vincula la sesión de la app (alias) con el email de compra
+  alias TEXT PRIMARY KEY,
+  email TEXT,
+  actualizado TEXT
+);
