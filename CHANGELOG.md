@@ -1,3 +1,25 @@
+## [4.9.0 (web) + 4.5.0 (app)] — 2026-09-21 — 📚 EXPANSIÓN CURRÍCULA: 57 cursos (+10 completos)
+
+### Nuevas materias de estudio (aditivas, nada se quitó)
+- 🆓 **📐 Matemáticas para Programadores** — binario/hex/máscaras, álgebra diaria, Boole/De Morgan, percentiles, Big O (6 lecciones + 12 quizzes)
+- 🆓 **🧠 Lógica y Pensamiento Computacional** — proposicional, cuantificadores (∀∃ = every/some), dry run, falacias de debugging
+
+### Tecnología actual y emergente (cursos PRO)
+- **🤖 Ingeniería de IA Aplicada** — prompts serios, RAG, embeddings, agentes/MCP, evals y costos
+- **📡 HTMX y Alpine** — la web hipermedia sin build
+- **⚡ WebAssembly y WebGPU** — rendimiento nativo en el navegador
+- **☁️ Cloudflare y Edge** — serverless real (caso de estudio: esta misma web)
+- **🌊 Qwik, Solid y Señales** — el frontend post-hydration
+- **🛢️ Ingeniería de Datos Moderna** — DuckDB, dbt, ELT, pipelines idempotentes
+- **🔭 Observabilidad** — logs/métricas/trazas, OpenTelemetry, SLOs
+- **🦀 Tauri** — apps de escritorio con el stack web
+
+### Sistema
+- Generador idempotente `scripts/nuevos_cursos.py` (fuente única → web JSON + índice + `contenido_f.py` desktop); validación automática de 120 quizzes nuevos
+- **Tutor Propio recreció**: corpus 329 lecciones + 658 preguntas (620 KB) — test: 8/8 consultas resueltas apuntando a los cursos nuevos
+- **Rutas: 7 carreras** (+📐 Fundamentos y Matemática, +🚀 Vanguardia 2026, +🛢️ Datos e IA Aplicada)
+- Contadores actualizados en toda la superficie (57/17 gratis/40 PRO/658)
+
 ## [4.8.0 (web)] — 2026-09-21 — 🏠 TUTOR PROPIO: agente de IA 100% nuestro, sin modelos externos
 
 - **Nuevo modo en el chat: "🏠 Propio (sin IA externa)"** — responde SOLO desde nuestra currícula (269 lecciones + 538 preguntas de quiz) con motor de recuperación propio (TF-IDF/ BM25-lite, ~120 líneas JS, en `public/tutor.js`). Ni Cloudflare, ni Ollama, ni ningún modelo externo: **costo y dependencia = 0, sin límites, offline-able**.

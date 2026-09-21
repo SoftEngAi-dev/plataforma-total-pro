@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """🎓 PLATAFORMA TOTAL v3.0 — Escuela local de programación con IA.
-41 cursos · 243 lecciones · 486 quizzes · Buscador · Pomodoro · Racha 🔥
+57 cursos · 329 lecciones · 658 quizzes · Buscador · Pomodoro · Racha 🔥
 Certificados 🎓 · Chat IA con memoria · 100% offline (Ollama opcional)."""
 import os, sys, json, threading, subprocess, shutil, webbrowser, datetime, platform, hashlib, random, tempfile, re, unicodedata
 from pathlib import Path
@@ -18,8 +18,8 @@ except ImportError:
 BASE = Path(__file__).parent.resolve()
 sys.path.insert(0, str(BASE))
 
-# ─── CONTENIDO: 41 cursos / 243 lecciones / 486 quizzes ───
-import contenido_a, contenido_b, contenido_c, contenido_d, contenido_e
+# ─── CONTENIDO: 57 cursos / 329 lecciones / 658 quizzes ───
+import contenido_a, contenido_b, contenido_c, contenido_d, contenido_e, contenido_f
 
 try:  # ☁️ cliente de nube opcional (stdlib urllib — sin dependencias nuevas)
     import sync_web
@@ -27,14 +27,17 @@ except Exception:
     sync_web = None
 
 # 🔁 Versión instalada — la auto-actualización la compara con GitHub Releases
-VERSION_APP = "4.4.0"
+VERSION_APP = "4.5.0"
 REPO_GH = "SoftEngAi-dev/plataforma-total-pro"
 _LECCIONES = {}
-for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e):
+for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e, contenido_f):
     _LECCIONES.update(_mod.CURSOS_MOD)
 
-# ══════════ 💎 MONETIZACIÓN — freemium (15 cursos gratis, resto PRO) ══════════
-CURSOS_GRATIS = set(list(_LECCIONES.keys())[:15])   # los fundamentos, gratis para siempre
+# ══════════ 💎 MONETIZACIÓN — freemium (15+2 cursos gratis, resto PRO) ══════════
+CURSOS_GRATIS = set(list(_LECCIONES.keys())[:15]) | {  # los fundamentos, gratis para siempre
+    "📐 Matemáticas para Programadores — Las que Sí Se Usan",
+    "🧠 Lógica y Pensamiento Computacional",
+}
 URL_MONETIZACION = f"https://raw.githubusercontent.com/{REPO_GH}/main/monetizacion.json"
 _LS_VALIDATE = "https://api.lemonsqueezy.com/v1/licenses/validate"
 _MONETIZACION_FALLBACK = {
@@ -783,7 +786,7 @@ class App(ctk.CTk):
         box.pack(fill="both", expand=True, padx=12, pady=12)
         ctk.CTkLabel(box, text="💎 HAZTE PRO" if es_gratis else "💎 CURSO PRO",
                      font=("Arial", 24, "bold"), text_color="#a78bfa").pack(pady=(20, 2))
-        subtitulo = ("Este curso es gratis 🎉 — con PRO desbloqueas los otros 32 cursos avanzados."
+        subtitulo = ("Este curso es gratis 🎉 — con PRO desbloqueas los otros 40 cursos avanzados (IA, Cloudflare, WASM, datos, Rust…)."
                      if es_gratis else f"«{curso}» pertenece al plan PRO.")
         ctk.CTkLabel(box, text=subtitulo, font=("Arial", 13), wraplength=560).pack()
         ctk.CTkLabel(box,

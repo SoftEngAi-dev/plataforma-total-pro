@@ -13,7 +13,7 @@ export const prerender = true;
       <textarea id="inp" rows="1" placeholder="Preguntame lo que quieras: código, dudas, ejercicios…"></textarea>
       <button class="btn" id="send">Enviar ➤</button>
     </div>
-    <p style="color:var(--muted);font-size:.75rem;text-align:center;margin-top:.4rem">El tutor puede equivocarse: verificá el código. El modo 🏠 <b>Propio</b> nunca usa modelos externos: responde desde nuestra currícula (269 lecciones + 538 preguntas), sin límites y gratis para siempre.</p>
+    <p style="color:var(--muted);font-size:.75rem;text-align:center;margin-top:.4rem">El tutor puede equivocarse: verificá el código. El modo 🏠 <b>Propio</b> nunca usa modelos externos: responde desde nuestra currícula (329 lecciones + 658 preguntas), sin límites y gratis para siempre.</p>
   </div>
   <script is:inline>
     PT.cargar();
@@ -68,7 +68,7 @@ export const prerender = true;
       think.className = 'msg ai typing'; think.textContent = '🤖 pensando…'; msgs.appendChild(think); msgs.scrollTop = msgs.scrollHeight;
       // ── 🏠 MODO PROPIO: motor de recuperación sobre la currícula — NINGÚN modelo externo ──
       if (modo === 3) {
-        think.textContent = '🏠 consultando los 47 cursos…';
+        think.textContent = '🏠 consultando los 57 cursos…';
         try {
           if (!window.PTutor) {
             await new Promise((res, rej) => { const s = document.createElement('script'); s.src = '../tutor.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });

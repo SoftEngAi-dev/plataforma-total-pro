@@ -10,7 +10,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' en raíz, sin '//' 
   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
     <div class="card"><h3>🔥 Racha</h3><p style="font-size:1.8rem;font-weight:800" id="racha">0 días</p><p style="color:var(--muted);font-size:.85rem">25 min al día mínimo</p></div>
     <div class="card"><h3>⭐ Nivel <span id="nivel">1</span></h3><div class="barra"><div id="xpbar" style="width:0%"></div></div><p style="color:var(--muted);font-size:.85rem;margin-top:.4rem"><span id="xpnum">0</span> XP</p></div>
-    <div class="card"><h3>📚 Lecciones</h3><p style="font-size:1.8rem;font-weight:800" id="leidas">0</p><p style="color:var(--muted);font-size:.85rem">de 269</p></div>
+    <div class="card"><h3>📚 Lecciones</h3><p style="font-size:1.8rem;font-weight:800" id="leidas">0</p><p style="color:var(--muted);font-size:.85rem">de 329</p></div>
     <div class="card"><h3>🧠 Quizzes</h3><p style="font-size:1.8rem;font-weight:800" id="quiz">0/0</p><p style="color:var(--muted);font-size:.85rem">aciertos</p></div>
   </div>
 
@@ -18,7 +18,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' en raíz, sin '//' 
 
   <h2>🗺️ ¿Qué hacemos hoy?</h2>
   <div class="grid">
-    <div class="card clickable" onclick={`location.href='${B}/aprender/'`}><h3>📚 Aprender</h3><p>47 cursos: los 15 de fundamentos gratis completos, con quizzes interactivos.</p></div>
+    <div class="card clickable" onclick={`location.href='${B}/aprender/'`}><h3>📚 Aprender</h3><p>57 cursos: los 17 de fundamentos gratis completos (¡matemáticas y lógica incluidas!), con quizzes interactivos.</p></div>
     <div class="card clickable" onclick={`location.href='${B}/chat/'`}><h3>🤖 IA Chat</h3><p>Tu tutor estilo ChatGPT: dudas, código y explicaciones — con contexto de tu lección.</p></div>
     <div class="card clickable" onclick={`location.href='${B}/pomo/'`}><h3>🔥 Pomodoro</h3><p>25 minutos de foco, 5 de descanso. La racha se alimenta sola.</p></div>
     <div class="card clickable" onclick={`location.href='${B}/certificados/'`}><h3>📜 Certificados</h3><p>Terminá un curso y descargá tu certificado con código verificable.</p></div>

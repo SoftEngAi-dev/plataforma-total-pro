@@ -4,7 +4,7 @@ export const prerender = true;
 ---
 <Base titulo="Rutas" activo="rutas">
   <h1>🗺️ Rutas profesionales</h1>
-  <p class="sub">Spec §19/§35/§67: caminos guiados que encadenan los 47 cursos en carreras completas. Tu progreso se calcula en vivo.</p>
+  <p class="sub">Spec §19/§35/§67: caminos guiados que encadenan los 57 cursos en 7 carreras completas. Tu progreso se calcula en vivo.</p>
   <div id="rutas"></div>
   <script is:inline>
     PT.cargar();
@@ -18,6 +18,12 @@ export const prerender = true;
         pasos: [0, 1, 7, 8, 9, 33, 29, 36, 10] },
       { e: '🏗️', n: 'Arquitecto de Software', d: 'Diseño, seguridad y sistemas que escalan.',
         pasos: [35, 36, 32, 33, 21, 12, 13, 18, 19, 40] },
+      { e: '📐', n: 'Fundamentos y Matemática', d: 'La base lógico-matemática que separa al junior del senior.',
+        pasos: [47, 48, 34, 33, 39] },
+      { e: '🚀', n: 'Vanguardia 2026', d: 'IA aplicada, edge, hipermedia y el frontend que viene.',
+        pasos: [49, 51, 52, 50, 53, 55, 56] },
+      { e: '🛢️', n: 'Datos e IA Aplicada', d: 'Del análisis al pipeline moderno y la IA en producción.',
+        pasos: [28, 29, 54, 30, 31, 49] },
     ];
     fetch('data/indice.json').then(r => r.json()).then(IND => {
       document.getElementById('rutas').innerHTML = RUTAS.map(r => {

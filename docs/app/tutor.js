@@ -110,7 +110,7 @@
       .map(([_, i]) => CORPUS.l[i].t + ' (' + CORPUS.l[i].c + ')');
     return {
       tipo: 'sin_hallazgo',
-      texto: `🤔 No encontré eso exactamente en la currícula. Recordá que soy el **tutor local**: respondo desde los 47 cursos y 538 preguntas de Plataforma Total, sin IA externa.\n\n` +
+      texto: `🤔 No encontré eso exactamente en la currícula. Recordá que soy el **tutor local**: respondo desde los 57 cursos y 658 preguntas de Plataforma Total, sin IA externa.\n\n` +
         (vagos.length ? `Lo más cercano que veo:\n• ${vagos.join('\n• ')}\n\n` : '') +
         `Probá con algo como: "qué es una variable", "formularios html", "diferencia entre id y class"… o usá el modo 🤖 IA para preguntas abiertas.`,
     };
