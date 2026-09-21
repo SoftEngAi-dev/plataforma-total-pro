@@ -1,3 +1,10 @@
+## [4.9.1 (web)] — 2026-09-21 — 📱 PWA offline REAL restaurada
+
+- **Service Worker vuelve** (`public/sw.js`, se había perdido en un ciclo de builds): installación móvil fiable y, sobre todo, **modo 🏠 Propio 100% offline** — la currícula completa (corpus 620 KB) y el tutor propio se precachean; respondés dudas en el subte sin señal.
+- Estrategia: shell+currícula precache · páginas network-first con respaldo · assets stale-while-revalidate · `/api/*` jamás se cachea (datos personales = solo red).
+- Registro en todas las páginas vía Base.astro (`define:vars` con la base correcta para ambos despliegues).
+- Fix texto del workflow (conteos actualizados 57/329/658).
+
 ## [4.9.0 (web) + 4.5.0 (app)] — 2026-09-21 — 📚 EXPANSIÓN CURRÍCULA: 57 cursos (+10 completos)
 
 ### Nuevas materias de estudio (aditivas, nada se quitó)
