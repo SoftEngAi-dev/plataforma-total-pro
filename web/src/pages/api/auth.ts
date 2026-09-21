@@ -31,9 +31,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (!pin || String(pin).length < 4) return J({ ok: false, error: 'PIN de 4+ caracteres' });
 
     const u = await env.DB.prepare('SELECT hash, salt FROM users WHERE alias = ?').bind(a).first();
+    // 🛡️ anti fuerza bruta: 5 PIN erróneos en 10 min → bloqueo temporal
+    const ahora = Date.now();
+    const int = await env.DB.prepare('SELECT n, ts FROM intentos WHERE alias = ?').bind(a).first();
+    const fallos = (int && ahora - Date.parse(String(int.ts)) < 600_000) ? Number(int.n) : 0;
+    if (fallos >= 5) {
+      return J({ ok: false, error: 'Demasiados intentos fallidos. Esperá ~10 minutos.' }, 429);
+    }
     if (u) {
       const h = await pbkdf2(String(pin), u.salt as string);
-      if (h !== u.hash) return J({ ok: false, error: 'PIN incorrecto para ese alias' }, 401);
+      if (h !== u.hash) {
+        const iso = new Date(ahora).toISOString();
+        await env.DB.prepare(
+          'INSERT INTO intentos (alias, n, ts) VALUES (?, 1, ?) ' +
+          'ON CONFLICT(alias) DO UPDATE SET n = ?, ts = ?'
+        ).bind(a, iso, fallos + 1, iso).run();
+        return J({ ok: false, error: 'PIN incorrecto para ese alias' }, 401);
+      }
+      await env.DB.prepare('DELETE FROM intentos WHERE alias = ?').bind(a).run();
     } else {
       const salt = randHex(16);
       const h = await pbkdf2(String(pin), salt);

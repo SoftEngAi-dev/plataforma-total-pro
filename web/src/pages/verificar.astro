@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="Verificar certificado" activo="certificados">
+  <h1>🔍 Verificar certificado</h1>
+  <p class="sub">Cualquier empleador o institución puede comprobar la autenticidad de un certificado de Plataforma Total pegando su código (PT-XXXXXX). El titular se muestra enmascarado por privacidad.</p>
+  <div class="card" style="max-width:34rem">
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <input id="vc-cod" placeholder="PT-XXXXXX" autocomplete="off"
+        style="flex:1;min-width:200px;padding:.8rem 1rem;border-radius:10px;border:1px solid var(--borde);background:var(--bg);color:var(--tx);text-transform:uppercase;font-weight:700;letter-spacing:.05em" />
+      <button class="btn big" id="vc-btn">🔍 Verificar</button>
+    </div>
+    <div id="vc-res" style="margin-top:1rem;min-height:2.5rem"></div>
+  </div>
+  <p style="color:var(--muted);font-size:.85rem">¿Todavía no tenés el tuyo? <a href="../certificados/">📜 Generá tu certificado gratis</a> completando un curso.</p>
+  <script is:inline>
+    PT.cargar();
+    const APIB = location.hostname.endsWith('github.io') ? 'https://plataforma-total-web.pages.dev/' : '';
+    const res = document.getElementById('vc-res');
+    function verificar(cod) {
+      cod = String(cod || '').trim().toUpperCase();
+      if (!cod) { res.textContent = ''; return; }
+      res.style.color = 'var(--muted)'; res.textContent = '⏳ Consultando el registro…';
+      fetch(APIB + 'api/certificado?codigo=' + encodeURIComponent(cod)).then(r => r.json()).then(d => {
+        if (d.ok && d.valido) {
+          res.style.color = 'var(--verde, #3fb950)';
+          res.innerHTML = '✔ <b>Certificado VÁLIDO</b><br><span style="color:var(--tx)">' +
+            PT.esc(d.quien) + '</span> completó <b>' + PT.esc(d.curso) + '</b> el ' + PT.esc(d.fecha) +
+            '<br><span style="color:var(--muted);font-size:.85rem">Registro inmutable en la base de datos de Plataforma Total.</span>';
+        } else if (d.ok) {
+          res.style.color = 'var(--rojo, #f85149)';
+          res.innerHTML = '✘ Código <b>no encontrado</b>. Revisá mayúsculas y guiones (formato PT-XXXXXX).';
+        } else {
+          res.style.color = 'var(--rojo, #f85149)'; res.textContent = '⚠️ ' + (d.error || 'Error de verificación');
+        }
+      }).catch(() => { res.style.color = 'var(--rojo, #f85149)'; res.textContent = '⚠️ Sin conexión con el registro.'; });
+    }
+    document.getElementById('vc-btn').onclick = () => verificar(document.getElementById('vc-cod').value);
+    document.getElementById('vc-cod').addEventListener('keydown', e => { if (e.key === 'Enter') verificar(e.target.value); });
+    // deep-link: /verificar/?codigo=PT-XXX
+    const q = new URLSearchParams(location.search).get('codigo');
+    if (q) { document.getElementById('vc-cod').value = q; verificar(q); }
+  </script>
+</Base>

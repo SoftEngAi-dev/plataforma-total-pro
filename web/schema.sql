@@ -40,3 +40,10 @@ CREATE TABLE IF NOT EXISTS pro_alias ( -- vincula la sesión de la app (alias) c
   email TEXT,
   actualizado TEXT
 );
+
+-- 🛡️ anti fuerza bruta login (5 fallos / 10 min)
+CREATE TABLE IF NOT EXISTS intentos (
+  alias TEXT PRIMARY KEY,
+  n INTEGER DEFAULT 0,
+  ts TEXT
+);

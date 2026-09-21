@@ -21,8 +21,13 @@ sys.path.insert(0, str(BASE))
 # ─── CONTENIDO: 41 cursos / 243 lecciones / 486 quizzes ───
 import contenido_a, contenido_b, contenido_c, contenido_d, contenido_e
 
+try:  # ☁️ cliente de nube opcional (stdlib urllib — sin dependencias nuevas)
+    import sync_web
+except Exception:
+    sync_web = None
+
 # 🔁 Versión instalada — la auto-actualización la compara con GitHub Releases
-VERSION_APP = "4.2.0"
+VERSION_APP = "4.3.0"
 REPO_GH = "SoftEngAi-dev/plataforma-total-pro"
 _LECCIONES = {}
 for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e):
@@ -164,6 +169,87 @@ def init_db():
     con.commit(); con.close()
 
 init_db()  # tablas garantizadas incluso si solo se importa el módulo
+
+# ══════════════ ☁️ NUBE OPCIONAL (mismo resumen web/móvil/escritorio) ══════════════
+def _nube_path():
+    return DATA_DIR / "nube.json"
+
+def nube_cargar():
+    """Devuelve {alias, token, ...} si hay sesión de nube guardada, o None."""
+    try:
+        d = json.loads(_nube_path().read_text(encoding="utf-8"))
+        return d if d.get("token") else None
+    except Exception:
+        return None
+
+def nube_guardar(d):
+    _nube_path().parent.mkdir(parents=True, exist_ok=True)
+    _nube_path().write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
+
+def nube_limpiar():
+    try:
+        _nube_path().unlink()
+    except Exception:
+        pass
+
+def nube_payload_desktop():
+    """Resumen local en el contrato pt_web_v1 (10 XP/lección, 5 XP/quiz perfecto)."""
+    q_tot, q_perf = db_quiz_stats()
+    return {"xp": db_progreso_total() * 10 + q_perf * 5,
+            "quiz_ok": q_perf, "quiz_tot": q_tot,
+            "racha": {"n": db_racha(), "ult": datetime.date.today().isoformat()}}
+
+def nube_sincronizar():
+    """Merge SEGURO escritorio→nube: nunca toca `leidas`/`ultima` de la web/móvil;
+    contadores y racha se mezclan tomando el MAYOR. Además registra certificados
+    (quedan verificables en /verificar/) y desbloquea PRO comprado vía web."""
+    if sync_web is None:
+        return False, "Módulo sync_web no disponible."
+    n = nube_cargar()
+    if not n:
+        return False, "Sin sesión de nube."
+    tok = n["token"]
+    cloud = sync_web.pull(tok)
+    if cloud is None:
+        return False, "Sin conexión con la nube (¿internet?)."
+    loc = nube_payload_desktop()
+    merged = dict(cloud)
+    merged["xp"] = max(int(cloud.get("xp") or 0), loc["xp"])
+    merged["quiz_ok"] = max(int(cloud.get("quiz_ok") or 0), loc["quiz_ok"])
+    merged["quiz_tot"] = max(int(cloud.get("quiz_tot") or 0), loc["quiz_tot"])
+    rn_cloud = int((cloud.get("racha") or {}).get("n") or 0)
+    merged["racha"] = {"n": max(rn_cloud, loc["racha"]["n"]), "ult": loc["racha"]["ult"]}
+    merged["contrato"] = "pt_web_v1"
+    enviados = set(n.get("certs_enviados") or [])
+    nuevos = 0
+    for curso, _alumno, codigo, _f in db_certificados():
+        if codigo and codigo not in enviados:
+            if sync_web.cert_registrar(tok, "PT-" + codigo, curso):
+                enviados.add(codigo); nuevos += 1
+    if not sync_web.push(tok, merged):
+        return False, "No se pudo subir (¿sesión vencida?). Volvé a entrar."
+    n["certs_enviados"] = sorted(enviados)
+    n["ultima_sync"] = datetime.datetime.now().isoformat(timespec="minutes")
+    nube_guardar(n)
+    msg = f"✅ Resumen en la nube (XP {merged['xp']})"
+    if nuevos:
+        msg += f" · {nuevos} certificado(s) ya verificables online"
+    return True, msg
+
+def nube_desbloquear_pro_si_corresponde():
+    """Si el alias tiene PRO comprado en la web (Lemon Squeezy), desbloquea el escritorio."""
+    n = nube_cargar()
+    if not n or sync_web is None or licencia_guardada():
+        return False
+    if not sync_web.es_pro(n["token"]):
+        return False
+    CFG["paths"]["base"].mkdir(parents=True, exist_ok=True)
+    _lic_path().write_text(json.dumps({
+        "clave": "WEB:" + n.get("alias", ""), "valida": True,
+        "fecha": str(datetime.date.today()), "producto": "PRO (compra web)",
+        "cliente": n.get("alias", ""),
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+    return True
 
 def db_marcar_actividad():
     con = _con()
@@ -412,6 +498,7 @@ class App(ctk.CTk):
         self.main = ctk.CTkFrame(self); self.main.pack(side="right", fill="both", expand=True, padx=10, pady=10)
         self.after(4500, lambda: self.buscar_actualizacion(silencioso=True))  # 🔄 chequeo suave al iniciar
         self._sync_pro_badge()  # 💎 muestra FREE/PRO al arrancar
+        self.after(8000, self._nube_loop)  # ☁️ sync silenciosa cada 5 min si hay sesión
         self.show("🏠 Inicio")
 
     # ── sidebar ──
@@ -434,11 +521,17 @@ class App(ctk.CTk):
         # 🔄 Auto-actualización desde GitHub Releases (zona inferior del sidebar)
         upd = ctk.CTkFrame(sb, fg_color="transparent")
         upd.pack(side="bottom", fill="x", padx=8, pady=(0, 6))
-        ctk.CTkLabel(upd, text=f"v{VERSION_APP} · 100% local", font=("Arial", 9), text_color="gray").pack()
+        ctk.CTkLabel(upd, text=f"v{VERSION_APP} · local + ☁️ nube", font=("Arial", 9), text_color="gray").pack()
         self.lbl_pro = ctk.CTkLabel(upd, text="", font=("Arial", 10, "bold"))
         self.lbl_pro.pack(pady=(3, 0))
         ctk.CTkButton(upd, text="💎 Ser PRO / Activar clave", height=25, fg_color="#7c3aed",
                       command=self._ir_paywall).pack(fill="x", pady=(2, 0))
+        # ☁️ Nube opcional (misma sesión que la web/móvil)
+        self.lbl_nube = ctk.CTkLabel(upd, text="", font=("Arial", 9), text_color="gray")
+        self.lbl_nube.pack(pady=(2, 0))
+        ctk.CTkButton(upd, text="☁️ Nube / Cuenta", height=24, fg_color="#2f6fed",
+                      command=self._nube_dialog).pack(fill="x", pady=(2, 0))
+        self._nube_pintar()
         self.lbl_update = ctk.CTkLabel(upd, text="", font=("Arial", 10), wraplength=170)
         self.lbl_update.pack()
         self.btn_instalar = ctk.CTkButton(upd, text="⬇ INSTALAR", height=26, fg_color="#7c3aed",
@@ -472,6 +565,84 @@ class App(ctk.CTk):
         bar = ctk.CTkFrame(f); bar.pack(pady=6)
         ctk.CTkButton(bar, text="🧭 ¿Qué estudio hoy? (IA)", fg_color="#6f42c1", command=self.recomendar_con_ia).pack(side="left", padx=6)
         ctk.CTkButton(bar, text="🔄 Refrescar", fg_color="gray", command=lambda: self.show("🏠 Inicio")).pack(side="left", padx=6)
+
+    # ── ☁️ NUBE (sesión compartida con la web/móvil) ──
+    def _nube_pintar(self):
+        n = nube_cargar()
+        if n:
+            ult = (n.get("ultima_sync") or "—")[11:16]
+            self.lbl_nube.configure(text=f"☁️ {n.get('alias', '?')} · sync {ult}")
+        else:
+            self.lbl_nube.configure(text="☁️ nube: desconectada")
+
+    def _nube_loop(self):
+        if nube_cargar():
+            self._nube_sync_async()
+        self.after(300_000, self._nube_loop)  # cada 5 min
+
+    def _nube_sync_async(self, estado=None):
+        n = nube_cargar()
+        if estado is not None and not n:
+            estado.configure(text="⚠ Primero entrá con alias+PIN")
+            return
+        if not n:
+            return
+        if estado is not None:
+            estado.configure(text="⏳ Sincronizando…")
+        def trabajo():
+            ok, msg = nube_sincronizar()
+            if ok and nube_desbloquear_pro_si_corresponde():
+                msg += " · 💎 ¡PRO comprado en la web detectado → desbloqueado acá!"
+            def fin():
+                if estado is not None:
+                    try:
+                        estado.configure(text=msg)
+                    except Exception:
+                        pass
+                self._nube_pintar()
+                self._sync_pro_badge()
+            self.after(0, fin)
+        threading.Thread(target=trabajo, daemon=True).start()
+
+    def _nube_dialog(self):
+        if sync_web is None:
+            messagebox.showinfo("☁️ Nube", "El módulo de nube no está disponible en esta instalación.")
+            return
+        n = nube_cargar()
+        w = ctk.CTkToplevel(self); w.title("☁️ Cuenta y nube"); w.geometry("470x430"); w.grab_set()
+        ctk.CTkLabel(w, text="☁️ Sincronización opcional", font=("Arial", 16, "bold")).pack(pady=(14, 4))
+        ctk.CTkLabel(w, justify="left", wraplength=430, font=("Arial", 11), text=(
+            "Usá el mismo alias+PIN que en la web. Se sube tu RESUMEN (XP, racha, quizzes) "
+            "sin pisar el detalle por lección de la web/móvil: se mezcla quedándose con el mayor. "
+            "Si compraste PRO en la web, se desbloquea acá automáticamente. "
+            "Tus certificados quedan verificables en plataforma-total-web.pages.dev/verificar/.")).pack(padx=16, pady=6)
+        estado = ctk.CTkLabel(w, text="", font=("Arial", 11)); estado.pack(pady=4)
+        if n:
+            ctk.CTkLabel(w, text=f"👤 {n.get('alias')}  ·  última sync: {n.get('ultima_sync', 'nunca')}",
+                         font=("Arial", 12, "bold")).pack(pady=6)
+            ctk.CTkButton(w, text="🔁 Sincronizar ahora", fg_color="#2f6fed",
+                          command=lambda: self._nube_sync_async(estado)).pack(pady=5)
+            ctk.CTkButton(w, text="🚪 Cerrar sesión de nube", fg_color="gray",
+                          command=lambda: (nube_limpiar(), self._nube_pintar(), w.destroy())).pack(pady=5)
+        else:
+            ea = ctk.CTkEntry(w, placeholder_text="👤 alias (ej: dev_ana)", width=260); ea.pack(pady=5)
+            ep = ctk.CTkEntry(w, placeholder_text="🔑 PIN (4+ caracteres)", show="*", width=260); ep.pack(pady=5)
+            def entrar():
+                estado.configure(text="⏳ Conectando…")
+                def t():
+                    ok, d = sync_web.login(ea.get().strip(), ep.get())
+                    def fin():
+                        if ok:
+                            nube_guardar({"alias": d["alias"], "token": d["token"], "certs_enviados": []})
+                            estado.configure(text=f"✔ ¡Bienvenido/a {d['alias']}! Sincronizando…")
+                            self._nube_pintar()
+                            self._nube_sync_async(estado)
+                        else:
+                            estado.configure(text="⚠ " + str(d.get("error", "no se pudo entrar")))
+                    self.after(0, fin)
+                threading.Thread(target=t, daemon=True).start()
+            ctk.CTkButton(w, text="Entrar / Crear cuenta", fg_color="#2f6fed", command=entrar).pack(pady=6)
+        ctk.CTkButton(w, text="Cerrar", fg_color="gray", command=w.destroy).pack(pady=(8, 10))
 
     # ══════════ 🔄 AUTO-ACTUALIZACIÓN (GitHub Releases) ══════════
     def buscar_actualizacion(self, silencioso=False):
@@ -892,6 +1063,10 @@ class App(ctk.CTk):
         ruta.write_text(HTML_CERTIFICADO.format(alumno=alumno, curso=curso, lecciones=lecciones, quizzes=n_quiz,
                                                 codigo=codigo, fecha=datetime.date.today().strftime("%d/%m/%Y")), encoding="utf-8")
         db_guardar_certificado(curso, alumno, codigo)
+        n = nube_cargar()  # ☁️ si hay sesión, el certificado queda verificable online (PT-<codigo>)
+        if n and sync_web is not None:
+            threading.Thread(target=lambda: sync_web.cert_registrar(n["token"], "PT-" + codigo, curso),
+                             daemon=True).start()
         self.open_path(ruta)
         messagebox.showinfo("🎓 ¡Felicitaciones!", f"Certificado emitido:\n{ruta}\n\nCódigo: {codigo}\n(Imprímelo a PDF desde el navegador)")
 

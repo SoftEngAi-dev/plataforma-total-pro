@@ -1,3 +1,22 @@
+## [4.7.0 (web)] — 2026-09-21 — 📜 Certificados verificables + login blindado
+
+### Certificados con registro en la nube
+- **`/api/certificado`**: POST (con sesión) registra el código del certificado; GET público `?codigo=` verifica (alias enmascarado por privacidad, curso y fecha). Fallback: acepta el código con o sin prefijo `PT-` (los de escritorio se muestran sin prefijo).
+- **Nueva página `/verificar/`**: verificación pública con deep-link `?codigo=`, accesible desde el PNG del certificado.
+- **certificados.astro**: con sesión, al generar registra el código y muestra el link de verificación; sin sesión, lo sugiere.
+
+### 🛡️ Anti fuerza bruta en login
+- Tabla `intentos` en D1: 5 PIN erróneos en 10 min por alias → HTTP 429 con mensaje claro. Verificado en vivo (5×401 → 429 al 6º).
+
+## [4.3.0 (app escritorio)] — 2026-09-21 — ☁️ NUBE OPCIONAL: progreso + PRO compartidos
+
+- **Nuevo `sync_web.py`** (solo stdlib/urllib, UA amigable para WAF): login alias+PIN contra el backend Cloudflare — **la misma sesión que la web/móvil**.
+- **Sidebar → "☁️ Nube / Cuenta"**: entrar/crear cuenta, estado de sync, sincronizar ahora, cerrar sesión. Sync automática silenciosa cada 5 min.
+- **Merge SEGURO**: sube el RESUMEN (XP 10/lección + 5/quiz, racha, quizzes) sin tocar jamás `leidas`/`ultima` de la web — contadores se mezclan tomando el mayor. Probado contra producción (pull/push round-trip OK).
+- **PRO compartido**: si el alias compró PRO en la web (Lemon Squeezy), el escritorio **se desbloquea solo** al sincronizar (licencia.web).
+- **Certificados de escritorio → verificables online** (`PT-<codigo>` en /verificar/), registrados al generar y en cada sync.
+- Nota: el detalle de lección individual sigue local (sync de resumen v1); se unificará en una fase posterior con identificadores de curso compartidos.
+
 ## [4.6.0 (web)] — 2026-09-21 — 💎 ACTIVACIÓN PRO AUTOMÁTICA (infra de cobro lista)
 
 ### Webhook Lemon Squeezy verificado end-to-end
