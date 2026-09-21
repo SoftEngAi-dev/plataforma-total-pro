@@ -2,7 +2,7 @@
 """🎓 PLATAFORMA TOTAL v3.0 — Escuela local de programación con IA.
 41 cursos · 243 lecciones · 486 quizzes · Buscador · Pomodoro · Racha 🔥
 Certificados 🎓 · Chat IA con memoria · 100% offline (Ollama opcional)."""
-import os, sys, json, threading, subprocess, shutil, webbrowser, datetime, platform, hashlib, random, tempfile
+import os, sys, json, threading, subprocess, shutil, webbrowser, datetime, platform, hashlib, random, tempfile, re, unicodedata
 from pathlib import Path
 import customtkinter as ctk
 from tkinter import messagebox, filedialog, simpledialog
@@ -27,7 +27,7 @@ except Exception:
     sync_web = None
 
 # 🔁 Versión instalada — la auto-actualización la compara con GitHub Releases
-VERSION_APP = "4.3.0"
+VERSION_APP = "4.4.0"
 REPO_GH = "SoftEngAi-dev/plataforma-total-pro"
 _LECCIONES = {}
 for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e):
@@ -379,8 +379,90 @@ def run_ollama(prompt, modelo=None, timeout=90):
     except Exception:
         return None
 
+# ══════ 🏠 TUTOR PROPIO: recuperación sobre NUESTRA currícula — ningún modelo externo ══════
+_TUTOR_STOP = set(("de la el los las un una unas en por para con sin sobre entre como mas muy si no al del lo le les su sus tu mis "
+                   "es son sea ser fue están esta este estos esto eso ese esas que qué cuando cuándo dónde cómo cuál cuáles hay hace hacer "
+                   "puede puedo puedes tiene tienen me te se nos les yo ella porque aunque cada tanto").split())
+
+def _tutor_tokens(s):
+    s = (s or "").lower()
+    s = "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")  # sin tildes
+    return [w for w in re.sub(r"[^a-z0-9ñ_+#.]", " ", s).split() if len(w) > 1 and w not in _TUTOR_STOP]
+
+_TUTOR = None  # índice perezoso: (docs, df, items, qdocs, qdf, qitems)
+
+def li_titulo(curso, i):
+    lecs = CURSOS.get(curso) or []
+    return lecs[i]["titulo"] if 0 <= i < len(lecs) else curso
+
+def _tutor_indice():
+    global _TUTOR
+    if _TUTOR is not None:
+        return _TUTOR
+    from collections import Counter
+    docs, df, items, qdocs, qdf, qitems = [], Counter(), [], [], Counter(), []
+    for curso, lecs in CURSOS.items():
+        for i, lec in enumerate(lecs):
+            toks = _tutor_tokens(lec["titulo"]) * 3 + _tutor_tokens(curso) * 2 + _tutor_tokens(lec["contenido"])
+            tf = Counter(toks); docs.append(tf); df.update(tf.keys())
+            items.append((curso, i, lec["titulo"], lec["contenido"]))
+        for i, preguntas in QUIZZES.get(curso, {}).items():
+            for q in preguntas:
+                ops = q.get("ops", []); ok = q.get("ok", 0)
+                if not (0 <= ok < len(ops)):
+                    continue
+                tf = Counter(_tutor_tokens(q["p"])); qdocs.append(tf); qdf.update(tf.keys())
+                qitems.append((curso, li_titulo(curso, i), q["p"], ops[ok], q.get("exp", "")))
+    _TUTOR = (docs, df, items, qdocs, qdf, qitems)
+    return _TUTOR
+
+def _tutor_top(consulta, docs, df, total, k=3):
+    import math
+    qs = _tutor_tokens(consulta)
+    if not qs:
+        return []
+    puntos = []
+    for idx, tf in enumerate(docs):
+        score, hits = 0.0, 0
+        for t in qs:
+            f = tf.get(t, 0)
+            if f:
+                idf = math.log(1 + (total - df.get(t, 0) + 0.5) / (df.get(t, 0) + 0.5))
+                score += idf * (f * 2.2) / (f + 1.2)
+                hits += 1
+        if hits:
+            score *= (hits / len(qs)) * 0.6 + 0.4
+        if score > 0:
+            puntos.append((score, idx))
+    puntos.sort(reverse=True)
+    return puntos[:k]
+
+def tutor_local(msg):
+    """Responde desde los cursos+quizzes embebidos. Devuelve texto o None si no hay buena coincidencia."""
+    docs, df, items, qdocs, qdf, qitems = _tutor_indice()
+    tl = _tutor_top(msg, docs, df, len(items), 3)
+    tq = _tutor_top(msg, qdocs, qdf, len(qitems), 1)
+    ml, mq = (tl[0] if tl else None), (tq[0] if tq else None)
+    if mq and (not ml or mq[0] > ml[0] * 1.15) and mq[0] > 2.2:
+        curso, titulo, p, r, exp = qitems[mq[1]]
+        return f"🎯 Aparece en el quiz de «{curso}» ({titulo}):\n\n{p}\n✔ Respuesta: {r}\n💡 {exp}"
+    if ml and ml[0] > 2.0:
+        curso, i, titulo, contenido = items[ml[1]]
+        qs = set(_tutor_tokens(msg))
+        lineas = [l for l in contenido.split("\n") if len(l) > 40 and qs & set(_tutor_tokens(l))][:3]
+        frag = "\n".join(lineas) if lineas else contenido[:380].rsplit("\n", 1)[0]
+        extra = ""
+        if len(tl) > 1 and tl[1][0] > ml[0] * 0.55:
+            extra = f"\n\nTambién te sirve: «{items[tl[1][1]][2]}» ({items[tl[1][1]][0]})."
+        return (f"🏠 Desde tu currícula — «{titulo}» ({curso}):\n\n{frag[:460]}"
+                f"\n\n📂 Está en 📚 Aprender → {curso} · lección {i + 1}.{extra}")
+    return None
+
 def cerebro_offline(msg):
     """Respuestas de respaldo 100% offline para el chat."""
+    r = tutor_local(msg)  # 🏠 primero: respuesta REAL desde la currícula (sin modelos externos)
+    if r:
+        return r
     m = msg.lower()
     if any(k in m for k in ["error", "falla", "traceback", "exception", "bug"]):
         return ("🛠 Depuración express:\n1) Lee el ÚLTIMO mensaje de error completo.\n2) Imprime/pinta variables justo antes del fallo.\n"

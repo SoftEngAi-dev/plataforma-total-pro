@@ -1,3 +1,16 @@
+## [4.8.0 (web)] — 2026-09-21 — 🏠 TUTOR PROPIO: agente de IA 100% nuestro, sin modelos externos
+
+- **Nuevo modo en el chat: "🏠 Propio (sin IA externa)"** — responde SOLO desde nuestra currícula (269 lecciones + 538 preguntas de quiz) con motor de recuperación propio (TF-IDF/ BM25-lite, ~120 líneas JS, en `public/tutor.js`). Ni Cloudflare, ni Ollama, ni ningún modelo externo: **costo y dependencia = 0, sin límites, offline-able**.
+- Cerebro compartido generado de la fuente de verdad: `scripts/generar_corpus.py` → `data/corpus.json` (494 KB, se carga LAZY solo al usar el modo).
+- Detección inteligente: preguntas que coinciden con el quiz → respuesta oficial + explicación; si no → lección relevante con extracto y referencia (curso/lección); si el score es bajo, lo dice honestamente y sugiere el modo 🤖 IA.
+- El modo 🤖 IA (llama-3.3) sigue para preguntas abiertas/fuera de currícula; si falla, el chat sugiere el modo Propio.
+- Test de calidad: 8/8 consultas reales con hallazgo útil (`scripts/test-tutor.mjs`).
+
+## [4.4.0 (app escritorio)] — 2026-09-21 — 🏠 mismo Tutor Propio embebido
+
+- **`tutor_local()`**: el mismo motor portado a Python puro (stdlib) sobre CURSOS+QUIZZES embebidos. El chat offline deja de responder SOLO con recetas enlatadas: ahora contesta con contenido real de la currícula; las recetas quedan de respaldo final.
+- Sin Ollama, sin internet, sin nada externo — el cerebro viaja dentro del .exe.
+
 ## [4.7.0 (web)] — 2026-09-21 — 📜 Certificados verificables + login blindado
 
 ### Certificados con registro en la nube

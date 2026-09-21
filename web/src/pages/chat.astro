@@ -13,7 +13,7 @@ export const prerender = true;
       <textarea id="inp" rows="1" placeholder="Preguntame lo que quieras: código, dudas, ejercicios…"></textarea>
       <button class="btn" id="send">Enviar ➤</button>
     </div>
-    <p style="color:var(--muted);font-size:.75rem;text-align:center;margin-top:.4rem">El tutor puede equivocarse: verificá el código. Conversión contexto: se incluye tu última lección automáticamente.</p>
+    <p style="color:var(--muted);font-size:.75rem;text-align:center;margin-top:.4rem">El tutor puede equivocarse: verificá el código. El modo 🏠 <b>Propio</b> nunca usa modelos externos: responde desde nuestra currícula (269 lecciones + 538 preguntas), sin límites y gratis para siempre.</p>
   </div>
   <script is:inline>
     PT.cargar();
@@ -41,6 +41,7 @@ export const prerender = true;
       ['🎓 Aprendizaje', 'MODO APRENDIZAJE: explicá prácticamente todo, desde lo básico, con analogías del mundo real y mini-ejemplos. Asumí que estoy empezando.'],
       ['🤝 Asistido', 'MODO ASISTIDO: dame primero PISTAS, no la solución completa. Si la pido explícitamente, dámela y explicame el porqué.'],
       ['📝 Examen', 'MODO EXAMEN: NUNCA reveles la respuesta completa. Haceme preguntas socráticas, evaluá mi razonamiento paso a paso y al final dame una nota sobre 10 con feedback.'],
+      ['🏠 Propio (sin IA externa)', ''],  // modo 3 → motor local PTutor: NO llama a ningún modelo externo
     ];
     let modo = +(localStorage.getItem('pt_chat_modo') || 0);
     const pintarModos = () => {
@@ -65,6 +66,25 @@ export const prerender = true;
       H.push({ role: 'user', content: t }); pintar();
       const think = document.createElement('div');
       think.className = 'msg ai typing'; think.textContent = '🤖 pensando…'; msgs.appendChild(think); msgs.scrollTop = msgs.scrollHeight;
+      // ── 🏠 MODO PROPIO: motor de recuperación sobre la currícula — NINGÚN modelo externo ──
+      if (modo === 3) {
+        think.textContent = '🏠 consultando los 47 cursos…';
+        try {
+          if (!window.PTutor) {
+            await new Promise((res, rej) => { const s = document.createElement('script'); s.src = '../tutor.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+          }
+          if (!window.PTutor._ok) { await PTutor.cargar('../data/corpus.json'); window.PTutor._ok = true; }
+          think.remove();
+          const r = PTutor.responder(t);
+          H.push({ role: 'assistant', content: '🏠 ' + r.texto +
+            (r.tipo === 'leccion' ? `\n\n📂 Lección completa en: 📚 Aprender → curso ${r.ci + 1} · lección ${r.j + 1}` : '') +
+            (r.otras && r.otras.length ? `\n\nTambién relacionado: ${r.otras.map(o => o.t).join(' · ')}` : '') });
+        } catch (e) {
+          think.remove();
+          H.push({ role: 'assistant', content: '⚠ No pude cargar el tutor propio (corpus). Probá el modo 🤖 IA en la nube.' });
+        }
+        localStorage.setItem('pt_chat', JSON.stringify(H.slice(-40))); pintar(); return;
+      }
       try {
         const APIB = location.hostname.endsWith('github.io') ? 'https://plataforma-total-web.pages.dev/' : '';
         const r = await fetch(APIB + 'api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
@@ -74,7 +94,7 @@ export const prerender = true;
         H.push({ role: 'assistant', content: txt });
       } catch (e) {
         think.remove();
-        H.push({ role: 'assistant', content: '⚠ El tutor en la nube todavía no está desplegado (falta conectar Cloudflare — ver web/DESPLIEGUE.md). Mientras tanto: revisá la lección, probá el quiz, o preguntame de nuevo cuando esté activo 🙌' });
+        H.push({ role: 'assistant', content: '⚠ El tutor en la nube no respondió (¿límite diario o sin backend?). 💡 Probá el modo **🏠 Propio (sin IA externa)**: es 100% nuestro, no usa Cloudflare ni ningún modelo externo, y no tiene límites. 🙌' });
       }
       localStorage.setItem('pt_chat', JSON.stringify(H.slice(-40)));
       pintar();
