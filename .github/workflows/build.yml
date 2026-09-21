@@ -84,6 +84,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd artifacts
+          # idempotente: si la release ya existe (la creó otro workflow), sube los assets faltantes
           gh release create "${GITHUB_REF_NAME}" *.zip *.tar.gz \
             --title "🎓 PlataformaTotal ${GITHUB_REF_NAME}" \
-            --notes "Ejecutables desktop — **Windows**: descomprime el .zip y doble clic en \`PlataformaTotal.exe\` (SmartScreen: 'Más información' → 'Ejecutar de todas formas'). **macOS/Linux**: descomprime el .tar.gz y ejecuta el binario."
+            --notes "Ejecutables desktop — **Windows**: descomprime el .zip y doble clic en \`PlataformaTotal.exe\` (SmartScreen: 'Más información' → 'Ejecutar de todas formas'). **macOS/Linux**: descomprime el .tar.gz y ejecuta el binario." \
+          || gh release upload "${GITHUB_REF_NAME}" *.zip *.tar.gz --clobber
