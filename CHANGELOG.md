@@ -1,3 +1,10 @@
+## [4.9.7 (web)] — 2026-09-22 — 🛡️ headers de seguridad + 🧪 CI + 📦 Dependabot
+
+- **`_headers` (CF Pages)**: nosniff, Referrer-Policy, frame-ancestors, Permissions-Policy mínimos; `_astro/` inmutable 1 año, `/api/` no-store, `/data/` 1 h.
+- **`ci.yml`**: en cada push corre tests Python, build completo y valida 57/329 + JSON-LD — los errores de pipeline que antes se detectaban en producción ahora **se atrapan en CI**.
+- **`dependabot.yml`**: PRs automáticos semanales de deps npm (web) y GitHub Actions.
+- NOTA OPERATIVA: la variante previa de este commit se hizo sobre árbol fósil y regresó producción temporalmente; regla adoptada = siempre `fetch + reset --hard FETCH_HEAD` antes de cualquier build/commit.
+
 ## [4.9.6 (web)] — 2026-09-22 — 🤖 llms.txt + 🛡️ security.txt + 🩺 uptime diario
 
 - **`/llms.txt`**: resumen del proyecto para crawlers de IA (GEO): qué es, URLs clave, stack técnico.

@@ -1,0 +1,35 @@
+name: 🧪 CI — integridad antes de deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Tests Python (integridad de contenido)
+        run: python tests/test_integridad.py
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build web (raíz) — atrapa builds rotas antes de cualquier deploy
+        working-directory: web
+        run: |
+          npm install --no-audit --no-fund
+          ASTRO_BASE=/ npm run build
+          test -f dist/index.html
+      - name: Validar corpus (57 cursos / 329 lecciones / 658 quizzes)
+        run: |
+          python3 - <<'PYEOF'
+          import json
+          d = json.load(open('web/public/data/indice.json'))
+          assert len(d) == 57, f"esperaba 57 cursos, hay {len(d)}"
+          ls = sum(c['l'] for c in d)
+          assert ls == 329, f"esperaba 329 lecciones, hay {ls}"
+          print(f"✔ índice: {len(d)} cursos / {ls} lecciones")
+          PYEOF
+          test "$(grep -o '@type\":\"Course' web/dist/index.html | wc -l)" = "57" && echo "✔ JSON-LD con 57 cursos"
