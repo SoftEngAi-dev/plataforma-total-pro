@@ -1,3 +1,8 @@
+## [4.9.3 (web)] — 2026-09-22 — 🖼️ Tarjetas sociales + portadas de tienda
+
+- **Open Graph + Twitter Card en todas las páginas** (Base.astro): og:title/description/url por página, og:image absoluto 1200×630, locale es_UY, summary_large_image. Compartir cualquier link ahora muestra la tarjeta de marca.
+- **og-cover.png (1200×630)** y **itch-cover.png (630×500)** generadas on-brand (púrpura/cian, logo con birrete-llaves): listas la tarjeta social y la portada de la página de itch.io (`marketing/`).
+
 ## [4.9.2 (web)] — 2026-09-21 — 🇺🇾 RIEL REGIONAL: cobros en pesos por Mercado Pago
 
 - **Estrategia de 2 rieles documentada** en COBROS-UY.md ("Estrategia definitiva v1, persona física UY"): global = Lemon Squeezy→PayPal→Prex o wire→Santander; regional = Mercado Pago directo→MP→Santander/MiDinero (gratis).
