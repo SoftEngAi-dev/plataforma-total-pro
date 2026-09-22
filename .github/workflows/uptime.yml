@@ -1,0 +1,40 @@
+name: 🩺 Uptime diario
+
+on:
+  schedule:
+    - cron: '0 12 * * *'   # todos los días 12:00 UTC (09:00 UY)
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chequear producción
+        id: check
+        run: |
+          FAIL=""
+          for U in "https://plataforma-total-web.pages.dev/" \
+                   "https://plataforma-total-web.pages.dev/aprender/" \
+                   "https://plataforma-total-web.pages.dev/sitemap.xml" \
+                   "https://softengai-dev.github.io/plataforma-total-pro/app/"; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 20 "$U")
+            echo "$U → $CODE"
+            [ "$CODE" = "200" ] || FAIL="$FAIL\n- ❌ $U respondió $CODE"
+          done
+          { echo "resultados<<EOF"; echo -e "$FAIL" | sed '/^$/d'; echo "EOF"; } >> "$GITHUB_OUTPUT"
+      - name: Abrir issue si hay caída (y no hay una abierta)
+        if: ${{ steps.check.outputs.resultados != '' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const abiertas = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'open', labels: 'uptime' });
+            if (abiertas.data.length) { console.log('ya hay issue uptime abierta'); return; }
+            await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo,
+              title: `🚨 Uptime: fallo detectado ${new Date().toISOString().slice(0,16)}Z`,
+              labels: ['uptime'],
+              body: `El chequeo diario detectó problemas:\n\n${process.env.FALLAS}\n\nCuando se resuelva, cerrar esta issue.` });
+        env:
+          FALLAS: ${{ steps.check.outputs.resultados }}

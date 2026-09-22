@@ -1,0 +1,28 @@
+# Plataforma Total
+
+> Plataforma educativa offline-first en español: 57 cursos de tecnología (17 gratuitos completos),
+> 329 lecciones y 658 preguntas de quiz. Funciona 100% sin internet (PWA instalable + app de
+> escritorio), sincroniza el progreso entre dispositivos con alias+PIN y emite certificados
+> verificables públicamente. Hecha en Uruguay, código abierto (MIT).
+
+## Producto
+- 17 cursos gratis para siempre (fundamentos: Python, HTML/CSS, Git, redes, matemáticas para programadores, lógica…)
+- 40 cursos PRO (IA aplicada/RAG, HTMX, WASM, Cloudflare/Edge, Qwik, DuckDB, Observabilidad, Tauri…) — pago único o suscripción; en Uruguay también por Mercado Pago en pesos
+- Tutor de estudio propio offline + IA (Workers AI) opcional
+- 7 rutas profesionales guiadas, XP/rachas, pomodoro, laboratorio, inglés técnico
+- Certificados con verificación pública por código
+
+## URLs principales
+- [App](https://plataforma-total-web.pages.dev/): web app completa (PWA instalable)
+- [Aprender](https://plataforma-total-web.pages.dev/aprender/): catálogo de 57 cursos
+- [Rutas](https://plataforma-total-web.pages.dev/rutas/): 7 carreras guiadas
+- [PRO](https://plataforma-total-web.pages.dev/pro/): planes y activación
+- [Verificar certificados](https://plataforma-total-web.pages.dev/verificar/): validación pública PT-XXXXXX
+- [Sitemap](https://plataforma-total-web.pages.dev/sitemap.xml): 68 URLs indexables
+- [Código fuente](https://github.com/SoftEngAi-dev/plataforma-total-pro): MIT
+- [Descarga Windows](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases): app de escritorio offline
+
+## Técnico
+Astro (SSG + SSR en Cloudflare Pages), D1 (SQLite) para cuentas/progreso/PRO/certificados,
+Workers AI para el tutor, service worker con precache para uso sin señal. Desktop: Python/Tkinter
+offline-first con el mismo currículo.

@@ -1,3 +1,10 @@
+## [4.9.6 (web)] — 2026-09-22 — 🤖 llms.txt + 🛡️ security.txt + 🩺 uptime diario
+
+- **`/llms.txt`**: resumen del proyecto para crawlers de IA (GEO): qué es, URLs clave, stack técnico.
+- **`/.well-known/security.txt`**: contacto de divulgación de vulnerabilidades (RFC 9116), expira 2027.
+- **Workflow uptime diario** (12:00 UTC): chequea home/aprender/sitemap/espejo; si algo no da 200 **abre issue `uptime` automáticamente** (sin duplicar si ya hay una abierta). Monitoreo gratis sin servicios externos.
+- Fix de pipeline: este deploy también restauró producción tras un build desde árbol fósil (snapshot rebobinado) — lección: verificar HEAD antes de build.
+
 ## [4.9.5 (web)] — 2026-09-22 — 🧾 JSON-LD + 🗄️ backup automático + 🔒 auditoría
 
 - **Schema.org Course/ItemList** en la home: los 57 cursos con posición, URL, proveedor y flag gratuito — rich results en buscadores.

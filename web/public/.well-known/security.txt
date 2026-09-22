@@ -1,0 +1,5 @@
+Contact: https://github.com/SoftEngAi-dev/plataforma-total-pro/security/advisories/new
+Contact: https://github.com/SoftEngAi-dev/plataforma-total-pro/issues
+Expires: 2027-09-22T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://plataforma-total-web.pages.dev/.well-known/security.txt
