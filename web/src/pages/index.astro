@@ -5,8 +5,6 @@ import indiceRaw from '../../public/data/indice.json?raw'; // inline en build (c
 const indice = JSON.parse(indiceRaw);
 export const prerender = true;
 const B = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' en raíz, sin '//' roto
-// 🧾 JSON-LD: catálogo de cursos para buscadores (SEO enriquecido)
-const indice = JSON.parse(readFileSync(new URL('../../public/data/indice.json', import.meta.url), 'utf-8'));
 const jsonld = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',

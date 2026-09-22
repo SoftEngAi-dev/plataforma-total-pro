@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="es"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#111318"><title>🎓 Laboratorio — Plataforma Total</title><meta name="description" content="57 cursos tech en español, 100% offline: Python, web, Git, datos, IA aplicada y más. 329 lecciones, 658 quizzes, tutor propio y certificados verificables. Gratis."><link rel="canonical" href="https://plataforma-total-web.pages.dev/lab/"><meta property="og:type" content="website"><meta property="og:site_name" content="Plataforma Total"><meta property="og:locale" content="es_UY"><meta property="og:title" content="🎓 Laboratorio — Plataforma Total"><meta property="og:description" content="57 cursos tech en español · 100% offline · 329 lecciones + 658 quizzes · certificados verificables · gratis"><meta property="og:url" content="https://plataforma-total-web.pages.dev/lab/"><meta property="og:image" content="https://plataforma-total-web.pages.dev/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Plataforma Total — 57 cursos tech en español, 100% offline"><meta name="twitter:card" content="summary_large_image"><link rel="manifest" href="/plataforma-total-pro/app/manifest.webmanifest"><link rel="icon" type="image/png" href="/plataforma-total-pro/app/icon-192.png"><link rel="apple-touch-icon" href="/plataforma-total-pro/app/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="/plataforma-total-pro/app/_astro/aprender.DNxaP-YF.css">
+<style>@media (max-width:760px){.labgrid[data-astro-cid-t3nv4xef]{grid-template-columns:1fr!important}}
+</style></head> <body> <button class="hamb" id="hamb" aria-label="menú">☰</button> <div class="layout"> <aside id="sidebar"> <div class="brand"> <img src="/plataforma-total-pro/app/icon-192.png" alt="logo"> <b>PLATAFORMA<br>TOTAL <span class="badge-pro">WEB</span></b> </div> <nav> <a href="/plataforma-total-pro/app/" class="">🏠 Inicio</a><a href="/plataforma-total-pro/app/aprender/" class="">📚 Aprender</a><a href="/plataforma-total-pro/app/rutas/" class="">🗺️ Rutas</a><a href="/plataforma-total-pro/app/lab/" class="activo">💻 Laboratorio</a><a href="/plataforma-total-pro/app/chat/" class="">🤖 IA Chat</a><a href="/plataforma-total-pro/app/pomo/" class="">🔥 Pomodoro</a><a href="/plataforma-total-pro/app/progreso/" class="">🏆 Progreso</a><a href="/plataforma-total-pro/app/evaluacion/" class="">📝 Evaluación</a><a href="/plataforma-total-pro/app/ingles/" class="">🇬🇧 Inglés técnico</a><a href="/plataforma-total-pro/app/certificados/" class="">📜 Certificados</a><a href="/plataforma-total-pro/app/pro/" class="">💎 PRO</a> </nav> <div class="foot"> <div class="estado" id="estado-sesion">🆓 Modo local · <a href="#" id="lnk-login">iniciar sesión</a></div> <div class="loginbox" id="loginbox" hidden> <input id="lg-alias" placeholder="👤 alias (ej: dev_ana)" autocomplete="off"> <input id="lg-pin" placeholder="🔑 PIN (4+ dígitos)" inputmode="numeric" type="password"> <button class="btn big" id="btn-login" style="padding:.45rem">Entrar / Crear cuenta</button> <div id="lg-msg" style="color:var(--muted);margin-top:.3rem"></div> </div> <div>v4.9.5 · <span id="estado-nube">nube: desconectado</span></div> <div style="margin-top:.3rem"><a href="https://softengai-dev.github.io/plataforma-total-pro/">🌐 Portada</a> · <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">🪟 .exe</a></div> </div> </aside> <main> <h1 data-astro-cid-t3nv4xef>💻 Laboratorio de código</h1> <p class="sub" data-astro-cid-t3nv4xef>IDE educativo del spec §6/§73: escribí, ejecutá y entendé código <b data-astro-cid-t3nv4xef>en tu navegador</b> (Python vía Pyodide/WASM, JS nativo) — gratis y sin instalar nada. +5 XP por ejecución.</p> <div class="chips" id="ejemplos" data-astro-cid-t3nv4xef></div> <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem" class="labgrid" data-astro-cid-t3nv4xef> <div data-astro-cid-t3nv4xef> <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem" data-astro-cid-t3nv4xef> <b data-astro-cid-t3nv4xef>📝 Editor</b> <select id="lang" class="buscar" style="width:auto;margin:0;padding:.3rem .6rem" data-astro-cid-t3nv4xef> <option value="python" data-astro-cid-t3nv4xef>🐍 Python</option> <option value="js" data-astro-cid-t3nv4xef>🟨 JavaScript</option> </select> </div> <textarea id="code" spellcheck="false" style="width:100%;height:380px;background:#0b0e14;color:#d6e2ff;border:1px solid var(--borde);border-radius:.7rem;padding:.8rem;font:13px/1.5 ui-monospace,Consolas,monospace;resize:vertical;tab-size:4" data-astro-cid-t3nv4xef></textarea> <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap" data-astro-cid-t3nv4xef> <button class="btn" id="run" data-astro-cid-t3nv4xef>▶ Ejecutar</button> <button class="btn ghost" id="ai" data-astro-cid-t3nv4xef>🤖 Explicar/Mejorar con IA</button> <button class="btn ghost" id="clear" data-astro-cid-t3nv4xef>🧹</button> </div> </div> <div data-astro-cid-t3nv4xef> <b data-astro-cid-t3nv4xef>🖥️ Salida</b> <pre id="out" style="height:380px;overflow:auto;background:#0b0e14;border:1px solid var(--borde);border-radius:.7rem;padding:.8rem;font:13px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;margin:.3rem 0 0;color:#a5f3a1" data-astro-cid-t3nv4xef>▶ Elegí un ejemplo o escribí tu código y apretá Ejecutar…</pre> <p style="color:var(--muted);font-size:.8rem;margin-top:.4rem" id="status" data-astro-cid-t3nv4xef>Python: primera ejecución descarga el runtime (~10 MB, queda en caché y funciona offline después).</p> </div> </div>  <script>
+    const EJS = {
+      python_1: ['🐍 Hola Python', 'nombre = input_data = "Plataforma Total"\nprint(f"🎓 Bienvenido a {nombre}")\n\nfor i in range(1, 6):\n    print("⭐" * i)\n\n# Probá cambiar el range o el emoji'],
+      python_2: ['🐍 Lista + función', 'def promedio(nums):\n    """Devuelve el promedio de una lista."""\n    return sum(nums) / len(nums)\n\nnotas = [7, 8.5, 10, 6]\nprint("Promedio:", promedio(notas))\nprint("Aprobado" if promedio(notas) >= 7 else "A repasar")'],
+      python_3: ['🐍 Error para diagnosticar', '# El spec §30: los errores son parte del curso.\n# Este código FALLA a propósito — leé el traceback y corregilo:\ndef dividir(a, b):\n    return a / b\n\nprint(dividir(10, 2))\nprint(dividir(8, 0))  # ¿qué pasa acá?'],
+      js_1: ['🟨 Hola JS', 'const tech = ["HTML", "CSS", "JS", "Python", "SQL"];\nfor (const t of tech) console.log("📚", t);\nconsole.log(`Vas a dominar ${tech.length} tecnologías 🚀`);'],
+      js_2: ['🟨 Función + array', 'const notas = [7, 8.5, 10, 6];\nconst promedio = ns => ns.reduce((a, b) => a + b, 0) / ns.length;\nconsole.log("Promedio:", promedio(notas).toFixed(1));\nconsole.log(promedio(notas) >= 7 ? "✅ Aprobado" : "📖 A repasar");'],
+    };
+    const $ = s => document.querySelector(s);
+    PT.cargar();
+    let pyodide = null;
+    const out = $('#out'), st = $('#status');
+
+    $('#ejemplos').innerHTML = Object.entries(EJS).map(([k, [t]]) => `<span class="chip" data-k="${k}">${t}</span>`).join('');
+    document.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+      const [t, code] = EJS[c.dataset.k];
+      $('#code').value = code;
+      $('#lang').value = c.dataset.k.startsWith('js') ? 'js' : 'python';
+    });
+
+    async function runPy(code) {
+      st.textContent = '⏳ Cargando Python (Pyodide)…';
+      if (!pyodide) {
+        await new Promise((res, rej) => { const s = document.createElement('script');
+          s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+        pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+        st.textContent = '✅ Python listo (cacheado — la próxima corre offline).';
+      }
+      let buf = [];
+      pyodide.setStdout({ batched: l => buf.push(l) });
+      pyodide.setStderr({ batched: l => buf.push('⚠ ' + l) });
+      try { await pyodide.runPythonAsync(code); return buf.join('\n') || '(sin salida)'; }
+      catch (e) { return buf.join('\n') + '\n' + String(e); }
+    }
+    function runJS(code) {
+      const buf = [];
+      const console2 = { log: (...a) => buf.push(a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ')),
+        error: (...a) => buf.push('❌ ' + a.join(' ')), warn: (...a) => buf.push('⚠ ' + a.join(' ')) };
+      try { (new Function('console', 'input_data', code))(console2, undefined); }
+      catch (e) { buf.push('❌ ' + e); }
+      return buf.join('\n') || '(sin salida)';
+    }
+
+    $('#run').onclick = async () => {
+      const code = $('#code').value; if (!code.trim()) return;
+      out.textContent = '⏳ ejecutando…';
+      const lang = $('#lang').value;
+      out.textContent = lang === 'python' ? await runPy(code) : runJS(code);
+      if (!out.textContent.startsWith('❌')) PT.actividad(5);
+    };
+    $('#clear').onclick = () => { $('#code').value = ''; out.textContent = '…'; };
+    $('#ai').onclick = () => {
+      const modo = $('#lang').value === 'python' ? 'Python' : 'JavaScript';
+      localStorage.setItem('pt_chat_prefill', `Explicame paso a paso qué hace este código ${modo}, cómo mejorarlo y proponeme un mini-ejercicio para practicarlo:\n\n${$('#code').value}`);
+      location.href = '../chat/';
+    };
+    $('#code').addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault();
+      const el = e.target, p = el.selectionStart; el.value = el.value.slice(0, p) + '    ' + el.value.slice(el.selectionEnd); el.selectionStart = el.selectionEnd = p + 4; } });
+    document.querySelector('.chip')?.click();
+  </script> </main> </div> <script src="/plataforma-total-pro/app/pt.js"></script> <script>(function(){const swUrl = "/plataforma-total-pro/app/sw.js";
+
+    // 📦 PWA: registra el service worker (offline real + instalación móvil)
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+  })();</script> <script>
+    document.getElementById('hamb').onclick = () =>
+      document.getElementById('sidebar').classList.toggle('abierto');
+    PT.initSesionUI();
+  </script> </body> </html>

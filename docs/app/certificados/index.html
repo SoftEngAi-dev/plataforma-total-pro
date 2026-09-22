@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="es"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#111318"><title>🎓 Certificados — Plataforma Total</title><meta name="description" content="57 cursos tech en español, 100% offline: Python, web, Git, datos, IA aplicada y más. 329 lecciones, 658 quizzes, tutor propio y certificados verificables. Gratis."><link rel="canonical" href="https://plataforma-total-web.pages.dev/certificados/"><meta property="og:type" content="website"><meta property="og:site_name" content="Plataforma Total"><meta property="og:locale" content="es_UY"><meta property="og:title" content="🎓 Certificados — Plataforma Total"><meta property="og:description" content="57 cursos tech en español · 100% offline · 329 lecciones + 658 quizzes · certificados verificables · gratis"><meta property="og:url" content="https://plataforma-total-web.pages.dev/certificados/"><meta property="og:image" content="https://plataforma-total-web.pages.dev/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Plataforma Total — 57 cursos tech en español, 100% offline"><meta name="twitter:card" content="summary_large_image"><link rel="manifest" href="/plataforma-total-pro/app/manifest.webmanifest"><link rel="icon" type="image/png" href="/plataforma-total-pro/app/icon-192.png"><link rel="apple-touch-icon" href="/plataforma-total-pro/app/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="/plataforma-total-pro/app/_astro/aprender.DNxaP-YF.css"></head> <body> <button class="hamb" id="hamb" aria-label="menú">☰</button> <div class="layout"> <aside id="sidebar"> <div class="brand"> <img src="/plataforma-total-pro/app/icon-192.png" alt="logo"> <b>PLATAFORMA<br>TOTAL <span class="badge-pro">WEB</span></b> </div> <nav> <a href="/plataforma-total-pro/app/" class="">🏠 Inicio</a><a href="/plataforma-total-pro/app/aprender/" class="">📚 Aprender</a><a href="/plataforma-total-pro/app/rutas/" class="">🗺️ Rutas</a><a href="/plataforma-total-pro/app/lab/" class="">💻 Laboratorio</a><a href="/plataforma-total-pro/app/chat/" class="">🤖 IA Chat</a><a href="/plataforma-total-pro/app/pomo/" class="">🔥 Pomodoro</a><a href="/plataforma-total-pro/app/progreso/" class="">🏆 Progreso</a><a href="/plataforma-total-pro/app/evaluacion/" class="">📝 Evaluación</a><a href="/plataforma-total-pro/app/ingles/" class="">🇬🇧 Inglés técnico</a><a href="/plataforma-total-pro/app/certificados/" class="activo">📜 Certificados</a><a href="/plataforma-total-pro/app/pro/" class="">💎 PRO</a> </nav> <div class="foot"> <div class="estado" id="estado-sesion">🆓 Modo local · <a href="#" id="lnk-login">iniciar sesión</a></div> <div class="loginbox" id="loginbox" hidden> <input id="lg-alias" placeholder="👤 alias (ej: dev_ana)" autocomplete="off"> <input id="lg-pin" placeholder="🔑 PIN (4+ dígitos)" inputmode="numeric" type="password"> <button class="btn big" id="btn-login" style="padding:.45rem">Entrar / Crear cuenta</button> <div id="lg-msg" style="color:var(--muted);margin-top:.3rem"></div> </div> <div>v4.9.5 · <span id="estado-nube">nube: desconectado</span></div> <div style="margin-top:.3rem"><a href="https://softengai-dev.github.io/plataforma-total-pro/">🌐 Portada</a> · <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">🪟 .exe</a></div> </div> </aside> <main> <h1>📜 Certificados</h1> <p class="sub">Al completar un curso generás tu certificado con código verificable, descargable en PNG. Gratis, sin cuenta. Con sesión, el código queda registrado y cualquiera puede <a href="../verificar/">🔍 verificarlo online</a>.</p> <div id="zona"><p style="color:var(--muted)">Cargando…</p></div> <canvas id="cv" width="1200" height="850" style="max-width:100%;border-radius:.8rem;margin-top:1rem" hidden></canvas> <script>
+    PT.cargar();
+    const $ = s => document.querySelector(s);
+    const genCodigo = (curso, alias) => {
+      let h = 0; const str = curso + '|' + (alias || 'anon') + '|' + PT.hoy();
+      for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) >>> 0;
+      return 'PT-' + h.toString(36).toUpperCase().padStart(8, '0').slice(0, 8);
+    };
+    fetch('data/indice.json').then(r => r.json()).then(IND => {
+      const s = PT.s;
+      const listos = IND.map((c, i) => ({ ...c, i })).filter(c => {
+        const l = (s.leidas[c.i] || []).length;
+        return c.free && l >= c.l;
+      });
+      if (!listos.length) {
+        const casi = IND.map((c, i) => ({ ...c, i })).filter(c => c.free && (s.leidas[c.i] || []).length > 0);
+        $('#zona').innerHTML = `<div class="card"><h3>🔒 Todavía no hay certificados disponibles</h3>
+          <p>Terminá todas las lecciones de un curso gratis para generar el tuyo.</p>
+          ${casi.length ? '<h2>Tu avance:</h2>' + casi.map(c => `<p>· ${PT.esc(c.n)} — ${(s.leidas[c.i] || []).length}/${c.l}</p>`).join('') : ''}
+          <a class="btn" href="../aprender/" style="margin-top:.4rem">📚 Seguir estudiando</a></div>`;
+        return;
+      }
+      $('#zona').innerHTML = `<div class="grid">${listos.map(c =>
+        `<div class="card"><h3>✅ ${PT.esc(c.n)}</h3><p style="color:var(--muted);font-size:.85rem">${c.l} lecciones completadas</p>
+         <input class="buscar" style="margin-top:.5rem" id="nm-${c.i}" placeholder="Tu nombre para el certificado" value="${PT.esc(s.alias || '')}">
+         <button class="btn" data-i="${c.i}" data-s="${c.s}">Generar certificado</button></div>`).join('')}</div>
+        <div id="salida"></div>`;
+      document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => {
+        const c = IND[+b.dataset.i];
+        const nombre = document.getElementById('nm-' + c.i).value.trim() || 'Estudiante';
+        const cod = genCodigo(c.n, nombre);
+        const cv = document.getElementById('cv'); cv.hidden = false;
+        const x = cv.getContext('2d');
+        x.fillStyle = '#111318'; x.fillRect(0, 0, 1200, 850);
+        x.strokeStyle = '#7c3aed'; x.lineWidth = 6; x.strokeRect(40, 40, 1120, 770);
+        x.strokeStyle = '#262b36'; x.lineWidth = 2; x.strokeRect(60, 60, 1080, 730);
+        x.fillStyle = '#a78bfa'; x.font = '800 64px system-ui'; x.textAlign = 'center';
+        x.fillText('CERTIFICADO', 600, 180);
+        x.fillStyle = '#e8eaf0'; x.font = '400 28px system-ui';
+        x.fillText('Plataforma Total certifica que', 600, 260);
+        x.font = '800 52px system-ui';
+        x.fillText(nombre, 600, 340);
+        x.font = '400 28px system-ui'; x.fillText('completó con éxito el curso', 600, 420);
+        x.fillStyle = '#a78bfa'; x.font = '800 40px system-ui';
+        x.fillText(c.n, 600, 490);
+        x.fillStyle = '#e8eaf0'; x.font = '400 24px system-ui';
+        x.fillText(c.l + ' lecciones · quizzes aprobados · ' + PT.hoy(), 600, 570);
+        x.fillStyle = '#9aa3b2'; x.font = '400 22px system-ui';
+        x.fillText('Código verificable: ' + cod, 600, 700);
+        x.fillText('Verificá en: plataforma-total-web.pages.dev/verificar/', 600, 745);
+        cv.scrollIntoView({ behavior: 'smooth' });
+        const a = document.createElement('a');
+        a.download = 'Certificado-PlataformaTotal.png'; a.href = cv.toDataURL('image/png');
+        a.className = 'btn ok'; a.textContent = '⬇ Descargar PNG (código ' + cod + ')'; a.style.marginTop = '1rem';
+        const sal = document.getElementById('salida'); sal.innerHTML = ''; sal.appendChild(a);
+        PT.s.certs.push({ codigo: cod, curso: c.n, fecha: PT.hoy() }); PT.guardar();
+        if (PT.s.token) {  // 📜 registro en la nube → verificación pública /verificar/
+          PT.api('certificado', { method: 'POST', body: JSON.stringify({ codigo: cod, curso: c.n }) }).then(d => {
+            if (d.ok) {
+              const n = document.createElement('p');
+              n.style.cssText = 'color:var(--verde,#3fb950);margin-top:.5rem';
+              n.innerHTML = '🌐 Registrado en la nube — verificable por cualquiera en <a href="../verificar/?codigo=' + cod + '">/verificar/</a>';
+              sal.appendChild(n);
+            }
+          }).catch(() => {});
+        } else {
+          const n = document.createElement('p');
+          n.style.cssText = 'color:var(--muted);margin-top:.5rem;font-size:.85rem';
+          n.textContent = '💡 Iniciá sesión (sidebar) antes de generar para que el código quede verificable online en /verificar/.';
+          sal.appendChild(n);
+        }
+      });
+    });
+  </script> </main> </div> <script src="/plataforma-total-pro/app/pt.js"></script> <script>(function(){const swUrl = "/plataforma-total-pro/app/sw.js";
+
+    // 📦 PWA: registra el service worker (offline real + instalación móvil)
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+  })();</script> <script>
+    document.getElementById('hamb').onclick = () =>
+      document.getElementById('sidebar').classList.toggle('abierto');
+    PT.initSesionUI();
+  </script> </body> </html>
