@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="es"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#111318"><title>🎓 Evaluación inicial — Plataforma Total</title><meta name="description" content="57 cursos tech en español, 100% offline: Python, web, Git, datos, IA aplicada y más. 329 lecciones, 658 quizzes, tutor propio y certificados verificables. Gratis."><link rel="canonical" href="https://plataforma-total-web.pages.dev/evaluacion/"><meta property="og:type" content="website"><meta property="og:site_name" content="Plataforma Total"><meta property="og:locale" content="es_UY"><meta property="og:title" content="🎓 Evaluación inicial — Plataforma Total"><meta property="og:description" content="57 cursos tech en español · 100% offline · 329 lecciones + 658 quizzes · certificados verificables · gratis"><meta property="og:url" content="https://plataforma-total-web.pages.dev/evaluacion/"><meta property="og:image" content="https://plataforma-total-web.pages.dev/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Plataforma Total — 57 cursos tech en español, 100% offline"><meta name="twitter:card" content="summary_large_image"><link rel="manifest" href="/plataforma-total-pro/app/manifest.webmanifest"><link rel="icon" type="image/png" href="/plataforma-total-pro/app/icon-192.png"><link rel="apple-touch-icon" href="/plataforma-total-pro/app/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="/plataforma-total-pro/app/_astro/aprender.DNxaP-YF.css"></head> <body> <button class="hamb" id="hamb" aria-label="menú">☰</button> <div class="layout"> <aside id="sidebar"> <div class="brand"> <img src="/plataforma-total-pro/app/icon-192.png" alt="logo"> <b>PLATAFORMA<br>TOTAL <span class="badge-pro">WEB</span></b> </div> <nav> <a href="/plataforma-total-pro/app/" class="">🏠 Inicio</a><a href="/plataforma-total-pro/app/aprender/" class="">📚 Aprender</a><a href="/plataforma-total-pro/app/rutas/" class="">🗺️ Rutas</a><a href="/plataforma-total-pro/app/lab/" class="">💻 Laboratorio</a><a href="/plataforma-total-pro/app/chat/" class="">🤖 IA Chat</a><a href="/plataforma-total-pro/app/pomo/" class="">🔥 Pomodoro</a><a href="/plataforma-total-pro/app/progreso/" class="">🏆 Progreso</a><a href="/plataforma-total-pro/app/evaluacion/" class="activo">📝 Evaluación</a><a href="/plataforma-total-pro/app/ingles/" class="">🇬🇧 Inglés técnico</a><a href="/plataforma-total-pro/app/certificados/" class="">📜 Certificados</a><a href="/plataforma-total-pro/app/pro/" class="">💎 PRO</a> </nav> <div class="foot"> <div class="estado" id="estado-sesion">🆓 Modo local · <a href="#" id="lnk-login">iniciar sesión</a></div> <div class="loginbox" id="loginbox" hidden> <input id="lg-alias" placeholder="👤 alias (ej: dev_ana)" autocomplete="off"> <input id="lg-pin" placeholder="🔑 PIN (4+ dígitos)" inputmode="numeric" type="password"> <button class="btn big" id="btn-login" style="padding:.45rem">Entrar / Crear cuenta</button> <div id="lg-msg" style="color:var(--muted);margin-top:.3rem"></div> </div> <div>v4.9.4 · <span id="estado-nube">nube: desconectado</span></div> <div style="margin-top:.3rem"><a href="https://softengai-dev.github.io/plataforma-total-pro/">🌐 Portada</a> · <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">🪟 .exe</a></div> </div> </aside> <main> <h1>📝 Evaluación inicial</h1> <p class="sub">Spec §65/§31/§29: 12 preguntas → tu nivel (0-5 del spec §3) → ruta personalizada. Sin presión: sirve para adaptar la dificultad y el tutor.</p> <div id="zona"></div> <script>
+    const QS = [
+      ['¿Qué hace este pseudocódigo? "x = 5; x = x + 2"', ['x vale 5', 'x vale 7', 'x vale 52', 'error'], 1, 0],
+      ['¿Qué es un algoritmo?', ['un programa en Python', 'una serie de pasos para resolver un problema', 'un lenguaje', 'un error'], 1, 0],
+      ['¿Para qué sirve HTML?', ['dar lógica', 'estructurar el contenido web', 'base de datos', 'estilos'], 1, 1],
+      ['¿Qué imprime print(len("hola"))?', ['3', '4', '5', 'error'], 1, 1],
+      ['¿Qué es una variable?', ['una foto', 'un espacio con nombre que guarda un valor', 'una función', 'un archivo'], 1, 1],
+      ['¿Qué hace CSS?', ['base de datos', 'lógica del servidor', 'apariencia visual de la web', 'redes'], 2, 2],
+      ['En JS, ¿qué devuelve [1,2,3].map(n => n * 2)?', ['[1,2,3]', '[2,4,6]', '[2,3,4]', 'error'], 1, 2],
+      ['¿Qué es una API?', ['una app móvil', 'una interfaz para que programas se comuniquen', 'un servidor físico', 'un lenguaje'], 1, 2],
+      ['¿Qué comando crea una rama en git?', ['git merge', 'git branch nombre', 'git push', 'git init'], 1, 3],
+      ['¿Qué devuelve SELECT COUNT(*) FROM users?', ['todos los users', 'la cantidad de filas users', 'la primera fila', 'error'], 1, 3],
+      ['¿Qué es Docker?', ['un lenguaje', 'empaqueta apps con sus dependencias en contenedores', 'una base de datos', 'un editor'], 1, 3],
+      ['¿Qué es el prompt en relación a LLMs?', ['la ventana de comandos', 'las instrucciones que guían al modelo', 'un error', 'la memoria RAM'], 1, 4],
+    ];
+    const $ = s => document.querySelector(s);
+    let i = 0, ok = 0;
+    function pintar() {
+      if (i >= QS.length) return fin();
+      const [p, ops, oki, dif] = QS[i];
+      $('#zona').innerHTML = `<div class="card">
+        <p style="color:var(--muted);font-size:.85rem">Pregunta ${i + 1}/${QS.length} · nivel ${dif}</p>
+        <div class="barra" style="height:6px;margin:.4rem 0 1rem"><div style="width:${100 * i / QS.length}%"></div></div>
+        <h3>${PT.esc(p)}</h3>
+        ${ops.map((o, t) => `<button class="op" data-i="${t}">${PT.esc(o)}</button>`).join('')}
+      </div>`;
+      document.querySelectorAll('.op').forEach(b => b.onclick = () => {
+        document.querySelectorAll('.op').forEach(x => x.disabled = true);
+        if (+b.dataset.i === oki) { b.classList.add('right'); ok++; } else b.classList.add('wrong');
+        i++; setTimeout(pintar, 700);
+      });
+    }
+    function fin() {
+      const pct = Math.round(100 * ok / QS.length);
+      const nivel = pct < 25 ? 0 : pct < 45 ? 1 : pct < 65 ? 2 : pct < 85 ? 3 : 4;
+      const N = ['Explorador', 'Principiante', 'Intermedio', 'Avanzado', 'Profesional'];
+      const R = [
+        ['🐍 Python Profesional', 'Empezá por la base: lógica y Python desde cero.', 0],
+        ['🐍 Python Profesional', 'Consolidá fundamentos y arrancá proyectos.', 0],
+        ['🌐 Full Stack Developer', 'Ya tenés base: a construir la web completa.', 1],
+        ['🤖 AI Engineer', 'Listo para datos, ML y LLMs.', 1],
+        ['🏗️ Arquitecto de Software', 'Sistemas, seguridad y escala. O directo a proyectos.', 3],
+      ][nivel];
+      PT.s.evaluacion = { pct, nivel, fecha: PT.hoy(), ruta: R[0] };
+      PT.actividad(ok * 5);
+      $('#zona').innerHTML = `<div class="card" style="text-align:center;padding:2rem">
+        <div style="font-size:3rem">${['🌱', '📗', '⚡', '🚀', '🏆'][nivel]}</div>
+        <h2>Nivel ${nivel} — ${N[nivel]} <span style="color:var(--muted)">(${pct}%)</span></h2>
+        <p style="color:var(--muted)">${R[1]}</p>
+        <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:.6rem">
+          <a class="btn" href="../rutas/">🗺️ Mi ruta: ${R[0]}</a>
+          <a class="btn ghost" href="../aprender/#/c/${R[2]}">▶ Empezar ya</a>
+          <a class="btn ghost" href="../chat/">🤖 Hablar con el tutor</a>
+        </div>
+        <p style="color:var(--muted);font-size:.8rem;margin-top:1rem">+${ok * 5} XP por evaluarte · el tutor ajustará sus explicaciones a tu nivel</p>
+      </div>`;
+    }
+    if (PT.s.evaluacion) {
+      const e = PT.s.evaluacion;
+      $('#zona').innerHTML = `<div class="card"><h3>📊 Ya te evaluaste el ${e.fecha}</h3>
+        <p>Nivel ${e.nivel} · ${e.pct}% · ruta sugerida: ${PT.esc(e.ruta)}</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">
+          <a class="btn ghost" id="re">↺ Rehacer evaluación</a>
+          <a class="btn" href="../rutas/">🗺️ Ir a mi ruta</a></div></div>`;
+      document.getElementById('re').onclick = () => { PT.s.evaluacion = null; PT.guardar(); location.reload(); };
+    } else pintar();
+  </script> </main> </div> <script src="/plataforma-total-pro/app/pt.js"></script> <script>(function(){const swUrl = "/plataforma-total-pro/app/sw.js";
+
+    // 📦 PWA: registra el service worker (offline real + instalación móvil)
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+  })();</script> <script>
+    document.getElementById('hamb').onclick = () =>
+      document.getElementById('sidebar').classList.toggle('abierto');
+    PT.initSesionUI();
+  </script> </body> </html>

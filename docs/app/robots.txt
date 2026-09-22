@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://plataforma-total-web.pages.dev/sitemap.xml
