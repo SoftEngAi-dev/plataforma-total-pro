@@ -18,3 +18,4 @@ Thumbs.db
 
 # Secretos SIEMPRE fuera
 .env
+.dev.vars

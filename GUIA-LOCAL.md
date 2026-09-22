@@ -62,6 +62,28 @@ python main.py
 
 ---
 
+## 🏠 Opción 4 — Levantar la WEB COMPLETA en tu PC (backend real local, U$S 0)
+
+La misma app que corre en Cloudflare corre en tu máquina con el emulador oficial (wrangler dev),
+**con base de datos SQLite local incluida** — ideal para probar antes de publicar:
+
+```powershell
+git clone https://github.com/SoftEngAi-dev/plataforma-total-pro.git
+cd plataforma-total-pro\web
+npm install
+npx wrangler d1 execute plataforma --local --file=./schema.sql   # crea las 7 tablas locales
+# (opcional) creá un archivo .dev.vars con:  ADMIN_SECRET=tu-secreto-de-pruebas
+$env:ASTRO_BASE='/'; npm run build
+npx wrangler pages dev --port 8788
+```
+
+→ Abrí **http://localhost:8788** : registro alias+PIN, sync de progreso, certificados
+verificables, riel PRO manual (`POST /api/admin`)… todo funciona contra tu D1 local
+(archivo en `web/.wrangler/state`). El Tutor IA usa tu cuenta de Cloudflare si hay AI binding;
+el tutor propio de reglas funciona siempre offline.
+
+---
+
 ## ❓ Solución rápida de problemas
 
 | Síntoma | Solución |
