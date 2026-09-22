@@ -35,3 +35,41 @@ jobs:
           assert n >= 57, f"JSON-LD incompleto: {n} cursos"
           print(f"✔ índice: {len(d)} cursos / {ls} lecciones · JSON-LD: {n} cursos en home")
           PYEOF
+
+  e2e:
+    name: 🧪 E2E — API viva contra wrangler local
+    needs: validar
+    runs-on: ubuntu-latest
+    env: { ADMIN_SECRET: ci-test-123 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build + esquema D1 local
+        working-directory: web
+        run: |
+          npm install --no-audit --no-fund
+          ASTRO_BASE=/ npm run build
+          npm i -g wrangler@4 2>&1 | tail -1
+          wrangler d1 execute plataforma --local --file=./schema.sql 2>&1 | grep -c successfully
+      - name: Levantar servidor local
+        working-directory: web
+        run: |
+          (wrangler pages dev --port 8788 --ip 127.0.0.1 --local-protocol http > /tmp/wr.log 2>&1 &)
+          for i in $(seq 1 40); do curl -s -o /dev/null -m 3 http://127.0.0.1:8788/ && break || sleep 3; done
+          curl -s -o /dev/null -w "home: %{http_code}\n" http://127.0.0.1:8788/
+      - name: E2E — flujo completo (registro → PRO → certificado → sync)
+        run: |
+          set -e
+          B="http://127.0.0.1:8788"
+          [ "$(curl -s -o /dev/null -w '%{http_code}' "$B/curso/57")" = 200 ]
+          [ "$(curl -s "$B/sitemap.xml" | grep -oc '<url>')" = 68 ]
+          TOK=$(curl -s -X POST "$B/api/auth" -H 'Content-Type: application/json' -d '{"alias":"ci_bot","pin":"7777"}' | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
+          curl -s -X POST "$B/api/admin" -H 'Content-Type: application/json' -d '{"secret":"ci-test-123","email":"ci@bot.dev"}' | grep -q '"ok":true'
+          curl -s -X POST "$B/api/pro" -H "X-Token: $TOK" -H 'Content-Type: application/json' -d '{"email":"ci@bot.dev"}' | grep -q '"pro":true'
+          curl -s -X POST "$B/api/progreso" -H "X-Token: $TOK" -H 'Content-Type: application/json' -d '{"data":{"xp":42}}' | grep -q '"ok":true'
+          curl -s "$B/api/progreso" -H "X-Token: $TOK" | grep -q '"xp":42'
+          curl -s -X POST "$B/api/certificado" -H "X-Token: $TOK" -H 'Content-Type: application/json' -d '{"codigo":"PT-CIE2E1","curso":"📐 Matemáticas"}' | grep -q '"ok":true'
+          curl -s "$B/api/certificado?codigo=PT-CIE2E1" | grep -q '"valido":true'
+          curl -s -X POST "$B/api/admin" -H 'Content-Type: application/json' -d '{"secret":"malo","email":"x@x.com"}' | grep -q 'no autorizado'
+          echo "✅ E2E COMPLETO: registro, PRO manual, sync, certificado verificable, admin 401"

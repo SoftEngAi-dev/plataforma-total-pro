@@ -1,3 +1,7 @@
+## [4.9.7+ci (web)] — 2026-09-22 — 🧪 CI nivel 2: E2E contra API viva en cada push
+
+- Job `e2e` en ci.yml: levanta `wrangler pages dev` con D1 local en el runner y ejecuta el flujo completo **con curl real**: home/curso/sitemap 200, registro alias+PIN, admin→PRO→activación, sync progreso roundtrip, certificado emitido→verificado público, y rechazo 401 con secreto malo. Cada push queda probado como si un usuario de verdad pagara y activara.
+
 ## [4.9.7 (web)] — 2026-09-22 — 🛡️ headers de seguridad + 🧪 CI + 📦 Dependabot
 
 - **`_headers` (CF Pages)**: nosniff, Referrer-Policy, frame-ancestors, Permissions-Policy mínimos; `_astro/` inmutable 1 año, `/api/` no-store, `/data/` 1 h.
