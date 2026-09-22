@@ -1,3 +1,8 @@
+## [4.9.4 (web)] — 2026-09-22 — 🗺️ SEO técnico: robots.txt + sitemap.xml
+
+- `robots.txt` (allow all, /api/ disallow) y `sitemap.xml` canónico con **68 URLs**: 11 rutas principales + los 57 cursos (`/curso/N`), con lastmod/changefreq/priority.
+- `scripts/generar_sitemap.py`: generador reproducible (lee el índice → N cursos automático). Re-ejecutar tras nuevas rutas/cursos.
+
 ## [4.9.3 (web)] — 2026-09-22 — 🖼️ Tarjetas sociales + portadas de tienda
 
 - **Open Graph + Twitter Card en todas las páginas** (Base.astro): og:title/description/url por página, og:image absoluto 1200×630, locale es_UY, summary_large_image. Compartir cualquier link ahora muestra la tarjeta de marca.
