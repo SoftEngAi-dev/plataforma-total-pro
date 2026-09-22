@@ -1,0 +1,6 @@
+# Subir con: wingetcreate submit .\manifests\winget\
+PackageIdentifier: SoftEngAi.PlataformaTotal
+PackageVersion: 4.5.0
+DefaultLocale: es-ES
+ManifestType: version
+ManifestVersion: 1.9.0

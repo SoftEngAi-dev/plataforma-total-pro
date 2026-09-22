@@ -1,0 +1,16 @@
+PackageIdentifier: SoftEngAi.PlataformaTotal
+PackageVersion: 4.5.0
+InstallerType: nullsoft
+InstallModes:
+- interactive
+- silent
+InstallerSwitches:
+  Silent: /S
+  SilentWithProgress: /S
+UpgradeBehavior: install
+Installers:
+- Architecture: x64
+  InstallerUrl: https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/download/v4.5.0/PlataformaTotal-Windows.exe
+  InstallerSha256: e6c9123e54b3d14881fa1b9cffcdcf542603deaf4984b05e59e4cb947f6a3896
+ManifestType: installer
+ManifestVersion: 1.9.0

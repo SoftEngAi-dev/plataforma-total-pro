@@ -1,0 +1,23 @@
+PackageIdentifier: SoftEngAi.PlataformaTotal
+PackageVersion: 4.5.0
+PackageLocale: es-ES
+Publisher: SoftEngAi
+PublisherUrl: https://plataforma-total-web.pages.dev
+PackageName: Plataforma Total
+PackageUrl: https://plataforma-total-web.pages.dev
+License: MIT
+LicenseUrl: https://github.com/SoftEngAi-dev/plataforma-total-pro/blob/main/LICENSE
+ShortDescription: 57 cursos tech en español, 100% offline — aprendé programación sin señal
+Description: |-
+  Plataforma Total es una app educativa offline-first: 57 cursos (17 gratis), 329 lecciones
+  y 658 preguntas de quiz en español. Funciona sin internet, sincroniza tu progreso con tu
+  cuenta web, emite certificados verificables y trae tutor de estudio local + IA opcional.
+Tags:
+- educacion
+- programacion
+- cursos
+- offline
+- espanol
+- aprender
+ManifestType: defaultLocale
+ManifestVersion: 1.9.0
