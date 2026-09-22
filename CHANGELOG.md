@@ -1,3 +1,9 @@
+## [4.9.5 (web)] — 2026-09-22 — 🧾 JSON-LD + 🗄️ backup automático + 🔒 auditoría
+
+- **Schema.org Course/ItemList** en la home: los 57 cursos con posición, URL, proveedor y flag gratuito — rich results en buscadores.
+- **Backup semanal de D1** (workflow `backup-d1.yml`, lunes 04:00 UTC): exporta la DB a `backups/` y commitea automático. Secretos CF cargados cifrados vía API (nada en texto plano).
+- **Auditoría de secretos: repo e historial 100% limpios** (los “ghp_” en archivos son solo instrucciones, nunca valores).
+
 ## [4.9.4 (web)] — 2026-09-22 — 🗺️ SEO técnico: robots.txt + sitemap.xml
 
 - `robots.txt` (allow all, /api/ disallow) y `sitemap.xml` canónico con **68 URLs**: 11 rutas principales + los 57 cursos (`/curso/N`), con lastmod/changefreq/priority.

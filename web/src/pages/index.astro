@@ -1,9 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
+import { readFileSync } from 'node:fs';
 export const prerender = true;
 const B = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' en raíz, sin '//' roto
+// 🧾 JSON-LD: catálogo de cursos para buscadores (SEO enriquecido)
+const indice = JSON.parse(readFileSync(new URL('../../public/data/indice.json', import.meta.url), 'utf-8'));
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Plataforma Total — 57 cursos tech en español',
+  itemListElement: indice.map((c, i) => ({
+    '@type': 'ListItem', position: i + 1,
+    item: {
+      '@type': 'Course', name: c.n,
+      url: `https://plataforma-total-web.pages.dev/curso/${i + 1}`,
+      provider: { '@type': 'Organization', name: 'Plataforma Total', sameAs: 'https://plataforma-total-web.pages.dev' },
+      isAccessibleForFree: !!c.free,
+      hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: 'PT25M' },
+    },
+  })),
+};
 ---
 <Base titulo="Inicio" activo="inicio">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
   <h1 id="saludo">👋 ¡Hola!</h1>
   <p class="sub">Tu escuela de programación en español — web, móvil y escritorio, con el mismo progreso sincronizado.</p>
 
