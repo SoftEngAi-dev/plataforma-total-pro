@@ -30,6 +30,8 @@ jobs:
           assert len(d) == 57, f"esperaba 57 cursos, hay {len(d)}"
           ls = sum(c['l'] for c in d)
           assert ls == 329, f"esperaba 329 lecciones, hay {ls}"
-          print(f"✔ índice: {len(d)} cursos / {ls} lecciones")
+          html = open('web/dist/index.html', encoding='utf-8').read()
+          n = html.count('"@type": "Course"') + html.count('"@type":"Course"')
+          assert n >= 57, f"JSON-LD incompleto: {n} cursos"
+          print(f"✔ índice: {len(d)} cursos / {ls} lecciones · JSON-LD: {n} cursos en home")
           PYEOF
-          test "$(grep -o '@type\":\"Course' web/dist/index.html | wc -l)" = "57" && echo "✔ JSON-LD con 57 cursos"
