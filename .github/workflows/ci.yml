@@ -40,10 +40,7 @@ jobs:
     name: 🧪 E2E — API viva contra wrangler local
     needs: validar
     runs-on: ubuntu-latest
-    env:
-      ADMIN_SECRET: ci-test-123
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}      # el binding [ai] necesita proxy remoto
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    env: { ADMIN_SECRET: ci-test-123 }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -54,6 +51,12 @@ jobs:
           npm install --no-audit --no-fund
           ASTRO_BASE=/ npm run build
           npm i -g wrangler@4 2>&1 | tail -1
+          python3 - <<'PYEOF'
+          # CI corre 100% local: el proxy remoto del binding [ai] no existe en esta cuenta
+          t = open('wrangler.toml').read()
+          open('wrangler.toml', 'w').write(t.split('\n# 🤖')[0] + '\n')
+          print('binding [ai] removido para CI ✔')
+          PYEOF
           wrangler d1 execute plataforma --local --file=./schema.sql 2>&1 | grep -c successfully
       - name: Levantar servidor local
         working-directory: web
