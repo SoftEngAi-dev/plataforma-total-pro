@@ -73,8 +73,10 @@ jobs:
           echo "sitemap urls: $(curl -s "$B/sitemap.xml" | grep -oc '<url>')"
           [ "$(curl -s -o /dev/null -w '%{http_code}' "$B/curso/57")" = 200 ]
           [ "$(curl -s "$B/sitemap.xml" | grep -oc '<url>')" = 68 ]
-          TOK=$(curl -s -X POST "$B/api/auth" -H 'Content-Type: application/json' -d '{"alias":"ci_bot","pin":"7777"}' | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
-          curl -s -X POST "$B/api/admin" -H 'Content-Type: application/json' -d '{"secret":"ci-test-123","email":"ci@bot.dev"}' | grep -q '"ok":true'
+          R=$(curl -s -X POST "$B/api/auth" -H 'Content-Type: application/json' -d '{"alias":"ci_bot","pin":"7777"}'); echo "auth: ${R:0:120}"
+          TOK=$(echo "$R" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
+          R=$(curl -s -X POST "$B/api/admin" -H 'Content-Type: application/json' -d '{"secret":"ci-test-123","email":"ci@bot.dev"}'); echo "admin: ${R:0:120}"
+          echo "$R" | grep -q '"ok":true'
           curl -s -X POST "$B/api/pro" -H "X-Token: $TOK" -H 'Content-Type: application/json' -d '{"email":"ci@bot.dev"}' | grep -q '"pro":true'
           curl -s -X POST "$B/api/progreso" -H "X-Token: $TOK" -H 'Content-Type: application/json' -d '{"data":{"xp":42}}' | grep -q '"ok":true'
           curl -s "$B/api/progreso" -H "X-Token: $TOK" | grep -q '"xp":42'
