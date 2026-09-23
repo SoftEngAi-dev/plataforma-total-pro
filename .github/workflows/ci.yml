@@ -56,7 +56,8 @@ jobs:
         working-directory: web
         run: |
           (wrangler pages dev --port 8788 --ip 127.0.0.1 --local-protocol http > /tmp/wr.log 2>&1 &)
-          for i in $(seq 1 40); do curl -s -o /dev/null -m 3 http://127.0.0.1:8788/ && break || sleep 3; done
+          for i in $(seq 1 60); do curl -s -o /dev/null -m 3 http://127.0.0.1:8788/ && { echo "arriba en $((i*4))s"; break; } || sleep 4; done
+          tail -30 /tmp/wr.log || true
           curl -s -o /dev/null -w "home: %{http_code}\n" http://127.0.0.1:8788/
       - name: E2E — flujo completo (registro → PRO → certificado → sync)
         run: |
