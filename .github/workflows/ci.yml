@@ -40,7 +40,10 @@ jobs:
     name: 🧪 E2E — API viva contra wrangler local
     needs: validar
     runs-on: ubuntu-latest
-    env: { ADMIN_SECRET: ci-test-123 }
+    env:
+      ADMIN_SECRET: ci-test-123
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}      # el binding [ai] necesita proxy remoto
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
