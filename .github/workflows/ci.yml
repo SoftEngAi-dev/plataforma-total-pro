@@ -69,6 +69,8 @@ jobs:
         run: |
           set -e
           B="http://127.0.0.1:8788"
+          echo "curso/57: $(curl -s -o /dev/null -w '%{http_code}' "$B/curso/57")"
+          echo "sitemap urls: $(curl -s "$B/sitemap.xml" | grep -oc '<url>')"
           [ "$(curl -s -o /dev/null -w '%{http_code}' "$B/curso/57")" = 200 ]
           [ "$(curl -s "$B/sitemap.xml" | grep -oc '<url>')" = 68 ]
           TOK=$(curl -s -X POST "$B/api/auth" -H 'Content-Type: application/json' -d '{"alias":"ci_bot","pin":"7777"}' | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
