@@ -57,6 +57,7 @@ jobs:
           open('wrangler.toml', 'w').write(t.split('\n# 🤖')[0] + '\n')
           print('binding [ai] removido para CI ✔')
           PYEOF
+          echo 'ADMIN_SECRET=ci-test-123' > .dev.vars   # wrangler dev lee bindings de .dev.vars, no del shell
           wrangler d1 execute plataforma --local --file=./schema.sql 2>&1 | grep -c successfully
       - name: Levantar servidor local
         working-directory: web
