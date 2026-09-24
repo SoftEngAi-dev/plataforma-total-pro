@@ -41,7 +41,7 @@
 
 ### Lo que dice el mercado
 
-1. **El precio anual efectivo del sector serio: U$S 180-300/año.** Nosotros NO podemos cobrar eso todavía: catálogo 47 cursos vs 1.500-30.000 y marca desconocida. Precio honesto de entrada: **~1/3 del tier medio**.
+1. **El precio anual efectivo del sector serio: U$S 180-300/año.** Nosotros NO podemos cobrar eso todavía: catálogo 57 cursos vs 1.500-30.000 y marca desconocida. Precio honesto de entrada: **~1/3 del tier medio**.
 2. **LATAM paga menos** (paridad de poder adquisitivo): Platzi baja a ~U$S 100-150 en varios países, Código Facilito vive en U$S 50-70. Nuestro anual U$S 79 encaja en el bolsillo LATAM y sigue siendo "barato" para EE.UU./España.
 3. **Lifetime funciona**: ZTM cobra U$S 999-1.299 de por vida y vende. Al U$S 169 nuestro lifetime es impulso-compra ("cuesta menos que 3 meses de Platzi").
 4. **Nuestra diferenciación real defendible**: 100% **offline** (nadie más), app desktop nativa, IA local opcional, gamificación (racha, pomodoro, certificados), en español nativo. Eso sostiene el precio aunque seamos más pequeños.
@@ -102,7 +102,7 @@ Conversión típica freemium app: **2-5%** de usuarios activos → pagando.
 | Landing con precios y checkout | GitHub Pages (ya pública) | $0 |
 | Distribución de la app | GitHub Releases + auto-update en la app | $0 |
 | Config de precios editable sin recompilar | `monetizacion.json` en el repo (la app lo lee) | $0 |
-| Paywall en la app (15 gratis / 32 PRO) | ✅ Implementado en v4.0.0 | $0 |
+| Paywall en la app (17 gratis / 32 PRO) | ✅ Implementado en v4.0.0 | $0 |
 | Newsletter | Buttondown/Beehiiv tier gratis (<100-1.000 subs) | $0 |
 
 **¿Por qué NO Stripe directo?** Stripe (2,9%) te obliga a cobrar y declarar IVA en cada país tú solo — para un solo fundador vendiendo global, el 5% de Lemon Squeezy (que incluye eso) sale más barato en tiempo y riesgo. Cuando factures >U$S 100K/año se re-evalúa.
@@ -111,12 +111,12 @@ Conversión típica freemium app: **2-5%** de usuarios activos → pagando.
 
 ## 6. 📣 Marketing a costo $0 (el plan silencioso que compone)
 
-1. **SEO en español** (el activo que crece solo): 47 cursos = 47 artículos índice en la landing (uno por curso, generables desde `expansion/`), atacando "curso de X gratis en español", "aprender X offline", "app para aprender programación".
+1. **SEO en español** (el activo que crece solo): 57 cursos = 47 artículos índice en la landing (uno por curso, generables desde `expansion/`), atacando "curso de X gratis en español", "aprender X offline", "app para aprender programación".
 2. **Product Hunt** (1 lanzamiento): "The offline-first coding school in Spanish" — martes/miércoles 00:01 PT, 3 imágenes, primer comentario del maker, pedir upvotes en comunidades 48 h antes.
 3. **Comunidades**: r/programacion, r/learnprogramming, Discords dev ES, Dev.to (artículos con canonical a la web), foros de freeCodeCamp ES. Regla: 9 aportes por 1 autopromoción.
 4. **Shorts/TikTok** (2-3/semana): "¿Sabías que existe una app GRATIS con 15 cursos de programación SIN INTERNET?" → link en bio. Guion de 20 seg: problema (datos/plan/aulas) → app → PRO.
 5. **Afiliados 30%** (incluido en Lemon Squeezy): micro-creadores tech-ES venden por ti; sin ellos pagas $0.
-6. **Free tier como anzuelo**: 15 cursos gratis reales + auto-update = retención y evangelismo.
+6. **Free tier como anzuelo**: 17 cursos gratis reales + auto-update = retención y evangelismo.
 
 ---
 

@@ -9,13 +9,13 @@
 [![📜 Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e)](LICENSE)
 [![🌐 Web](https://img.shields.io/badge/web-del%20proyecto-f59e0b)](https://softengai-dev.github.io/plataforma-total-pro/)
 
-**Escuela completa de software que vive 100% en tu máquina. Sin internet, sin cuentas, sin suscripciones — justo tú, 47 cursos y (opcional) tu IA local.**
+**Escuela completa de software que vive 100% en tu máquina. Sin internet, sin cuentas, sin suscripciones — justo tú, 57 cursos y (opcional) tu IA local.**
 
 ```
-47 cursos · 269 lecciones · 538 quizzes (100% cobertura) · 3.941 archivos de material
+57 cursos · 269 lecciones · 538 quizzes (100% cobertura) · 3.941 archivos de material
 Buscador 🔍 · Quizzes 📝 · Pomodoro 🍅 · Racha 🔥 · Certificados 🎓 · Chat IA con memoria 🤖 · Auto-actualización 🔄
 Linux · Windows · macOS · 100% offline · 🔄 Auto-actualización · Ejecutables con icono oficial 🖼️
-🆓 FREE: 15 cursos gratis · 💎 PRO: 32 cursos desde U$S 7,99/mes (ver [MONETIZACION.md](MONETIZACION.md))
+🆓 FREE: 17 cursos gratis · 💎 PRO: 32 cursos desde U$S 7,99/mes (ver [MONETIZACION.md](MONETIZACION.md))
 🪟 **Windows**: [descargá PlataformaTotal-Windows.exe](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe) → doble clic y listo · 🌐📱 [web/móvil gratis](https://softengai-dev.github.io/plataforma-total-pro/app/)
 ```
 
@@ -97,7 +97,7 @@ La app aparece en tu menú de aplicaciones como 🎓 **Plataforma Total**.
 
 ---
 
-## 📚 El curriculum (47 cursos)
+## 📚 El curriculum (57 cursos)
 
 **Ruta y herramientas:** Ruta Maestra · Herramientas del Dev · Git/GitHub · Linux/Terminal · Docker · DevOps/CI-CD · Despliegue/Servidores
 **Web core:** HTML/CSS · JavaScript (18 lecciones) · TypeScript · React · Node.js
@@ -122,7 +122,7 @@ Domina un curso entero (lecciones + quizzes al 100%) y la app te **emisía tu ce
 | Ruta | Qué es |
 |------|--------|
 | `main.py` | La aplicación completa (customtkinter, SQLite, Ollama) |
-| `contenido_a/b/c.py` | El contenido curricular: 47 cursos × lecciones × quizzes |
+| `contenido_a/b/c.py` | El contenido curricular: 57 cursos × lecciones × quizzes |
 | `expandir_contenido.py` | Generador del ecosistema de estudio (`expansion/`) |
 | `expansion/` | **3.478 archivos de material**: lecciones MD, quizzes HTML offline, 482 flashcards, ejercicios, glosarios, prompts IA, 246 guías de proyecto, plan anual de estudio... |
 | `expansion/plan_diario/` | Plan día a día para un año de estudio (364 días) |

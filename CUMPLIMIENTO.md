@@ -17,7 +17,7 @@ Leyenda: ✅ implementado y LIVE · 🟡 parcial · 🔜 roadmap (fase del propi
 | 8, 37, 60 | Tutor IA contextual + procedimiento ante "no entiendo" | chat con contexto: lección actual, nivel evaluado, XP/racha + protocolo §37 en el system prompt |
 | 14, 54 | Offline-first / Local First | App de escritorio 100% offline + PWA instalable + Pyodide cacheado en lab |
 | 15, 59 | Sincronización híbrida | Progreso local ↔ D1 (API /api/progreso con merge por XP máximo) |
-| 16, 17, 18 | Lenguajes + ecosistemas + conexiones | 47 cursos cubriendo HTML…Rust/Go/IA + rutas multilenguaje |
+| 16, 17, 18 | Lenguajes + ecosistemas + conexiones | 57 cursos cubriendo HTML…Rust/Go/IA + rutas multilenguaje |
 | 19, 35, 67 | Rutas integrales + recomendaciones por trayectoria | **rutas.astro**: 4 carreras guiadas con % en vivo y "siguiente misión" |
 | 28, 66 | Gamificación + dashboard con barras | XP/niveles/racha/emblemas (progreso.astro) + barras por ruta (rutas.astro) |
 | 29 | Evaluación multidimensional | 🟡 evaluación inicial + precisión de quizzes; el scoring por proyecto es fase 2 |

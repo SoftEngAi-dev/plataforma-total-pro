@@ -1,5 +1,5 @@
 # Artículo de lanzamiento — listo para Dev.to / Medium / LinkedIn (ES)
-> Título sugerido: **"Construí una escuela de programación que funciona 100% sin internet — 15 cursos gratis"**
+> Título sugerido: **"Construí una escuela de programación que funciona 100% sin internet — 17 cursos gratis"**
 > Tags: spanish, programming, offline, opensource
 
 ---
@@ -10,7 +10,7 @@ Así que construí **Plataforma Total**: una app de escritorio (Windows, Linux, 
 
 ## Qué trae hoy
 
-- 📚 **47 cursos completos**: HTML/CSS, JavaScript/TypeScript, React, Node, Python, SQL, Git, Docker, Linux, DevOps… y avanzados: Rust, Go, Flutter, Kotlin, Swift, Machine Learning, IA y LLMs, Seguridad, Arquitectura, Next.js, Astro, Tailwind, Bun/Deno…
+- 📚 **57 cursos completos**: HTML/CSS, JavaScript/TypeScript, React, Node, Python, SQL, Git, Docker, Linux, DevOps… y avanzados: Rust, Go, Flutter, Kotlin, Swift, Machine Learning, IA y LLMs, Seguridad, Arquitectura, Next.js, Astro, Tailwind, Bun/Deno…
 - 🎓 269 lecciones guiadas + **538 quizzes con corrección por IA**
 - 🎮 Gamificación: XP, niveles, rachas de estudio, pomodoro integrado
 - 📜 Certificados con código verificable

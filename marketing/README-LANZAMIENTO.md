@@ -10,7 +10,7 @@
 | [TIKTOKS.md](TIKTOKS.md) | 3 guiones de 20 seg con hook, CTA y hashtag | 1 h grabación |
 | [PRODUCT-HUNT.md](PRODUCT-HUNT.md) | Tagline, descripción, primer comentario del maker, checklist 48 h | martes/miércoles |
 | [KIT-AFILIADOS.md](KIT-AFILIADOS.md) | Programa 30% (incluido en Lemon Squeezy) + textos y assets para reclutar micro-creadores tech-ES | continuo |
-| `docs/index.html` (sección #cursos-seo) | ✅ **YA DESPLEGADA**: 47 cursos indexables + FAQ + JSON-LD para Google | hecho |
+| `docs/index.html` (sección #cursos-seo) | ✅ **YA DESPLEGADA**: 57 cursos indexables + FAQ + JSON-LD para Google | hecho |
 
 **Recordatorios:**
 

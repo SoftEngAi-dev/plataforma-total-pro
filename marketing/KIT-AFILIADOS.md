@@ -20,8 +20,8 @@
 
 ```
 Hola [NOMBRE] 👋 Soy [tu nombre], creador de Plataforma Total: una app para
-aprender programación en español y 100% offline (47 cursos, quizzes con IA,
-certificados — 15 cursos gratis para siempre).
+aprender programación en español y 100% offline (57 cursos, quizzes con IA,
+certificados — 17 cursos gratis para siempre).
 
 Vi [video/post específico] y creo que a tu audiencia le serviría de verdad.
 Te propongo: 30% de cada venta que venga de tu link, pagos automáticos vía
@@ -34,7 +34,7 @@ Material listo: [adjuntar/enlazar capturas + textos de este kit].
 
 ## 4. Material para el afiliado (darle TODO resuelto)
 
-- ✍️ **Texto corto:** "Esta app tiene 47 cursos de programación en español que funcionan sin internet — y 15 son gratis. Ideal si se te acaban los datos o estudiás en movilidad. Mi link: [LINK]"
+- ✍️ **Texto corto:** "Esta app tiene 57 cursos de programación en español que funcionan sin internet — y 15 son gratis. Ideal si se te acaban los datos o estudiás en movilidad. Mi link: [LINK]"
 - ✍️ **Texto largo (descripción YouTube/blog):** adaptar el artículo LANZAMIENTO-DEVTO.md (corto) + CTA con su link.
 - 🖼️ Capturas oficiales (mismas de Product Hunt).
 - 📏 Honestidad contractual: deben aclarar "link afiliado". Prohibido: PPC sobre la marca, promesas falsas ("te hace senior en 1 mes"), spam en foros.

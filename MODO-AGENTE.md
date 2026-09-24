@@ -71,7 +71,7 @@ git add monetizacion.json && git commit -m "💰 activar checkout real Lemon Squ
 
 Todo el material está **listo y commiteado** — tras el Bloque B solo hay que publicar:
 
-1. ✅ **Landing SEO**: `docs/index.html` ya incluye #cursos-seo (47 cursos indexables) + FAQ + JSON-LD.
+1. ✅ **Landing SEO**: `docs/index.html` ya incluye #cursos-seo (57 cursos indexables) + FAQ + JSON-LD.
 2. ✅ **Artículo** en `marketing/LANZAMIENTO-DEVTO.md` — publicar en Dev.to/Medium/LinkedIn el día 0.
 3. ✅ **Posts comunidades** en `marketing/REDDIT-Y-COMUNIDADES.md` (con regla 9:1 y respuestas tipo).
 4. ✅ **3 guiones TikTok/Shorts** en `marketing/TIKTOKS.md` (cadencia 2-3/semana).
@@ -86,7 +86,7 @@ Todo el material está **listo y commiteado** — tras el Bloque B solo hay que 
 
 ```
 Sos mi agente de despliegue. Contexto: repo github.com/SoftEngAi-dev/plataforma-total-pro (rama main).
-La app ya tiene paywall (15 cursos gratis, 32 PRO) y lee checkout links de
+La app ya tiene paywall (17 cursos gratis, 32 PRO) y lee checkout links de
 https://raw.githubusercontent.com/SoftEngAi-dev/plataforma-total-pro/main/monetizacion.json
 Mis enlaces de Lemon Squeezy son:
 - mensual: PEGAR_AQUI

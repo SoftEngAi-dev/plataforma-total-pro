@@ -15,7 +15,7 @@ que es una escuela de programación completa SIN INTERNET.
 que consumen datos. En LATAM eso excluye a mucha gente.
 
 Qué tiene HOY:
-• 47 cursos (15 de fundamentos gratis para siempre: HTML/CSS, JS, Python, SQL, Git,
+• 57 cursos (15 de fundamentos gratis para siempre: HTML/CSS, JS, Python, SQL, Git,
   Docker, Linux, DevOps...)
 • 269 lecciones + 538 quizzes con IA local
 • XP, rachas, pomodoro, certificados verificables
@@ -53,7 +53,7 @@ you actually use this to learn?
 Mensaje corto en #proyectos (NO en #general):
 ```
 Hola 👋 comparto proyecto open-source: app de escritorio para aprender
-programación en español y SIN INTERNET (15 cursos gratis, quizzes con IA).
+programación en español y SIN INTERNET (17 cursos gratis, quizzes con IA).
 Feedback bienvenido: https://github.com/SoftEngAi-dev/plataforma-total-pro
 ```
 
