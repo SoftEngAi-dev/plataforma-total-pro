@@ -7,7 +7,7 @@ export const prerender = true;
   <p class="sub">Spec §19/§35/§67: caminos guiados que encadenan los 57 cursos en 7 carreras completas. Tu progreso se calcula en vivo.</p>
   <div id="rutas"></div>
   <script is:inline>
-    PT.ready();
+    async function boot() { await PT.ready();
     // índices 0-based según data/indice.json
     const RUTAS = [
       { e: '🌐', n: 'Full Stack Developer', d: 'Del HTML al despliegue: la web completa.',
