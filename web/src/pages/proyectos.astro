@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = true;
+---
+<Base titulo="Proyectos" activo="proyectos">
+  <h1>🚀 Proyectos</h1>
+  <p class="sub">Crea proyectos desde la plataforma y mantené su inventario sincronizado con tu cuenta. En el runtime local, el proyecto además se crea físicamente en la carpeta de proyectos compartida con el desktop.</p>
+  <div class="card" style="margin-bottom:1rem">
+    <h3>➕ Nuevo proyecto</h3>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">
+      <input id="pn" class="buscar" style="flex:1;min-width:220px;margin:0" placeholder="Nombre del proyecto">
+      <select id="pl" class="buscar" style="width:auto;margin:0;padding:.65rem .8rem">
+        <option value="">Sin lenguaje</option>
+        <option>TypeScript</option><option>Python</option><option>JavaScript</option><option>React</option><option>C#</option><option>Java</option><option>Go</option><option>Rust</option>
+      </select>
+      <button class="btn" id="crear">Crear proyecto</button>
+    </div>
+    <p id="msg" style="color:var(--muted);font-size:.85rem;margin-top:.5rem"></p>
+  </div>
+  <div id="lista"><p style="color:var(--muted)">Cargando proyectos…</p></div>
+  <script is:inline>
+    const $ = s => document.querySelector(s);
+    async function cargar() {
+      await PT.ready();
+      const d = await PT.api('projects');
+      if (!d.ok) {
+        $('#lista').innerHTML = '<div class="card"><h3>🔒 Iniciá sesión</h3><p style="color:var(--muted)">' + PT.esc(d.error || 'Necesitás una sesión para sincronizar proyectos.') + '</p></div>';
+        return;
+      }
+      $('#lista').innerHTML = (d.projects || []).length ? '<div class="grid">' + d.projects.map(p =>
+        '<div class="card"><h3>🧩 ' + PT.esc(p.name) + '</h3>' +
+        '<p style="color:var(--muted);font-size:.82rem">' + PT.esc(p.metadata?.language || 'proyecto') + ' · creado ' + PT.esc(String(p.created).slice(0,10)) + '</p>' +
+        (p.path ? '<p style="font-size:.75rem;word-break:break-all;color:var(--muted)">' + PT.esc(p.path) + '</p>' : '') +
+        '<button class="btn ghost del" data-id="' + PT.esc(p.id) + '">🗑 Eliminar</button></div>').join('') + '</div>' :
+        '<div class="card"><h3>🧩 Todavía no hay proyectos</h3><p style="color:var(--muted)">Creá el primero arriba.</p></div>';
+      document.querySelectorAll('.del').forEach(b => b.onclick = async () => {
+        if (!confirm('¿Eliminar este proyecto?')) return;
+        const x = await PT.api('projects?id=' + encodeURIComponent(b.dataset.id), { method: 'DELETE' });
+        if (x.ok) cargar(); else alert(x.error || 'No se pudo eliminar');
+      });
+    }
+    $('#crear').onclick = async () => {
+      const msg = $('#msg'); msg.textContent = '⏳ creando…';
+      const d = await PT.api('projects', { method: 'POST', body: JSON.stringify({ name: $('#pn').value, language: $('#pl').value }) });
+      if (d.ok) { $('#pn').value = ''; msg.textContent = '✅ proyecto creado'; cargar(); }
+      else msg.textContent = '⚠ ' + (d.error || 'No se pudo crear');
+    };
+    cargar();
+  </script>
+</Base>
