@@ -264,10 +264,92 @@ def nube_payload_desktop():
         "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
 
+def _merge_nube(a, b):
+    a, b = a or {}, b or {}
+    leidas = {k: list(v or []) for k, v in (a.get("leidas") or {}).items()}
+    for k, v in (b.get("leidas") or {}).items():
+        leidas[k] = sorted(set(leidas.get(k, [])) | set(v or []))
+    quizzes = {k: dict(v or {}) for k, v in (a.get("quiz_lessons") or {}).items()}
+    for k, v in (b.get("quiz_lessons") or {}).items():
+        v = v or {}
+        old = quizzes.get(k)
+        if not old:
+            quizzes[k] = dict(v)
+        else:
+            quizzes[k] = {
+                "correct": max(int(old.get("correct", 0)), int(v.get("correct", 0))),
+                "answered": max(int(old.get("answered", 0)), int(v.get("answered", 0))),
+                "total": max(int(old.get("total", 0)), int(v.get("total", 0))),
+                "updated_at": max(str(old.get("updated_at", "")), str(v.get("updated_at", ""))) or None,
+            }
+    dias = sorted(set(a.get("dias_activos") or []) | set(b.get("dias_activos") or []))
+    qtot = len(quizzes)
+    qok = sum(1 for q in quizzes.values() if int(q.get("total", 0)) > 0 and int(q.get("correct", 0)) >= int(q.get("total", 0)))
+    ultimas = [x for x in (a.get("ultima"), b.get("ultima")) if x]
+    ultima = max(ultimas, key=lambda x: int(x.get("at", 0))) if ultimas else None
+    return {
+        **a, **b,
+        "contrato": "pt_web_v3",
+        "leidas": leidas,
+        "quiz_lessons": quizzes,
+        "quiz_tot": qtot,
+        "quiz_ok": qok,
+        "dias_activos": dias,
+        "completados": sorted(set(a.get("completados") or []) | set(b.get("completados") or [])),
+        "xp": max(int(a.get("xp", 0) or 0), int(b.get("xp", 0) or 0)),
+        "racha": {
+            "n": max(int((a.get("racha") or {}).get("n", 0)), int((b.get("racha") or {}).get("n", 0))),
+            "ultimo": (a.get("racha") or {}).get("ultimo") or (b.get("racha") or {}).get("ultimo"),
+        },
+        "ultima": ultima,
+        "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
+
+
+def db_aplicar_estado_nube(data):
+    if not data:
+        return
+    con = _con()
+    try:
+        stamp = datetime.datetime.now().isoformat()
+        for ci_raw, lessons in (data.get("leidas") or {}).items():
+            try:
+                ci = int(ci_raw)
+                curso = list(CURSOS.keys())[ci]
+            except (ValueError, IndexError):
+                continue
+            for j in lessons or []:
+                j = int(j)
+                if 0 <= j < len(CURSOS[curso]):
+                    con.execute("INSERT OR IGNORE INTO progreso VALUES (?,?,?)", (curso, j, stamp))
+        for key, q in (data.get("quiz_lessons") or {}).items():
+            try:
+                ci, j = [int(x) for x in str(key).split(":", 1)]
+                curso = list(CURSOS.keys())[ci]
+                if not (0 <= j < len(CURSOS[curso])): continue
+                correct = max(0, int(q.get("correct", 0)))
+                total = max(1, int(q.get("total", 0)))
+                row = con.execute(
+                    "SELECT mejor,total FROM quiz_scores WHERE curso=? AND leccion=?",
+                    (curso, j),
+                ).fetchone()
+                mejor = max(int(row[0]), correct) if row else correct
+                db_total = max(int(row[1]), total) if row else total
+                con.execute(
+                    "INSERT OR REPLACE INTO quiz_scores VALUES (?,?,?,?,?)",
+                    (curso, j, mejor, db_total, str(q.get("updated_at") or stamp)),
+                )
+            except (ValueError, IndexError):
+                continue
+        for day in data.get("dias_activos") or []:
+            con.execute("INSERT OR IGNORE INTO actividad_dias VALUES (?)", (str(day),))
+        con.commit()
+    finally:
+        con.close()
+
+
 def nube_sincronizar():
-    """Merge seguro escritorio→nube usando el mismo contrato que la web; conserva entidades
-    (lecciones, quizzes, días, completados) y registros de certificados.
-    (quedan verificables en /verificar/) y desbloquea PRO comprado vía web."""
+    """Sincroniza en ambos sentidos el estado real escritorio/web."""
     if sync_web is None:
         return False, "Módulo sync_web no disponible."
     n = nube_cargar()
@@ -278,28 +360,35 @@ def nube_sincronizar():
     if cloud is None:
         return False, "Sin conexión con la nube (¿internet?)."
     loc = nube_payload_desktop()
-    merged = dict(cloud)
-    merged["xp"] = max(int(cloud.get("xp") or 0), loc["xp"])
-    merged["quiz_ok"] = max(int(cloud.get("quiz_ok") or 0), loc["quiz_ok"])
-    merged["quiz_tot"] = max(int(cloud.get("quiz_tot") or 0), loc["quiz_tot"])
-    rn_cloud = int((cloud.get("racha") or {}).get("n") or 0)
-    merged["racha"] = {"n": max(rn_cloud, loc["racha"]["n"]), "ult": loc["racha"]["ult"]}
-    merged["contrato"] = "pt_web_v3"
+    merged = _merge_nube(cloud, loc)
+
+    # Importa inmediatamente el trabajo hecho desde web/móvil al SQLite del desktop.
+    db_aplicar_estado_nube(merged)
+
     enviados = set(n.get("certs_enviados") or [])
     nuevos = 0
     for curso, _alumno, codigo, _f in db_certificados():
         if codigo and codigo not in enviados:
-            if sync_web.cert_registrar(tok, "PT-" + codigo, curso):
+            if sync_web.cert_registrar(tok, "PT-" + codigo.lstrip("PT-"), curso):
                 enviados.add(codigo); nuevos += 1
+
     if not sync_web.push(tok, merged):
         return False, "No se pudo subir (¿sesión vencida?). Volvé a entrar."
+
+    # La nube puede contener una versión todavía más completa después del merge.
+    final = sync_web.pull(tok) or merged
+    db_aplicar_estado_nube(final)
     n["certs_enviados"] = sorted(enviados)
     n["ultima_sync"] = datetime.datetime.now().isoformat(timespec="minutes")
     nube_guardar(n)
-    msg = f"✅ Resumen en la nube (XP {merged['xp']})"
+
+    msg = f"✅ Sincronización completa · XP {int(final.get('xp', 0))} · {len(final.get('leidas', {}))} cursos con avance"
     if nuevos:
-        msg += f" · {nuevos} certificado(s) ya verificables online"
+        msg += f" · {nuevos} certificado(s) registrados"
+    if final.get("quiz_ok"):
+        msg += f" · {int(final['quiz_ok'])} quizzes perfectos"
     return True, msg
+
 
 def nube_desbloquear_pro_si_corresponde():
     """Si el alias tiene PRO comprado en la web (Lemon Squeezy), desbloquea el escritorio."""
