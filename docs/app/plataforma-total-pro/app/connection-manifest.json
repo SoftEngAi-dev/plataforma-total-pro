@@ -1,0 +1,12 @@
+{
+  "version": "5.0.0-connected",
+  "source": "web",
+  "curriculum": {"courses": 57, "lessons": 329, "quizzes": 658},
+  "storage": {
+    "browser": "IndexedDB",
+    "local_runtime": "SQLite + desktop SQLite bridge",
+    "cloud": "D1"
+  },
+  "api": ["health", "catalog", "course", "auth", "progreso", "chat", "projects", "certificado"],
+  "ai": {"local": "Ollama or curriculum RAG", "cloud": "Workers AI or curriculum RAG fallback"}
+}

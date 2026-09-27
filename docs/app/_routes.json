@@ -7,6 +7,7 @@
     "/plataforma-total-pro/app",
     "/plataforma-total-pro/app/_astro/*",
     "/plataforma-total-pro/app/.well-known/*",
+    "/plataforma-total-pro/app/connection-manifest.json",
     "/plataforma-total-pro/app/data/*",
     "/plataforma-total-pro/app/icon-192.png",
     "/plataforma-total-pro/app/icon-512.png",
