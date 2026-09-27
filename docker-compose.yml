@@ -1,0 +1,24 @@
+services:
+  plataforma:
+    build:
+      context: .
+      dockerfile: docker/local.Dockerfile
+    ports:
+      - "8787:8787"
+    environment:
+      PT_DATA_DIR: /data
+      PT_OLLAMA_URL: http://ollama:11434
+    volumes:
+      - plataforma_data:/data
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    # Luego: docker compose exec ollama ollama pull llama3.2:3b
+
+volumes:
+  plataforma_data:
+  ollama_data:
