@@ -4,7 +4,19 @@ import indiceRaw from '../../public/data/indice.json?raw';
 export const prerender = true;
 ---
 <Base titulo="Aprender" activo="aprender">
-  <div id="vista"></div>
+  <div id="vista">
+  <h1>📚 Aprender</h1>
+  <p class="sub">57 cursos · 17 gratis completos · 329 lecciones · 658 quizzes</p>
+  <div class="grid">
+    {JSON.parse(indiceRaw).map((c, i) => (
+      <a class="card clickable" href={'#c/' + i} style="text-decoration:none">
+        <h3>{c.n}</h3>
+        <span class={'badge ' + (c.free ? 'b-free' : 'b-pro')}>{c.free ? '🆓 GRATIS' : '💎 PRO'}</span>
+        <span style="color:var(--muted);font-size:.8rem"> · {c.l} lecciones</span>
+      </a>
+    ))}
+  </div>
+</div>
   <script is:inline define:vars={{ indiceRaw }}>
     window.__PT_INDICE__ = JSON.parse(indiceRaw);
   </script>
