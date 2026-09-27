@@ -8,7 +8,7 @@ export const prerender = true;
   <div id="zona"><p style="color:var(--muted)">Cargando…</p></div>
   <canvas id="cv" width="1200" height="850" style="max-width:100%;border-radius:.8rem;margin-top:1rem" hidden></canvas>
   <script is:inline>
-    PT.ready();
+    async function boot() { await PT.ready();
     const $ = s => document.querySelector(s);
     const genCodigo = (curso, alias) => {
       let h = 0; const str = curso + '|' + (alias || 'anon') + '|' + PT.hoy();
@@ -82,5 +82,7 @@ export const prerender = true;
         }
       });
     });
+    }
+    boot();
   </script>
 </Base>
