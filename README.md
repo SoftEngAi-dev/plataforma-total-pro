@@ -9,7 +9,7 @@
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e)](LICENSE)
 [![Web](https://img.shields.io/badge/web-PWA-f59e0b)](https://softengai-dev.github.io/plataforma-total-pro/)
 
-**v5.1.0 · 57 cursos · 329 lecciones · 658 quizzes · 17 cursos FREE + 40 PRO.**
+**v5.1.4 · 57 cursos · 329 lecciones · 658 quizzes · 17 cursos FREE + 40 PRO.**
 
 Plataforma Local First para aprender programación, practicar, medir progreso y utilizar IA local opcional. Funciona como aplicación desktop y como web/PWA.
 
@@ -43,7 +43,7 @@ GitHub Actions compila automáticamente Windows, macOS y Linux.
 3. Descarga `PlataformaTotal-Windows`, `PlataformaTotal-macOS` o `PlataformaTotal-Linux`.
 4. En Windows, descomprime el ZIP y ejecuta `PlataformaTotal.exe`.
 
-Los artefactos de Actions son temporales. Para crear una descarga permanente, publica un tag `v5.1.0`; el workflow de release adjunta los tres paquetes automáticamente.
+Los artefactos de Actions son temporales. Para crear una descarga permanente, publica un tag `v5.1.4`; el workflow de release adjunta los tres paquetes automáticamente.
 
 ## 🌐 Versión online
 
@@ -116,7 +116,7 @@ El modo local almacena los datos fuera del repositorio:
 
 Puedes cambiarlo con `PT_DATA_DIR`.
 
-## 🧪 Estado verificado de v5.1.0
+## 🧪 Estado verificado de v5.1.4
 
 La capa web es Local First: valida el backend antes de usarlo y mantiene un fallback local real para datos, sesión, progreso, chat, proyectos y certificados. El currículo se regenera desde `contenido_a.py` … `contenido_f.py`.
 

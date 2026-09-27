@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ locals }) => {
   return Response.json({
     ok: true,
     service: 'plataforma-total-api',
-    version: '5.1.0',
+    version: '5.1.4',
     mode: db ? (ai ? 'cloud+ai' : 'cloud') : 'degraded',
     capabilities: {
       auth: db,
