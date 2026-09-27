@@ -27,13 +27,13 @@ except Exception:
     sync_web = None
 
 # 🔁 Versión instalada — la auto-actualización la compara con GitHub Releases
-VERSION_APP = "4.5.0"
+VERSION_APP = "5.0.0"
 REPO_GH = "SoftEngAi-dev/plataforma-total-pro"
 _LECCIONES = {}
 for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e, contenido_f):
     _LECCIONES.update(_mod.CURSOS_MOD)
 
-# ══════════ 💎 MONETIZACIÓN — freemium (15+2 cursos gratis, resto PRO) ══════════
+# ══════════ 💎 MONETIZACIÓN — freemium (17 cursos gratis, resto PRO) ══════════
 CURSOS_GRATIS = set(list(_LECCIONES.keys())[:15]) | {  # los fundamentos, gratis para siempre
     "📐 Matemáticas para Programadores — Las que Sí Se Usan",
     "🧠 Lógica y Pensamiento Computacional",
