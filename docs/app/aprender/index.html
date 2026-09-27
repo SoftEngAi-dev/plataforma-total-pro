@@ -5,7 +5,7 @@
 
     async function boot() {
       PT.cargar();
-      const base = location.pathname.replace(/\/aprender\/?$/, '') || '.';
+      const base = location.pathname.replace(/\/aprender(?:\/index\.html)?\/?$/, '') || '.';
       const res = await fetch(base + '/data/indice.json', { cache: 'no-store' });
       if (!res.ok) throw new Error('No se pudo cargar el currículo local');
       INDICE = await res.json();
