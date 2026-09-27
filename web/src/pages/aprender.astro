@@ -1,23 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import indiceRaw from '../../public/data/indice.json?raw';
 export const prerender = true;
 ---
 <Base titulo="Aprender" activo="aprender">
   <div id="vista"></div>
+  <script is:inline define:vars={{ indiceRaw }}>
+    window.__PT_INDICE__ = JSON.parse(indiceRaw);
+  </script>
   <script is:inline>
     const $ = s => document.querySelector(s);
     let INDICE = [];
     const B = location.pathname.replace(/\/aprender(?:\/index\.html)?\/?$/, '') || '.';
 
     async function boot() {
-      PT.cargar();
-      const base = location.pathname.replace(/\/aprender(?:\/index\.html)?\/?$/, '') || '.';
-      const res = await fetch(base + '/data/indice.json', { cache: 'no-store' });
-      if (!res.ok) throw new Error('No se pudo cargar el currículo local');
-      INDICE = await res.json();
+      try { PT.cargar(); } catch (_) {}
+      INDICE = Array.isArray(window.__PT_INDICE__) ? window.__PT_INDICE__ : [];
+      if (!INDICE.length) {
+        const base = location.pathname.replace(/\/aprender(?:\/index\.html)?\/?$/, '') || '.';
+        try {
+          const res = await fetch(base + '/data/indice.json', { cache: 'no-store' });
+          if (res.ok) INDICE = await res.json();
+        } catch (_) {}
+      }
       addEventListener('hashchange', ruta);
       ruta();
-      PT.health();
+      try { PT.health(); } catch (_) {}
     }
     const badge = f => f ? '<span class="badge b-free">🆓 GRATIS</span>' : '<span class="badge b-pro">💎 PRO</span>';
     const ruta = () => {
@@ -42,7 +50,8 @@ export const prerender = true;
             <div class="barra" style="margin-top:.5rem;height:6px"><div style="width:${c.l ? Math.round(100 * leidas / c.l) : 0}%"></div></div>
           </div>`;
         }).join('') || '<p>Sin resultados 😅</p>'}</div>`;
-      $('#q').addEventListener('input', e => home(e.target.value));
+      const input = $('#q');
+      if (input) input.addEventListener('input', e => home(e.target.value));
       if (q) { const el = $('#q'); el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
     }
 
