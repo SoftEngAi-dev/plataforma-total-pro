@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""🎓 PLATAFORMA TOTAL v3.0 — Escuela local de programación con IA.
+"""🎓 PLATAFORMA TOTAL v5.1 — Escuela local de programación con IA.
 57 cursos · 329 lecciones · 658 quizzes · Buscador · Pomodoro · Racha 🔥
 Certificados 🎓 · Chat IA con memoria · 100% offline (Ollama opcional)."""
 import os, sys, json, threading, subprocess, shutil, webbrowser, datetime, platform, hashlib, random, tempfile, re, unicodedata
@@ -27,7 +27,7 @@ except Exception:
     sync_web = None
 
 # 🔁 Versión instalada — la auto-actualización la compara con GitHub Releases
-VERSION_APP = "5.0.0"
+VERSION_APP = "5.1.0"
 REPO_GH = "SoftEngAi-dev/plataforma-total-pro"
 _LECCIONES = {}
 for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e, contenido_f):

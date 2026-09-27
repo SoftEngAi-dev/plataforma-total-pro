@@ -9,7 +9,7 @@
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e)](LICENSE)
 [![Web](https://img.shields.io/badge/web-PWA-f59e0b)](https://softengai-dev.github.io/plataforma-total-pro/)
 
-**v5.0.0 · 57 cursos · 329 lecciones · 658 quizzes · 17 cursos FREE + 40 PRO.**
+**v5.1.0 · 57 cursos · 329 lecciones · 658 quizzes · 17 cursos FREE + 40 PRO.**
 
 Plataforma Local First para aprender programación, practicar, medir progreso y utilizar IA local opcional. Funciona como aplicación desktop y como web/PWA.
 
@@ -114,6 +114,8 @@ El modo local almacena los datos fuera del repositorio:
 Puedes cambiarlo con `PT_DATA_DIR`.
 
 ## 🧪 Estado verificado de v5.0.0
+
+La capa web es Local First: valida el backend antes de usarlo y mantiene un fallback local real para datos, sesión, progreso, chat, proyectos y certificados. El currículo se regenera desde `contenido_a.py` … `contenido_f.py`.
 
 El commit actual de `main` pasa:
 

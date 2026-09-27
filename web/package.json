@@ -1,6 +1,6 @@
 {
   "name": "plataforma-total-web",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "deploy": "wrangler pages deploy dist",
     "build:local": "astro build",
-    "serve:local": "python ../local_server.py --port 8787"
+    "serve:local": "python ../local_server.py --port 8787",
+    "prebuild": "python ../scripts/ensure_content.py"
   },
   "dependencies": {
     "astro": "^4.16.18"

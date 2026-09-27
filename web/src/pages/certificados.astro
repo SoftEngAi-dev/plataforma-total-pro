@@ -64,7 +64,7 @@ export const prerender = true;
         a.download = 'Certificado-PlataformaTotal.png'; a.href = cv.toDataURL('image/png');
         a.className = 'btn ok'; a.textContent = '⬇ Descargar PNG (código ' + cod + ')'; a.style.marginTop = '1rem';
         const sal = document.getElementById('salida'); sal.innerHTML = ''; sal.appendChild(a);
-        PT.s.certs.push({ codigo: cod, curso: c.n, fecha: PT.hoy() }); PT.guardar();
+        PT.registerLocalCertificate(cod, c.n, nombre);
         if (PT.s.token) {  // 📜 registro en la nube → verificación pública /verificar/
           PT.api('certificado', { method: 'POST', body: JSON.stringify({ codigo: cod, curso: c.n }) }).then(d => {
             if (d.ok) {

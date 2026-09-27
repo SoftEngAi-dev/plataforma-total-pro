@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
+      - name: Regenerar currículo canónico
+        run: python scripts/ensure_content.py
       - name: Tests Python (integridad de contenido)
         run: python tests/test_integridad.py
       - uses: actions/setup-node@v4
