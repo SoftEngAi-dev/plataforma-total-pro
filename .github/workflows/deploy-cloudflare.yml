@@ -44,9 +44,12 @@ jobs:
       - name: Aplicar esquema D1
         working-directory: web
         run: npx wrangler d1 execute plataforma --remote --file=./schema.sql
-      - name: Deploy Pages + API
+      - name: Deploy Pages + API (dominio principal)
         working-directory: web
         run: npx wrangler pages deploy dist --project-name plataforma-total-web
+      - name: Deploy al dominio de marca aprendev.pages.dev (alias, misma build/D1)
+        working-directory: web
+        run: npx wrangler pages deploy dist --project-name aprendev
       - name: Probar API real
         run: |
           curl -fsS https://plataforma-total-web.pages.dev/api/health | tee /tmp/health.json
