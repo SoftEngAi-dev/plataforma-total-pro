@@ -8,7 +8,13 @@ on:
       - 'scripts/ensure_content.py'
       - 'platform.json'
       - '!docs/app/**'
+      - '!web/public/data/**'
+      - '!web/public/offline-manifest.json'
       - '.github/workflows/sync-pages-app.yml'
+  # Un solo publicador; los cambios generados no vuelven a dispararlo.
+concurrency:
+  group: pages-publisher
+  cancel-in-progress: false
   workflow_dispatch:
 
 permissions:
@@ -67,5 +73,7 @@ jobs:
             echo "Sin cambios generados"
           else
             git commit -m "chore(pages): publish web app and canonical course data"
+            git fetch origin main
+            git pull --rebase --autostash origin main
             git push
           fi

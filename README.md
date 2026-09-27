@@ -43,15 +43,18 @@ GitHub Actions compila automáticamente Windows, macOS y Linux.
 3. Descarga `PlataformaTotal-Windows`, `PlataformaTotal-macOS` o `PlataformaTotal-Linux`.
 4. En Windows, descomprime el ZIP y ejecuta `PlataformaTotal.exe`.
 
-Los artefactos de Actions son temporales. Para crear una descarga permanente, publica un tag `v5.0.0`; el workflow de release adjunta los tres paquetes automáticamente.
+Los artefactos de Actions son temporales. Para crear una descarga permanente, publica un tag `v5.1.0`; el workflow de release adjunta los tres paquetes automáticamente.
 
 ## 🌐 Versión online
 
-La versión pública se despliega mediante GitHub Pages:
+La aplicación online canónica usa Cloudflare Pages + D1 + Workers AI:
 
-**https://softengai-dev.github.io/plataforma-total-pro/**
+**https://plataforma-total-web.pages.dev/**
 
-La infraestructura Cloudflare/D1/Workers AI del repositorio queda disponible para el modo cloud/híbrido cuando se configuren sus credenciales y bindings.
+La copia estática de GitHub Pages sirve como espejo PWA:
+**https://softengai-dev.github.io/plataforma-total-pro/app/index.html**
+
+La web detecta el backend real mediante /api/health, valida que sea JSON y cambia a Local First si no está disponible.
 
 ## 🏠 Local First
 
@@ -113,7 +116,7 @@ El modo local almacena los datos fuera del repositorio:
 
 Puedes cambiarlo con `PT_DATA_DIR`.
 
-## 🧪 Estado verificado de v5.0.0
+## 🧪 Estado verificado de v5.1.0
 
 La capa web es Local First: valida el backend antes de usarlo y mantiene un fallback local real para datos, sesión, progreso, chat, proyectos y certificados. El currículo se regenera desde `contenido_a.py` … `contenido_f.py`.
 

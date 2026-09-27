@@ -1,6 +1,6 @@
 """
 ☁️ sync_web.py — Cliente de nube OPCIONAL para Plataforma Total (app escritorio).
-Conecta con el backend cloud usando el mismo contrato unificado que la web (pt_web_v3). Solo stdlib (urllib): no agrega dependencias.
+Conecta con el backend cloud usando el mismo contrato unificado que la web (v5.1). Solo stdlib (urllib): no agrega dependencias.
 
 Funciones:
   login(alias, pin)        → (ok, {alias, token} | {error})
@@ -25,7 +25,7 @@ def _req(path, payload=None, token=None):
     """Llamada JSON simple. Devuelve (status, dict) o (status, {'error': msg})."""
     req = urllib.request.Request(API + path)
     # Cloudflare WAF bloquea el UA por defecto de Python-urllib → UA neutro de app
-    req.add_header("User-Agent", "PlataformaTotal-Desktop/5.0 (+python-urllib)")
+    req.add_header("User-Agent", "PlataformaTotal-Desktop/5.1 (+python-urllib)")
     req.add_header("Accept", "application/json")
     req.add_header("Content-Type", "application/json")
     if token:
