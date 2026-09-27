@@ -54,7 +54,7 @@ INDEX = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<meta name="description" content="Plataforma Total WEB — 47 cursos de programación en español, 15 gratis para siempre, 100% en tu navegador. Instalación opcional como app.">
+<meta name="description" content="Plataforma Total WEB — 57 cursos de programación en español, 17 gratis para siempre, 100% en tu navegador. Instalación opcional como app.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plataforma Total">
 <link rel="manifest" href="manifest.webmanifest">
@@ -116,7 +116,7 @@ INDEX = r"""<!DOCTYPE html>
 """
 (APP / "index.html").write_text(INDEX, encoding="utf-8")
 
-APPJS = r"""/* SPA Plataforma Total WEB — fetch por curso, rutas #/, freemium 15/32 */
+APPJS = r"""/* SPA Plataforma Total WEB — fetch por curso, rutas #/, freemium 17/40 */
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let INDICE = [], CK = {checkout_mensual:'../#precios',checkout_anual:'../#precios',checkout_lifetime:'../#precios'};
@@ -224,7 +224,7 @@ boot();
 (APP / "manifest.webmanifest").write_text(json.dumps({
     "name": "Plataforma Total — Cursos de Programación",
     "short_name": "Plataforma",
-    "description": "47 cursos de programación en español (15 gratis), offline y gratis en tu navegador.",
+    "description": "57 cursos de programación en español (17 gratis), offline y gratis en tu navegador.",
     "lang": "es", "start_url": "./index.html", "scope": "./",
     "display": "standalone", "orientation": "portrait",
     "background_color": "#020617", "theme_color": "#0f172a",
