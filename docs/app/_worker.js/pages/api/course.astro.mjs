@@ -4,7 +4,20 @@ export { renderers } from '../../renderers.mjs';
 const prerender = false;
 const J = (d, status = 200) => Response.json(d, {
   status,
-  headers: { "Cache-Control": "public, max-age=300" }
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, X-Token",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Cache-Control": "public, max-age=300"
+  }
+});
+const OPTIONS = () => new Response(null, {
+  status: 204,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, X-Token",
+    "Access-Control-Allow-Methods": "GET, OPTIONS"
+  }
 });
 const GET = async ({ request }) => {
   const slug = new URL(request.url).searchParams.get("slug") || "";
@@ -19,6 +32,7 @@ const GET = async ({ request }) => {
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   GET,
+  OPTIONS,
   prerender
 }, Symbol.toStringTag, { value: 'Module' }));
 
