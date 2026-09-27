@@ -7,7 +7,7 @@ export const prerender = true;
   <p class="sub">Spec §19/§35/§67: caminos guiados que encadenan los 57 cursos en 7 carreras completas. Tu progreso se calcula en vivo.</p>
   <div id="rutas"></div>
   <script is:inline>
-    PT.cargar();
+    PT.ready();
     // índices 0-based según data/indice.json
     const RUTAS = [
       { e: '🌐', n: 'Full Stack Developer', d: 'Del HTML al despliegue: la web completa.',
@@ -25,7 +25,7 @@ export const prerender = true;
       { e: '🛢️', n: 'Datos e IA Aplicada', d: 'Del análisis al pipeline moderno y la IA en producción.',
         pasos: [28, 29, 54, 30, 31, 49] },
     ];
-    fetch('data/indice.json').then(r => r.json()).then(IND => {
+    PT.data('data/indice.json').then(IND => {
       document.getElementById('rutas').innerHTML = RUTAS.map(r => {
         const total = r.pasos.reduce((a, i) => a + (IND[i] ? IND[i].l : 0), 0);
         const hecho = r.pasos.reduce((a, i) => a + Math.min((PT.s.leidas[i] || []).length, IND[i] ? IND[i].l : 0), 0);
