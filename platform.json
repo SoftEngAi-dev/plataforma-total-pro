@@ -1,0 +1,10 @@
+{
+  "version":"5.0.0",
+  "schema":2,
+  "product":"Plataforma Total",
+  "stats":{"courses":57,"free_courses":17,"pro_courses":40,"lessons":329,"quizzes":658},
+  "modes":["local","local-ai","hybrid","cloud"],
+  "storage":{"desktop":"SQLite","web":"IndexedDB + local API","cloud":"D1"},
+  "ai":{"local":"rules/RAG + Ollama","cloud":"Workers AI (optional)"},
+  "source_of_truth":"contenido"
+}
