@@ -4,6 +4,7 @@
   const IDB_NAME = 'PlataformaTotal';
   const IDB_STORE = 'state';
   const DEVICE_KEY = 'pt_device_id';
+  const OLD_KEY = 'pt_web_v1';
   const DEF = () => ({
     alias: null, token: null,
     xp: 0, quiz_ok: 0, quiz_tot: 0,
@@ -41,7 +42,7 @@
         racha:{n:Math.max(Number(a.racha?.n||0),Number(b.racha?.n||0)),ultimo:a.racha?.ultimo||b.racha?.ultimo||null},ultima};
     },
     cargar(){
-      try{this.s={...DEF(),...JSON.parse(localStorage.getItem(K)||'{}')};}catch{this.s=DEF();}
+      try{this.s={...DEF(),...JSON.parse(localStorage.getItem(K)||localStorage.getItem(OLD_KEY)||'{}')};}catch{this.s=DEF();}
       this.s.device_id=this.s.device_id||this._deviceId();this.s.updated_at=this.s.updated_at||new Date().toISOString();
       this._idbGet().then(v=>{if(!v)return;const m=this._merge(this.s,v);m.alias=this.s.alias||v.alias||null;m.token=this.s.token||v.token||null;this.s={...DEF(),...m};try{localStorage.setItem(K,JSON.stringify(this.s));}catch{}}).catch(()=>{});
       return this.s;
