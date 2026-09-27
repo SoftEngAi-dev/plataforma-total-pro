@@ -27,7 +27,7 @@ except Exception:
     sync_web = None
 
 # 🔁 Versión instalada — la auto-actualización la compara con GitHub Releases
-VERSION_APP = "5.1.0"
+VERSION_APP = "5.1.4"
 REPO_GH = "SoftEngAi-dev/plataforma-total-pro"
 _LECCIONES = {}
 for _mod in (contenido_a, contenido_b, contenido_c, contenido_d, contenido_e, contenido_f):
