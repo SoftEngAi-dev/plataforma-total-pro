@@ -10,9 +10,14 @@ export const prerender = true;
     const B = location.pathname.replace(/\/aprender\/?$/, '') || '.';
 
     async function boot() {
-      await PT.ready();
-      INDICE = await PT.data('data/indice.json');
-      addEventListener('hashchange', ruta); ruta();
+      PT.cargar();
+      const base = location.pathname.replace(/\/aprender\/?$/, '') || '.';
+      const res = await fetch(base + '/data/indice.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('No se pudo cargar el currículo local');
+      INDICE = await res.json();
+      addEventListener('hashchange', ruta);
+      ruta();
+      PT.health();
     }
     const badge = f => f ? '<span class="badge b-free">🆓 GRATIS</span>' : '<span class="badge b-pro">💎 PRO</span>';
     const ruta = () => {
@@ -44,7 +49,7 @@ export const prerender = true;
     async function curso(i) {
       const c = INDICE[i]; if (!c) return home();
       if (!c.free && !PT.esPro()) return paywall(c);
-      const d = await PT.data('data/cursos/' + c.s + '.json');
+      const res = await fetch(B + '/data/cursos/' + c.s + '.json', { cache: 'no-store' }); if (!res.ok) throw new Error('curso no disponible'); const d = await res.json();
       const leidas = PT.s.leidas[i] || [];
       const qs = PT.cursoQuizStats(i, d.lecciones);
       $('#vista').innerHTML = `
@@ -58,7 +63,7 @@ export const prerender = true;
     async function leccion(i, j) {
       const c = INDICE[i]; if (!c) return home();
       if (!c.free && !PT.esPro()) return paywall(c);
-      const d = await PT.data('data/cursos/' + c.s + '.json');
+      const res = await fetch(B + '/data/cursos/' + c.s + '.json', { cache: 'no-store' }); if (!res.ok) throw new Error('curso no disponible'); const d = await res.json();
       const l = d.lecciones[j]; if (!l) return curso(i);
       const texto = PT.esc(l.x).replace(/^.*━+.*$/gm, '<hr>').replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');
       $('#vista').innerHTML = `
