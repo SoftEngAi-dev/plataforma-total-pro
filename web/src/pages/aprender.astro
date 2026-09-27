@@ -10,8 +10,8 @@ export const prerender = true;
     const B = location.pathname.replace(/\/aprender\/?$/, '') || '.';
 
     async function boot() {
-      PT.cargar();
-      INDICE = await (await fetch(B + '/data/indice.json')).json();
+      await PT.ready();
+      INDICE = await PT.data('data/indice.json');
       addEventListener('hashchange', ruta); ruta();
     }
     const badge = f => f ? '<span class="badge b-free">🆓 GRATIS</span>' : '<span class="badge b-pro">💎 PRO</span>';
@@ -44,12 +44,13 @@ export const prerender = true;
     async function curso(i) {
       const c = INDICE[i]; if (!c) return home();
       if (!c.free && !PT.esPro()) return paywall(c);
-      const d = await (await fetch(B + '/data/cursos/' + c.s + '.json')).json();
+      const d = await PT.data('data/cursos/' + c.s + '.json');
       const leidas = PT.s.leidas[i] || [];
+      const qs = PT.cursoQuizStats(i, d.lecciones);
       $('#vista').innerHTML = `
         <a href="#/" style="color:var(--muted)">← Todos los cursos</a>
         <h1 style="font-size:1.35rem;margin-top:.4rem">${PT.esc(d.n)}</h1>
-        <p class="sub">${badge(d.free)} · ${leidas.length}/${d.lecciones.length} lecciones · ${d.lecciones.length === leidas.length ? '🎉 ¡Completado!' : ''}</p>
+        <p class="sub">${badge(d.free)} · ${leidas.length}/${d.lecciones.length} lecciones · quizzes ${qs.ok}/${qs.total} perfectos · ${leidas.length === d.lecciones.length && qs.ok === qs.total ? '🎉 ¡Dominado!' : ''}</p>
         ${d.lecciones.map((l, j) => `<a class="lec ${leidas.includes(j) ? 'leida' : ''}" href="#/c/${i}/${j}">` +
           `${leidas.includes(j) ? '✅' : `<b>${j + 1}.</b>`} ${PT.esc(l.t)}</a>`).join('')}`;
     }
@@ -57,7 +58,7 @@ export const prerender = true;
     async function leccion(i, j) {
       const c = INDICE[i]; if (!c) return home();
       if (!c.free && !PT.esPro()) return paywall(c);
-      const d = await (await fetch(B + '/data/cursos/' + c.s + '.json')).json();
+      const d = await PT.data('data/cursos/' + c.s + '.json');
       const l = d.lecciones[j]; if (!l) return curso(i);
       const texto = PT.esc(l.x).replace(/^.*━+.*$/gm, '<hr>').replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');
       $('#vista').innerHTML = `
@@ -79,17 +80,18 @@ export const prerender = true;
         const ok = +qd.dataset.ok;
         qd.querySelectorAll('.op').forEach(b => b.onclick = () => {
           qd.querySelectorAll('.op').forEach(x => x.disabled = true);
-          respondidas++; PT.s.quiz_tot++;
-          if (+b.dataset.i === ok) { b.classList.add('right'); aciertos++; PT.s.quiz_ok++; PT.actividad(5); }
+          respondidas++;
+          if (+b.dataset.i === ok) { b.classList.add('right'); aciertos++; PT.actividad(5); }
           else { b.classList.add('wrong'); qd.querySelectorAll('.op')[ok].classList.add('right'); }
+          PT.registrarQuiz(i, j, aciertos, respondidas, l.q.length);
           qd.querySelector('.exp').style.display = 'block';
-          localStorage.setItem('pt_web_v1', JSON.stringify(PT.s));
         });
       });
       const fin = document.getElementById('fin');
       if (fin) fin.onclick = () => {
-        if (!PT.s.completados.includes(c.s)) PT.s.completados.push(c.s);
-        PT.actividad(50); location.hash = '#/c/' + i;
+        const ok = PT.completarCurso(i, c.s, d.lecciones);
+        if (!ok) { alert('Para cerrar este curso necesitás todas las lecciones y todos sus quizzes al 100%.'); return; }
+        location.hash = '#/c/' + i;
       };
       scrollTo(0, 0);
     }
