@@ -1,7 +1,7 @@
 /* 📦 Service Worker — PWA Plataforma Total (offline-first del contenido propio)
    Estrategia: shell + currícula precache · páginas network-first · assets stale-while-revalidate
    · /api/* siempre red (nunca cachear datos personales) */
-const V = 'pt-v5.1.1';
+const V = 'pt-v5.1.2';
 const B = self.registration.scope;            // funciona en / y en /plataforma-total-pro/app/
 const NUCLEO = ['', 'runtime-config.js', 'pt.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'data/indice.json', 'data/corpus.json', 'tutor.js', 'offline-manifest.json'];
 
