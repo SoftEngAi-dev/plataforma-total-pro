@@ -46,7 +46,7 @@ const jsonld = {
   <p style="margin-top:1.2rem;color:var(--muted);font-size:.85rem">🪟 ¿Querés la experiencia completa offline? <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">Descargá el .exe de Windows</a> — y en tu celular, «Añadir a pantalla principal».</p>
 
   <script is:inline>
-    PT.cargar();
+    PT.ready().then(() => {
     const s = PT.s, n = PT.xpNivel();
     if (s.alias) document.getElementById('saludo').innerHTML = '👋 ¡Hola, <b>' + PT.esc(s.alias) + '</b>!';
     document.getElementById('racha').textContent = s.racha.n + ' día' + (s.racha.n === 1 ? '' : 's');
