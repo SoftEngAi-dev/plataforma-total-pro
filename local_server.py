@@ -137,7 +137,15 @@ class Handler(BaseHTTPRequestHandler):
             b=self.body(); a=str(b.get("alias","")).strip().lower(); pin=str(b.get("pin",""))
             if not alias_ok(a) or len(pin)<4:return self.js({"ok":False,"error":"alias 3-24 y PIN 4+"},400)
             c=db(); r=c.execute("SELECT hash,salt FROM users WHERE alias=?",(a,)).fetchone()
-            if r and not secrets.compare_digest(pbk(pin,r[1]),r[0]): c.close(); return self.js({"ok":False,"error":"PIN incorrecto"},401)
+            if r:
+                failed=c.execute("SELECT n,ts FROM intentos WHERE alias=?",(a,)).fetchone()
+                if failed and failed[1]>now() and int(failed[0])>=5:
+                    c.close(); return self.js({"ok":False,"error":"demasiados intentos, esperá 10 min"},429)
+                if not secrets.compare_digest(pbk(pin,r[1]),r[0]):
+                    nfail=(int(failed[0]) if failed else 0)+1
+                    c.execute("INSERT INTO intentos VALUES(?,?,?) ON CONFLICT(alias) DO UPDATE SET n=?,ts=?",(a,nfail,now(),nfail,now()))
+                    c.commit(); c.close(); return self.js({"ok":False,"error":"PIN incorrecto"},401)
+                c.execute("DELETE FROM intentos WHERE alias=?",(a,))
             if not r:
                 salt=secrets.token_hex(16); c.execute("INSERT INTO users VALUES(?,?,?,?)",(a,pbk(pin,salt),salt,now()))
             token=secrets.token_hex(32); exp=(dt.datetime.now(dt.timezone.utc)+dt.timedelta(days=30)).isoformat(); c.execute("INSERT INTO sessions VALUES(?,?,?)",(token,a,exp)); c.commit(); c.close()
