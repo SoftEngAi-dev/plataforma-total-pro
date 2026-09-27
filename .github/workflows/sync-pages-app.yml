@@ -8,6 +8,7 @@ on:
       - 'scripts/ensure_content.py'
       - 'platform.json'
       - '!docs/app/**'
+      - '.github/workflows/sync-pages-app.yml'
   workflow_dispatch:
 
 permissions:
@@ -36,7 +37,11 @@ jobs:
         run: |
           rm -rf docs/app
           mkdir -p docs/app
-          cp -R web/dist/. docs/app/
+          if test -d web/dist/plataforma-total-pro/app; then
+            cp -R web/dist/plataforma-total-pro/app/. docs/app/
+          else
+            cp -R web/dist/. docs/app/
+          fi
           touch docs/.nojekyll
       - name: Publicar artefactos generados
         run: |
