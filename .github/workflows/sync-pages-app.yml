@@ -11,11 +11,12 @@ on:
       - '!web/public/data/**'
       - '!web/public/offline-manifest.json'
       - '.github/workflows/sync-pages-app.yml'
+  workflow_dispatch:
+
   # Un solo publicador; los cambios generados no vuelven a dispararlo.
 concurrency:
   group: pages-publisher
   cancel-in-progress: false
-  workflow_dispatch:
 
 permissions:
   contents: write
