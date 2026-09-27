@@ -196,15 +196,67 @@ def nube_limpiar():
         pass
 
 def nube_payload_desktop():
-    """Resumen local en el contrato pt_web_v1 (10 XP/lección, 5 XP/quiz perfecto)."""
+    """Exporta el estado real del desktop al contrato unificado pt_web_v3."""
     q_tot, q_perf = db_quiz_stats()
-    return {"xp": db_progreso_total() * 10 + q_perf * 5,
-            "quiz_ok": q_perf, "quiz_tot": q_tot,
-            "racha": {"n": db_racha(), "ult": datetime.date.today().isoformat()}}
+    leidas = {}
+    for ci, curso in enumerate(CURSOS):
+        leidas[str(ci)] = sorted(db_lecciones_hechas(curso))
+
+    quiz_lessons = {}
+    con = _con()
+    try:
+        rows = con.execute("SELECT curso, leccion, mejor, total, fecha FROM quiz_scores").fetchall()
+        dias = sorted({str(r[0])[:10] for r in con.execute("SELECT fecha FROM actividad_dias").fetchall()})
+        ultima_row = con.execute(
+            "SELECT curso, leccion, fecha FROM progreso ORDER BY fecha DESC LIMIT 1"
+        ).fetchone()
+    finally:
+        con.close()
+
+    for curso, leccion, mejor, total, fecha in rows:
+        ci = NAME_TO_INDEX.get(curso) if 'NAME_TO_INDEX' in globals() else None
+        if ci is None:
+            ci = list(CURSOS.keys()).index(curso) if curso in CURSOS else None
+        if ci is not None:
+            quiz_lessons[f"{ci}:{int(leccion)}"] = {
+                "correct": int(mejor), "answered": int(total), "total": int(total),
+                "updated_at": str(fecha),
+            }
+
+    completados = [curso_slug(i, curso) for i, curso in enumerate(CURSOS)
+                   if db_curso_detalle(curso)[0]]
+
+    ultima = None
+    if ultima_row and ultima_row[0] in CURSOS:
+        ci = list(CURSOS.keys()).index(ultima_row[0])
+        j = int(ultima_row[1])
+        stamp = 0
+        try:
+            stamp = int(datetime.datetime.fromisoformat(
+                str(ultima_row[2]).replace("Z", "+00:00")
+            ).timestamp() * 1000)
+        except Exception:
+            pass
+        ultima = {"c": ci, "j": j, "t": CURSOS[ultima_row[0]][j][0], "at": stamp}
+
+    xp = db_progreso_total() * 10 + q_perf * 5 + len(completados) * 50
+    return {
+        "contrato": "pt_web_v3",
+        "xp": xp,
+        "quiz_ok": q_perf,
+        "quiz_tot": q_tot,
+        "racha": {"n": db_racha(), "ultimo": dias[-1] if dias else None},
+        "dias_activos": dias,
+        "leidas": leidas,
+        "quiz_lessons": quiz_lessons,
+        "completados": completados,
+        "ultima": ultima,
+        "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
 
 def nube_sincronizar():
-    """Merge SEGURO escritorio→nube: nunca toca `leidas`/`ultima` de la web/móvil;
-    contadores y racha se mezclan tomando el MAYOR. Además registra certificados
+    """Merge seguro escritorio→nube usando el mismo contrato que la web; conserva entidades
+    (lecciones, quizzes, días, completados) y registros de certificados.
     (quedan verificables en /verificar/) y desbloquea PRO comprado vía web."""
     if sync_web is None:
         return False, "Módulo sync_web no disponible."
@@ -222,7 +274,7 @@ def nube_sincronizar():
     merged["quiz_tot"] = max(int(cloud.get("quiz_tot") or 0), loc["quiz_tot"])
     rn_cloud = int((cloud.get("racha") or {}).get("n") or 0)
     merged["racha"] = {"n": max(rn_cloud, loc["racha"]["n"]), "ult": loc["racha"]["ult"]}
-    merged["contrato"] = "pt_web_v1"
+    merged["contrato"] = "pt_web_v3"
     enviados = set(n.get("certs_enviados") or [])
     nuevos = 0
     for curso, _alumno, codigo, _f in db_certificados():
