@@ -16,13 +16,13 @@ export const prerender = true;
   <h2>🏅 Emblemas</h2>
   <div class="grid" id="emblemas"></div>
   <script is:inline>
-    PT.cargar(); PT.syncPull();
+    await PT.ready(); await PT.syncPull();
     const s = PT.s;
     document.getElementById('n').textContent = PT.nivel();
     document.getElementById('xp').textContent = s.xp;
     document.getElementById('r').textContent = s.racha.n + ' día' + (s.racha.n === 1 ? '' : 's');
     document.getElementById('acc').textContent = s.quiz_tot ? Math.round(100 * s.quiz_ok / s.quiz_tot) + '%' : '—';
-    fetch('data/indice.json').then(r => r.json()).then(IND => {
+    PT.data('data/indice.json').then(IND => {
       document.getElementById('cursos').innerHTML = IND.map((c, i) => {
         const l = (s.leidas[i] || []).length, pct = c.l ? Math.round(100 * l / c.l) : 0;
         if (!pct) return '';
