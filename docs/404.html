@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <title>Plataforma Total</title>
+</head>
+<body>
+  <script>
+    (function () {
+      const base = '/plataforma-total-pro/app';
+      const path = location.pathname;
+      if (path === base || path === base + '/') {
+        location.replace(base + '/index.html' + location.search + location.hash);
+        return;
+      }
+      if (path.indexOf(base + '/') === 0 && !/\/index\.html$/.test(path)) {
+        const target = path.replace(/\/$/, '') + '/index.html' + location.search + location.hash;
+        location.replace(target);
+        return;
+      }
+      location.replace(base + '/index.html');
+    })();
+  </script>
+  <p>Abriendo Plataforma Total…</p>
+</body>
+</html>
