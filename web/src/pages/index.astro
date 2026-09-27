@@ -60,7 +60,7 @@ const jsonld = {
       const d = document.getElementById('continuar');
       d.hidden = false;
       d.innerHTML = '<h3>▶️ Continuar donde lo dejaste</h3><p>' + PT.esc(s.ultima.t || '') + '</p><p style="color:var(--muted);font-size:.85rem">Curso ' + (s.ultima.c + 1) + ' · lección ' + (s.ultima.j + 1) + '</p>';
-      d.onclick = () => location.href = '../aprender/#/c/' + s.ultima.c + '/' + s.ultima.j;
+      d.onclick = () => location.href = '../aprender/index.html#/c/' + s.ultima.c + '/' + s.ultima.j;
     }
   </script>
 </Base>
