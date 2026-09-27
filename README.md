@@ -2,157 +2,138 @@
   <img src="assets/icono-256.png" width="140" alt="Plataforma Total 🎓">
 </p>
 
-# 🎓 Plataforma Total — Tu Escuela Local de Programación
+# 🎓 Plataforma Total — Escuela de Programación + IA
 
-[![🏷️ v5.0.0](https://img.shields.io/github/v/release/SoftEngAi-dev/plataforma-total-pro?display_name=tag&label=versi%C3%B3n&color=7c3aed)](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases)
-[![🖥️ Build](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions/workflows/build.yml/badge.svg)](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions)
-[![📜 Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e)](LICENSE)
-[![🌐 Web](https://img.shields.io/badge/web-del%20proyecto-f59e0b)](https://softengai-dev.github.io/plataforma-total-pro/)
+[![CI](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions)
+[![Desktop Build](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions/workflows/build.yml/badge.svg)](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions)
+[![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e)](LICENSE)
+[![Web](https://img.shields.io/badge/web-PWA-f59e0b)](https://softengai-dev.github.io/plataforma-total-pro/)
 
-**Escuela completa de software que vive 100% en tu máquina. Sin internet, sin cuentas, sin suscripciones — justo tú, 57 cursos y (opcional) tu IA local.**
+**v5.0.0 · 57 cursos · 329 lecciones · 658 quizzes · 17 cursos FREE + 40 PRO.**
 
+Plataforma Local First para aprender programación, practicar, medir progreso y utilizar IA local opcional. Funciona como aplicación desktop y como web/PWA.
+
+## 🚀 Empezar ahora
+
+### Opción 1 — Windows: runtime local completo
+Instala Python 3.10+ y Node.js LTS, clona el repositorio y ejecuta:
+
+```bat
+git clone https://github.com/SoftEngAi-dev/plataforma-total-pro.git
+cd plataforma-total-pro
+START-LOCAL.bat
 ```
-57 cursos · 329 lecciones · 658 quizzes (100% cobertura) · 3.941 archivos de material
-Buscador 🔍 · Quizzes 📝 · Pomodoro 🍅 · Racha 🔥 · Certificados 🎓 · Chat IA con memoria 🤖 · Auto-actualización 🔄
-Linux · Windows · macOS · 100% offline · 🔄 Auto-actualización · Ejecutables con icono oficial 🖼️
-🆓 FREE: 17 cursos gratis · 💎 PRO: 32 cursos desde U$S 7,99/mes (ver [MONETIZACION.md](MONETIZACION.md))
-🪟 **Windows**: [descargá PlataformaTotal-Windows.exe](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe) → doble clic y listo · 🌐📱 [web/móvil gratis](https://softengai-dev.github.io/plataforma-total-pro/app/)
-```
 
----
+Se abre en `http://127.0.0.1:8787/`. La primera ejecución crea el entorno virtual, instala dependencias y construye la web.
 
-## ⬇️ Descarga directa (sin compilar nada)
-
-| SO | Archivo | Instrucciones |
-|----|---------|---------------|
-| 🪟 **Windows** | [PlataformaTotal-Windows.zip](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.zip) | Descomprimir → doble clic en `PlataformaTotal.exe` *(SmartScreen: "Más información" → "Ejecutar de todas formas")* |
-| 🐧 **Linux** | [PlataformaTotal-Linux.tar.gz](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Linux.tar.gz) | `tar -xzf` → ejecutar `PlataformaTotal/PlataformaTotal` |
-| 🍎 **macOS** | [PlataformaTotal-macOS.tar.gz](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-macOS.tar.gz) | `tar -xzf` → abrir la app |
-
-> 🏷️ Enlaces permanentes siempre a la **última versión**. Historial completo: [Releases](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases) · Cambios: [CHANGELOG](CHANGELOG.md)
-
----
-
-## 🏠 v5 Local First
-
-La v5 añade un runtime web local con SQLite, persistencia IndexedDB, merge de progreso entre dispositivos, PWA offline, proyectos locales y Tutor IA con Ollama opcional. El servidor local no necesita Cloudflare ni una cuenta para la parte educativa.
-
-Windows: `START-LOCAL.bat` · Linux/macOS: `./START-LOCAL.sh` · guía: [LOCAL-FIRST.md](LOCAL-FIRST.md).
-
-## 🚀 Arranque en 60 segundos (desde código)
-
-| SO | Opción A: código | Opción B: ejecutable |
-|----|------------------|----------------------|
-| **Linux** | `./run.sh` | `./PlataformaTotal` (descomprimido de `.tar.gz`) |
-| **Windows** | `run.bat` | `PlataformaTotal.exe` (vía Actions ⌨ abajo) |
-| **macOS** | `./run.command` | `PlataformaTotal.app` (vía Actions ⌨ abajo) |
-
-**Código fuente** (necesitas Python 3.10+): los scripts instalan todo solos la primera vez.
+### Opción 2 — Linux/macOS: runtime local completo
 
 ```bash
-git clone https://github.com/SoftEngAi-dev/plataforma-total-pro.git && cd plataforma-total
-./run.sh        # Linux (o run.bat / run.command)
+git clone https://github.com/SoftEngAi-dev/plataforma-total-pro.git
+cd plataforma-total-pro
+chmod +x START-LOCAL.sh
+./START-LOCAL.sh
 ```
 
-## ⬇️ Ejecutable ya compilado (Linux)
+### Opción 3 — Aplicación desktop nativa
+GitHub Actions compila automáticamente Windows, macOS y Linux.
 
-En `ejecutable/PlataformaTotal-Linux-x86_64.tar.gz`:
+1. Abre **Actions** → **🖥️ Compilar ejecutables desktop**.
+2. Selecciona una ejecución exitosa.
+3. Descarga `PlataformaTotal-Windows`, `PlataformaTotal-macOS` o `PlataformaTotal-Linux`.
+4. En Windows, descomprime el ZIP y ejecuta `PlataformaTotal.exe`.
+
+Los artefactos de Actions son temporales. Para crear una descarga permanente, publica un tag `v5.0.0`; el workflow de release adjunta los tres paquetes automáticamente.
+
+## 🌐 Versión online
+
+La versión pública se despliega mediante GitHub Pages:
+
+**https://softengai-dev.github.io/plataforma-total-pro/**
+
+La infraestructura Cloudflare/D1/Workers AI del repositorio queda disponible para el modo cloud/híbrido cuando se configuren sus credenciales y bindings.
+
+## 🏠 Local First
+
+La v5 incorpora:
+
+- SQLite local para el runtime de escritorio/web local.
+- IndexedDB para persistencia del navegador.
+- PWA/offline y precarga del contenido FREE.
+- Sincronización con merge determinista.
+- Proyectos locales.
+- Certificados locales.
+- Tutor IA con RAG local y Ollama opcional.
+- API local sin necesidad de Cloudflare para estudiar.
+
+Guía completa: [LOCAL-FIRST.md](LOCAL-FIRST.md).
+
+## 🧠 IA local con Ollama
+
+Con Ollama ejecutándose en `127.0.0.1:11434`, el Tutor local puede utilizar el modelo instalado. Sin Ollama, funciona el tutor de recuperación sobre el corpus local.
+
+Ejemplo:
 
 ```bash
-tar -xzf ejecutable/PlataformaTotal-Linux-x86_64.tar.gz
-./PlataformaTotal/PlataformaTotal     # doble clic también funciona
+ollama pull llama3.2:3b
 ```
 
-Funciona en Linux x86_64 reciente **sin instalar Python ni dependencias** (GLibc; simplemente corre).
+También existe `docker-compose.yml` para levantar el runtime local junto con Ollama.
 
-## ☁️ Ejecutables de Windows y macOS (gratis, automáticos)
+## 📚 Contenido
 
-El workflow `.github/workflows/build.yml` compila los **3 ejecutables en la nube de GitHub** en cada push a `main`:
+**57 cursos · 329 lecciones · 658 quizzes**
 
-1. Sube/uplift este proyecto a tu GitHub
-2. Pestaña **Actions** → "🖥️ Compilar ejecutables desktop" → descarga los artefactos
-3. Tienes: **Windows.zip (con .exe)**, **macOS.tar.gz (con .app)** y **Linux.tar.gz**
+Incluye web, JavaScript, TypeScript, React, Node.js, Python, SQL/PostgreSQL, PHP/Laravel, Ruby/Rails, Java/Spring, C#/.NET, Go, Rust, C/C++, móvil, frameworks, datos, IA/LLMs, testing, seguridad, arquitectura, APIs, DevOps y carrera profesional.
 
-## 📤 Subir a GitHub (guía completa: [`SUBIR_A_GITHUB.md`](SUBIR_A_GITHUB.md))
+## 🗂️ Estructura principal
 
-**🪟 Windows (recomendado):** descarga `plataforma-total-completo.zip`, extráelo y haz **doble clic en `SUBIR_A_GITHUB.bat`** — te pide usuario, repo y token, **crea el repo en tu GitHub por API** y sube los 3.600+ archivos solo.
+| Ruta | Función |
+|---|---|
+| `main.py` | Aplicación desktop |
+| `contenido_*.py` | Fuente curricular |
+| `web/` | Astro + PWA + APIs |
+| `local_server.py` | Runtime local con SQLite |
+| `platform.json` | Contrato de capacidades y estadísticas |
+| `web/public/data/` | Corpus web |
+| `tests/test_integridad.py` | Integridad del contenido |
+| `.github/workflows/ci.yml` | CI, E2E y smoke test local |
+| `.github/workflows/build.yml` | Compilación Windows/macOS/Linux |
+| `START-LOCAL.bat` | Arranque Windows |
+| `START-LOCAL.sh` | Arranque Linux/macOS |
+| `docker-compose.yml` | Runtime local + Ollama |
 
-**🍎 macOS / 🐧 Linux:** `./subir_a_github.sh` (interactivo) o manual:
+## 🔐 Datos y privacidad
 
-```bash
-# github.com/new → crea el repo VACÍO, luego:
-git remote add origin https://github.com/TU-USUARIO/plataforma-total.git
-git push -u origin main        # contraseña = tu Personal Access Token
-```
+El modo local almacena los datos fuera del repositorio:
 
-> 🔐 Token: github.com → **Settings → Developer settings → Tokens (classic)** → scopes `repo` + `workflow`.
+- Windows: `%APPDATA%/PlataformaTotal`
+- Linux: `~/.local/share/PlataformaTotal`
+- macOS: `~/Library/Application Support/PlataformaTotal`
 
-**🖥️ Descargar tu `.exe` tras el push:** pestaña **Actions** → run ✅ → **Artifacts** → `PlataformaTotal-Windows` (ZIP con `PlataformaTotal.exe` dentro). Para descargas **permanentes**: `git tag v5.0.0 && git push origin v5.0.0` → los 3 ejecutables quedan en **Releases** sin caducidad.
+Puedes cambiarlo con `PT_DATA_DIR`.
 
-## 🖥️ Icono de escritorio (Linux)
+## 🧪 Estado verificado de v5.0.0
 
-Tras descomprimir el ejecutable:
+El commit actual de `main` pasa:
 
-```bash
-tar -xzf ejecutable/PlataformaTotal-Linux-x86_64.tar.gz -C /opt  # o cualquier carpeta
-sed -i "s|/opt/PlataformaTotal|$(pwd)/PlataformaTotal|" PlataformaTotal.desktop
-cp PlataformaTotal.desktop ~/.local/share/applications/
-```
+- integridad de contenido: **OK**
+- build Astro: **OK**
+- E2E contra Wrangler local: **OK**
+- runtime local: **OK**
+- ejecutable Windows: **OK**
+- ejecutable macOS: **OK**
+- ejecutable Linux: **OK**
+- GitHub Pages deployment: **OK**
 
-La app aparece en tu menú de aplicaciones como 🎓 **Plataforma Total**.
+## 📖 Documentación
 
----
-
-## 📚 El curriculum (57 cursos)
-
-**Ruta y herramientas:** Ruta Maestra · Herramientas del Dev · Git/GitHub · Linux/Terminal · Docker · DevOps/CI-CD · Despliegue/Servidores
-**Web core:** HTML/CSS · JavaScript (18 lecciones) · TypeScript · React · Node.js
-**Backend:** Python (16) · SQL/PostgreSQL · PHP/Laravel · Ruby/Rails · Java/Spring · C#/.NET · Go · Rust · C/C++
-**Móvil:** Kotlin · Swift · Flutter · React Native
-**Frameworks:** Angular · Svelte/SvelteKit
-**Datos/IA:** R · Pandas · Machine Learning · IA y LLMs (Ollama incluido)
-**Profesional:** Seguridad Web · Testing · Algoritmos · Arquitectura · APIs REST · Productividad Dev · Entrevistas · Regex · Carrera/Portafolio
-
-## 🧠 Cómo se estudia aquí (método comprobado)
-
-1. 🍅 panel lateral → pulsa ▶ (pomodoro 25 min)
-2. 📚 Aprender → elige curso/lección, lee el protocolo 25 minutos
-3. 🛠 Reproduce el ejemplo con tus propias manos
-4. ✅ marca completada → 📝 juega el quiz → **meta: 🏆 100%**
-5. 🔥 repite mañana — la racha es la palanca de todo
-
-Domina un curso entero (lecciones + quizzes al 100%) y la app te **emisía tu certificado 🎓 imprimible** con código de verificación SHA-256.
-
-## 🗂 ¿Qué hay en este repo?
-
-| Ruta | Qué es |
-|------|--------|
-| `main.py` | La aplicación completa (customtkinter, SQLite, Ollama) |
-| `contenido_a/b/c.py` | El contenido curricular: 57 cursos × lecciones × quizzes |
-| `expandir_contenido.py` | Generador del ecosistema de estudio (`expansion/`) |
-| `expansion/` | **3.478 archivos de material**: lecciones MD, quizzes HTML offline, 482 flashcards, ejercicios, glosarios, prompts IA, 246 guías de proyecto, plan anual de estudio... |
-| `expansion/plan_diario/` | Plan día a día para un año de estudio (364 días) |
-| `expansion/quizzes_html/` | Quizzes interactivos offline por lección (se abren en el navegador) |
-| `ejecutable/` | Binario Linux empaquetado y verificado |
-| `.github/workflows/build.yml` | CI que compila los ejecutables Win/Mac/Linux en cada push |
-| `run.*` / `build_*` | Scripts de ejecución y compilación local por SO |
-| `expansion/entrevistas/` | Banco de preguntas de entrevista por tecnología |
-| `expansion/resumen_curso/` | Cheatsheet consolidado por curso |
-
-## 🩺 Datos y privacidad
-
-Todo lo que haces vive en **SQLite local**: `~/PlataformaTotal/datos/plataforma.db` — lecciones, racha, quizzes, pomodoros, historial de chat, certificados. Es tuyo: respáldalo, inspecciónalo, bórralo.
-
-**IA**: el chat usa tu propio **[Ollama](https://ollama.com)** local (gratis, privado). Sin Ollama activo, un cerebro offline responde las FAQs. Nada sale de tu máquina en ningún caso.
-
-## 🤝 Contribuir
-
-¿Bug, mejora de lección, quiz nuevo? Revisa `CONTRIBUTING.md` y abre un PR. El contenido curricular vive en `contenido_*.py` con un formato fácil de leer.
+- [LOCAL-FIRST.md](LOCAL-FIRST.md)
+- [MONETIZACION.md](MONETIZACION.md)
+- [CHANGELOG.md](CHANGELOG.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [LICENSE](LICENSE)
 
 ## 📜 Licencia
 
-MIT — úsala, cámbiala, enséñala. Ver `LICENSE`.
-
----
-
-> 💡 **Empieza hoy la lección 1 de la Ruta Maestra.** Un 🍅 = una lección. En 8 meses, una transformación. ¡Vamos!
+MIT.
