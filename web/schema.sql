@@ -52,3 +52,5 @@ CREATE INDEX IF NOT EXISTS idx_sessions_alias ON sessions(alias);
 CREATE INDEX IF NOT EXISTS idx_sessions_expira ON sessions(expira);
 CREATE INDEX IF NOT EXISTS idx_certificados_alias ON certificados(alias);
 CREATE INDEX IF NOT EXISTS idx_pro_alias_email ON pro_alias(email);
+CREATE TABLE IF NOT EXISTS projects (id TEXT PRIMARY KEY,alias TEXT NOT NULL,name TEXT NOT NULL,metadata TEXT,created TEXT NOT NULL,updated TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_projects_alias_updated ON projects(alias,updated DESC);
