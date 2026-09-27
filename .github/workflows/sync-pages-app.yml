@@ -37,11 +37,22 @@ jobs:
         run: |
           rm -rf docs/app
           mkdir -p docs/app
-          if test -d web/dist/plataforma-total-pro/app; then
-            cp -R web/dist/plataforma-total-pro/app/. docs/app/
-          else
-            cp -R web/dist/. docs/app/
-          fi
+          SRC=""
+          for candidate in             web/dist/app/plataforma-total-pro/app             web/dist/plataforma-total-pro/app             web/dist/app             web/dist
+          do
+            if test -f "$candidate/index.html"; then
+              SRC="$candidate"
+              break
+            fi
+          done
+          test -n "$SRC" || {
+            echo "::error::No se encontró index.html en la salida Astro."
+            find web/dist -maxdepth 5 -name index.html -print | head -80
+            exit 1
+          }
+          echo "Publicando Pages desde: $SRC"
+          cp -R "$SRC"/. docs/app/
+          test -f docs/app/index.html
           touch docs/.nojekyll
       - name: Publicar artefactos generados
         run: |
