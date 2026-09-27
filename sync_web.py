@@ -1,7 +1,6 @@
 """
 ☁️ sync_web.py — Cliente de nube OPCIONAL para Plataforma Total (app escritorio).
-Conecta con el backend Cloudflare (Pages Functions + D1) usando el mismo
-contrato que la web (pt_web_v1). Solo stdlib (urllib): no agrega dependencias.
+Conecta con el backend cloud usando el mismo contrato unificado que la web (pt_web_v3). Solo stdlib (urllib): no agrega dependencias.
 
 Funciones:
   login(alias, pin)        → (ok, {alias, token} | {error})
@@ -13,8 +12,11 @@ Funciones:
 import json
 import urllib.request
 import urllib.error
+import time
 
-API = "https://plataforma-total-web.pages.dev/api/"
+API = os.environ.get("PT_CLOUD_API", "https://plataforma-total-web.pages.dev/api/")
+if not API.endswith("/"):
+    API += "/"
 TIMEOUT = 20
 
 
@@ -30,16 +32,26 @@ def _req(path, payload=None, token=None):
     data = None
     if payload is not None:
         data = json.dumps(payload).encode("utf-8")
-    try:
-        with urllib.request.urlopen(req, data=data, timeout=TIMEOUT) as r:
-            return r.status, json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
+    for attempt in range(2):
         try:
-            return e.code, json.loads(e.read().decode("utf-8"))
-        except Exception:
-            return e.code, {"error": f"HTTP {e.code}"}
-    except Exception as e:
-        return 0, {"error": f"sin conexión ({type(e).__name__})"}
+            with urllib.request.urlopen(req, data=data, timeout=TIMEOUT) as r:
+                return r.status, json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            try:
+                return e.code, json.loads(e.read().decode("utf-8"))
+            except Exception:
+                return e.code, {"error": f"HTTP {e.code}"}
+        except Exception as e:
+            if attempt == 0:
+                time.sleep(0.8)
+                continue
+            return 0, {"error": f"sin conexión ({type(e).__name__})"}
+
+
+
+def health():
+    st, d = _req("health")
+    return st == 200 and d.get("ok"), d
 
 
 def login(alias, pin):
