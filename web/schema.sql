@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS sessions (
 
 CREATE TABLE IF NOT EXISTS progreso (
   alias       TEXT PRIMARY KEY REFERENCES users(alias),
-  data        TEXT NOT NULL,     -- JSON: {xp, racha, ultima_leccion, completados[], quiz_ok}
+  data        TEXT NOT NULL,     -- JSON v3: leidas, quiz_lessons, dias_activos, completados, xp, racha
   actualizado TEXT NOT NULL
 );
 
