@@ -42,6 +42,8 @@ const NAV = [
   <link rel="icon" type="image/png" href={B + '/icon-192.png'} />
   <link rel="apple-touch-icon" href={B + '/icon-192.png'} />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <script src={B + '/runtime-config.js?v=5.1.2'}></script>
+  <script src={B + '/pt.js?v=5.1.2'} is:inline></script>
 </head>
 <body>
   <button class="hamb" id="hamb" aria-label="menú">☰</button>
@@ -64,14 +66,12 @@ const NAV = [
           <button class="btn big" id="btn-login" style="padding:.45rem">Entrar / Crear cuenta</button>
           <div id="lg-msg" style="color:var(--muted);margin-top:.3rem"></div>
         </div>
-        <div>v5.1.1 · <span id="estado-nube">nube: desconectado</span></div>
+        <div>v5.1.2 · <span id="estado-nube">nube: desconectado</span></div>
         <div style="margin-top:.3rem"><a href="https://softengai-dev.github.io/plataforma-total-pro/">🌐 Portada</a> · <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">🪟 .exe</a></div>
       </div>
     </aside>
     <main><slot /></main>
   </div>
-  <script src={B + '/runtime-config.js'}></script>
-  <script src={B + '/pt.js?v=5.1.1'} is:inline></script>
   <script is:inline define:vars={{ swUrl: B + '/sw.js' }}>
     // 📦 PWA: registra el service worker (offline real + instalación móvil)
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
