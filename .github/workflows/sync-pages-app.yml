@@ -33,7 +33,7 @@ jobs:
         run: |
           rm -rf docs/app
           mkdir -p docs/app
-          cp -R web/dist/. docs/app/
+          cp -R web/dist/plataforma-total-pro/app/. docs/app/
           touch docs/.nojekyll
       - name: Publicar cambios generados
         run: |
