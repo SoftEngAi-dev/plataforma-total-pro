@@ -332,8 +332,7 @@
 
     syncPush() {
       if (this._syncing) return;
-      const local = this._isLocalRuntime();
-      if (!this.s.token && !local) return;
+      if (!this.s.token || String(this.s.token).startsWith('local-')) return;
       this._syncing = true;
       this.api('progreso', {
         method: 'POST',
