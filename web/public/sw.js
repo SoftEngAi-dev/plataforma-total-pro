@@ -1,14 +1,13 @@
 /* 📦 Service Worker — PWA Plataforma Total (offline-first del contenido propio)
    Estrategia: shell + currícula precache · páginas network-first · assets stale-while-revalidate
    · /api/* siempre red (nunca cachear datos personales) */
-const V = 'pt-v4.9.1';
+const V = 'pt-v5.0.0';
 const B = self.registration.scope;            // funciona en / y en /plataforma-total-pro/app/
-const NUCLEO = ['', 'pt.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
-                'data/indice.json', 'data/corpus.json', 'tutor.js'];
+const NUCLEO = ['', 'pt.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'data/indice.json', 'data/corpus.json', 'tutor.js', 'offline-manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(V).then(c => c.addAll(NUCLEO.map(p => B + p))).then(() => self.skipWaiting())
+    caches.open(V).then(c => (async()=>{const u=NUCLEO.map(p=>B+p);try{const r=await fetch(B+'offline-manifest.json');const d=await r.json();(d.core||[]).forEach(p=>u.push(B+p));}catch{}return c.addAll(Array.from(new Set(u)))})()).then(() => self.skipWaiting())
   );
 });
 

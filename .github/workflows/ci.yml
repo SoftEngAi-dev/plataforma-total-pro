@@ -19,7 +19,7 @@ jobs:
       - name: Build web (raíz) — atrapa builds rotas antes de cualquier deploy
         working-directory: web
         run: |
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
           ASTRO_BASE=/ npm run build
           test -f dist/index.html
       - name: Validar corpus (57 cursos / 329 lecciones / 658 quizzes)
@@ -48,7 +48,7 @@ jobs:
       - name: Build + esquema D1 local
         working-directory: web
         run: |
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
           ASTRO_BASE=/ npm run build
           npm i -g wrangler@4 2>&1 | tail -1
           python3 - <<'PYEOF'
@@ -85,3 +85,26 @@ jobs:
           curl -s "$B/api/certificado?codigo=PT-CIE2E1" | grep -q '"valido":true'
           curl -s -X POST "$B/api/admin" -H 'Content-Type: application/json' -d '{"secret":"malo","email":"x@x.com"}' | grep -q 'no autorizado'
           echo "✅ E2E COMPLETO: registro, PRO manual, sync, certificado verificable, admin 401"
+
+
+  local-runtime:
+    name: 🏠 Smoke test runtime local
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build web local
+        working-directory: web
+        run: |
+          npm ci --no-audit --no-fund
+          ASTRO_BASE=/ npm run build:local
+      - name: Start local runtime
+        run: |
+          python local_server.py --port 8787 > /tmp/pt-local.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8787/api/health >/dev/null && break || sleep 1; done
+          curl -fsS http://127.0.0.1:8787/api/health | grep -q '"mode": "local"'
+          curl -fsS http://127.0.0.1:8787/ | grep -q "Plataforma Total"
+          echo "✅ runtime local OK"

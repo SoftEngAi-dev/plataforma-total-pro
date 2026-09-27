@@ -43,7 +43,7 @@ export const prerender = true;
 
     async function curso(i) {
       const c = INDICE[i]; if (!c) return home();
-      if (!c.free) return paywall(c);
+      if (!c.free && !PT.esPro()) return paywall(c);
       const d = await (await fetch(B + '/data/cursos/' + c.s + '.json')).json();
       const leidas = PT.s.leidas[i] || [];
       $('#vista').innerHTML = `
@@ -56,7 +56,7 @@ export const prerender = true;
 
     async function leccion(i, j) {
       const c = INDICE[i]; if (!c) return home();
-      if (!c.free) return paywall(c);
+      if (!c.free && !PT.esPro()) return paywall(c);
       const d = await (await fetch(B + '/data/cursos/' + c.s + '.json')).json();
       const l = d.lecciones[j]; if (!l) return curso(i);
       const texto = PT.esc(l.x).replace(/^.*━+.*$/gm, '<hr>').replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');

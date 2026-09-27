@@ -39,13 +39,25 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const a = await aliasDe(request, env);
     if (!a) return J({ ok: false, error: 'sesión inválida' }, 401);
     const { data } = await request.json() as { data: unknown };
-    const txt = JSON.stringify(data ?? {});
+    const incoming = (data && typeof data === 'object') ? data as any : {};
+    const txt = JSON.stringify(incoming);
     if (txt.length > 200_000) return J({ ok: false, error: 'demasiado grande' }, 413);
-    await env.DB.prepare(
-      'INSERT INTO progreso (alias, data, actualizado) VALUES (?, ?, ?) ' +
-      'ON CONFLICT(alias) DO UPDATE SET data = excluded.data, actualizado = excluded.actualizado'
-    ).bind(a, txt, new Date().toISOString()).run();
-    return J({ ok: true });
+    const row = await env.DB.prepare('SELECT data FROM progreso WHERE alias = ?').bind(a).first();
+    let current:any = {}; try { current = row?.data ? JSON.parse(String(row.data)) : {}; } catch {}
+    const leidas:any = { ...(current.leidas || {}) };
+    for (const [curso, arr] of Object.entries((incoming as any).leidas || {}))
+      leidas[curso] = Array.from(new Set([...(leidas[curso] || []), ...((arr as any[]) || [])])).sort((x,y)=>Number(x)-Number(y));
+    const merged:any = { ...current, ...incoming, leidas,
+      completados:Array.from(new Set([...(current.completados||[]),...(incoming.completados||[])])),
+      xp:Math.max(Number(current.xp||0),Number(incoming.xp||0)),
+      quiz_ok:Math.max(Number(current.quiz_ok||0),Number(incoming.quiz_ok||0)),
+      quiz_tot:Math.max(Number(current.quiz_tot||0),Number(incoming.quiz_tot||0)),
+      racha:{n:Math.max(Number(current.racha?.n||0),Number(incoming.racha?.n||0)),ultimo:current.racha?.ultimo||incoming.racha?.ultimo||null},
+      updated_at:new Date().toISOString()
+    };
+    await env.DB.prepare('INSERT INTO progreso (alias,data,actualizado) VALUES (?,?,?) ON CONFLICT(alias) DO UPDATE SET data=excluded.data,actualizado=excluded.actualizado')
+      .bind(a,JSON.stringify(merged),merged.updated_at).run();
+    return J({ ok:true, data:merged });
   } catch (e: any) {
     return J({ ok: false, error: String(e?.message || e) }, 500);
   }

@@ -1,13 +1,15 @@
 {
   "name": "plataforma-total-web",
-  "version": "4.9.7",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "wrangler pages deploy dist"
+    "deploy": "wrangler pages deploy dist",
+    "build:local": "astro build",
+    "serve:local": "python ../local_server.py --port 8787"
   },
   "dependencies": {
     "astro": "^4.16.18"

@@ -22,7 +22,7 @@ def _req(path, payload=None, token=None):
     """Llamada JSON simple. Devuelve (status, dict) o (status, {'error': msg})."""
     req = urllib.request.Request(API + path)
     # Cloudflare WAF bloquea el UA por defecto de Python-urllib → UA neutro de app
-    req.add_header("User-Agent", "PlataformaTotal-Desktop/4.3 (+python-urllib)")
+    req.add_header("User-Agent", "PlataformaTotal-Desktop/5.0 (+python-urllib)")
     req.add_header("Accept", "application/json")
     req.add_header("Content-Type", "application/json")
     if token:

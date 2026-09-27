@@ -4,7 +4,7 @@
 
 # 🎓 Plataforma Total — Tu Escuela Local de Programación
 
-[![🏷️ v3.1.0](https://img.shields.io/github/v/release/SoftEngAi-dev/plataforma-total-pro?display_name=tag&label=versi%C3%B3n&color=7c3aed)](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases)
+[![🏷️ v5.0.0](https://img.shields.io/github/v/release/SoftEngAi-dev/plataforma-total-pro?display_name=tag&label=versi%C3%B3n&color=7c3aed)](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases)
 [![🖥️ Build](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions/workflows/build.yml/badge.svg)](https://github.com/SoftEngAi-dev/plataforma-total-pro/actions)
 [![📜 Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e)](LICENSE)
 [![🌐 Web](https://img.shields.io/badge/web-del%20proyecto-f59e0b)](https://softengai-dev.github.io/plataforma-total-pro/)
@@ -12,7 +12,7 @@
 **Escuela completa de software que vive 100% en tu máquina. Sin internet, sin cuentas, sin suscripciones — justo tú, 57 cursos y (opcional) tu IA local.**
 
 ```
-57 cursos · 269 lecciones · 538 quizzes (100% cobertura) · 3.941 archivos de material
+57 cursos · 329 lecciones · 658 quizzes (100% cobertura) · 3.941 archivos de material
 Buscador 🔍 · Quizzes 📝 · Pomodoro 🍅 · Racha 🔥 · Certificados 🎓 · Chat IA con memoria 🤖 · Auto-actualización 🔄
 Linux · Windows · macOS · 100% offline · 🔄 Auto-actualización · Ejecutables con icono oficial 🖼️
 🆓 FREE: 17 cursos gratis · 💎 PRO: 32 cursos desde U$S 7,99/mes (ver [MONETIZACION.md](MONETIZACION.md))
@@ -32,6 +32,12 @@ Linux · Windows · macOS · 100% offline · 🔄 Auto-actualización · Ejecuta
 > 🏷️ Enlaces permanentes siempre a la **última versión**. Historial completo: [Releases](https://github.com/SoftEngAi-dev/plataforma-total-pro/releases) · Cambios: [CHANGELOG](CHANGELOG.md)
 
 ---
+
+## 🏠 v5 Local First
+
+La v5 añade un runtime web local con SQLite, persistencia IndexedDB, merge de progreso entre dispositivos, PWA offline, proyectos locales y Tutor IA con Ollama opcional. El servidor local no necesita Cloudflare ni una cuenta para la parte educativa.
+
+Windows: `START-LOCAL.bat` · Linux/macOS: `./START-LOCAL.sh` · guía: [LOCAL-FIRST.md](LOCAL-FIRST.md).
 
 ## 🚀 Arranque en 60 segundos (desde código)
 
@@ -81,7 +87,7 @@ git push -u origin main        # contraseña = tu Personal Access Token
 
 > 🔐 Token: github.com → **Settings → Developer settings → Tokens (classic)** → scopes `repo` + `workflow`.
 
-**🖥️ Descargar tu `.exe` tras el push:** pestaña **Actions** → run ✅ → **Artifacts** → `PlataformaTotal-Windows` (ZIP con `PlataformaTotal.exe` dentro). Para descargas **permanentes**: `git tag v3.0 && git push origin v3.0` → los 3 ejecutables quedan en **Releases** sin caducidad.
+**🖥️ Descargar tu `.exe` tras el push:** pestaña **Actions** → run ✅ → **Artifacts** → `PlataformaTotal-Windows` (ZIP con `PlataformaTotal.exe` dentro). Para descargas **permanentes**: `git tag v5.0.0 && git push origin v5.0.0` → los 3 ejecutables quedan en **Releases** sin caducidad.
 
 ## 🖥️ Icono de escritorio (Linux)
 

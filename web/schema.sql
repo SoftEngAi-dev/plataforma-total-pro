@@ -47,3 +47,8 @@ CREATE TABLE IF NOT EXISTS intentos (
   n INTEGER DEFAULT 0,
   ts TEXT
 );
+
+CREATE INDEX IF NOT EXISTS idx_sessions_alias ON sessions(alias);
+CREATE INDEX IF NOT EXISTS idx_sessions_expira ON sessions(expira);
+CREATE INDEX IF NOT EXISTS idx_certificados_alias ON certificados(alias);
+CREATE INDEX IF NOT EXISTS idx_pro_alias_email ON pro_alias(email);
