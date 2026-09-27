@@ -3,6 +3,7 @@ WORKDIR /app
 COPY web/package*.json web/
 RUN cd web && npm ci --no-audit --no-fund
 COPY . .
+RUN python3 scripts/ensure_content.py
 RUN cd web && ASTRO_BASE=/ npm run build
 
 FROM python:3.12-slim

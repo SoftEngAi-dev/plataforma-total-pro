@@ -7,6 +7,7 @@ if not exist .venv python -m venv .venv
 call .venv\Scripts\activate.bat
 python -m pip install --quiet --upgrade pip
 python -m pip install --quiet -r requirements.txt
+python scripts\ensure_content.py || (echo [ERROR] No se pudo preparar el contenido.&pause&exit /b 1)
 cd web
 if not exist node_modules call npm install --no-audit --no-fund
 call npm run build:local || (echo [ERROR] Build web fallo.&pause&exit /b 1)

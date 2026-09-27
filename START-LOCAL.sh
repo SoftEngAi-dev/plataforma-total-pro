@@ -7,6 +7,7 @@ command -v node >/dev/null || { echo "[ERROR] Node.js LTS requerido"; exit 1; }
 source .venv/bin/activate
 python -m pip install --quiet --upgrade pip
 python -m pip install --quiet -r requirements.txt
+python3 scripts/ensure_content.py
 cd web
 [[ -d node_modules ]] || npm install --no-audit --no-fund
 npm run build:local

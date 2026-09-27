@@ -457,6 +457,124 @@
       this.syncPull();
     },
 
+
+    /* v5.1 — conexión real + fallback local */
+    async _discoverBackend() {
+      if (this.backendBase) return this.backendInfo;
+      const cfg = window.PT_CONFIG || {};
+      const bases = [cfg.apiBase, cfg.cloudApiBase, location.origin + '/'].filter(Boolean);
+      for (const raw of bases) {
+        try {
+          const u = new URL(raw, location.href);
+          u.pathname = u.pathname.replace(/\/?$/, '/');
+          const base = u.origin + u.pathname;
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 3500);
+          const res = await fetch(base + 'api/health', { headers:{Accept:'application/json'}, cache:'no-store', signal:ctrl.signal });
+          const type = res.headers.get('content-type') || '';
+          const body = await res.text(); clearTimeout(timer);
+          if (!res.ok || !/json/i.test(type)) continue;
+          const d = JSON.parse(body);
+          if (d?.ok === true && d?.service === 'plataforma-total-api') {
+            this.backendBase = base; this.backendInfo = d; this.backendOk = true; this.nubeOn = true;
+            this.pintarNube(); return d;
+          }
+        } catch (_) {}
+      }
+      this.backendOk = false; this.nubeOn = false; this.pintarNube();
+      return {ok:false,mode:'offline'};
+    },
+    health() { return this._discoverBackend(); },
+    api(path, opts={}) {
+      return (async () => {
+        const base = await this._discoverBackend();
+        if (!this.backendBase) return {ok:false,offline:true,error:'backend unavailable'};
+        const h = { 'Content-Type':'application/json', Accept:'application/json', ...(opts.headers||{}) };
+        if (this.s.token && !String(this.s.token).startsWith('local-')) h['X-Token']=this.s.token;
+        try {
+          const ctrl = new AbortController(); const timer=setTimeout(()=>ctrl.abort(),10000);
+          const res=await fetch(this.backendBase+'api/'+path,{...opts,headers:h,cache:'no-store',signal:ctrl.signal});
+          const raw=await res.text();clearTimeout(timer);
+          let d={};try{d=raw?JSON.parse(raw):{}}catch(_){d={ok:false,error:'backend-no-json'}};
+          this.nubeOn=res.ok && d.ok!==false; this.pintarNube(); return d;
+        } catch (_) { this.nubeOn=false; this.pintarNube(); return {ok:false,offline:true,error:'backend unavailable'}; }
+      })();
+    },
+    async data(path) {
+      const clean=String(path||'').replace(/^\/+/,'');
+      if(clean==='data/indice.json'){const d=await this.api('catalog');if(d.ok&&d.data)return d.data;}
+      if(clean.startsWith('data/cursos/')&&clean.endsWith('.json')){
+        const slug=clean.slice(12,-5); const d=await this.api('course?slug='+encodeURIComponent(slug)); if(d.ok&&d.data)return d.data;
+      }
+      const candidates=[];
+      if(location.pathname.startsWith('/plataforma-total-pro/app/')) candidates.push('/plataforma-total-pro/app/'+clean);
+      candidates.push('/'+clean);
+      for(const u of candidates){try{const res=await fetch(u,{cache:'no-cache'});if(res.ok)return await res.json();}catch(_){}}
+      throw new Error('No se pudo cargar '+clean);
+    },
+    async login(alias,pin) {
+      const a=String(alias||'').trim().toLowerCase(), p=String(pin||'');
+      const d=await this.api('auth',{method:'POST',body:JSON.stringify({alias:a,pin:p})});
+      if(d.ok&&d.token){this.s.alias=d.alias;this.s.token=d.token;this.s.session_mode='cloud';this.s.pro=false;this._persistOnly();await this.syncPull();await this.proSinc();return d;}
+      if(/^[a-z0-9_]{3,24}$/.test(a)&&p.length>=4){
+        this.s.alias=a;this.s.token='local-'+this._uuid();this.s.session_mode='local';this._persistOnly();
+        return {ok:true,alias:a,token:this.s.token,local:true,warning:'backend unavailable'};
+      }
+      return d||{ok:false,error:'No se pudo iniciar sesión'};
+    },
+    async syncPush() {
+      if(!this.s.token||String(this.s.token).startsWith('local-')||this._syncing)return;
+      if(!this.backendBase)await this._discoverBackend();if(!this.backendBase)return;
+      this._syncing=true;
+      try{const d=await this.api('progreso',{method:'POST',body:JSON.stringify({data:this.s})});
+        if(d.ok&&d.data){const keep={alias:this.s.alias,token:this.s.token,pro:this.s.pro,session_mode:'cloud'};this.s={...this._merge(this.s,d.data),...keep};this._persistOnly();}
+      }finally{this._syncing=false;}
+    },
+    syncPull() {
+      if(!this.s.token||String(this.s.token).startsWith('local-'))return Promise.resolve();
+      return this.api('progreso').then(d=>{if(d.ok&&d.data){const keep={alias:this.s.alias,token:this.s.token,pro:this.s.pro,session_mode:'cloud'};this.s={...this._merge(this.s,d.data),...keep};this._persistOnly();}return d;});
+    },
+    _localProjects(){try{return JSON.parse(localStorage.getItem('pt_projects_local')||'[]')}catch(_){return[]}},
+    _saveLocalProjects(v){try{localStorage.setItem('pt_projects_local',JSON.stringify(v))}catch(_){}},
+    listProjects(){return this.api('projects').then(d=>d.ok?d:{ok:true,local:true,projects:this._localProjects()});},
+    createProject(name,language){
+      const fallback=()=>{const p={id:this._uuid(),name:String(name||'Proyecto').slice(0,100),metadata:{language:String(language||'').slice(0,40)},created:new Date().toISOString(),updated:new Date().toISOString(),local:true};this._saveLocalProjects(this._localProjects().concat(p));return{ok:true,local:true,project:p}};
+      return this.api('projects',{method:'POST',body:JSON.stringify({name,language})}).then(d=>d.ok?d:fallback()).catch(fallback);
+    },
+    deleteProject(id){
+      const local=()=>{this._saveLocalProjects(this._localProjects().filter(x=>x.id!==id));return{ok:true,local:true}};
+      return this.api('projects?id='+encodeURIComponent(id),{method:'DELETE'}).then(d=>d.ok?d:local()).catch(local);
+    },
+    registerLocalCertificate(code,curso,alias){
+      const row={codigo:code,curso,fecha:this.hoy(),alias:alias||this.s.alias||'anon'};
+      let all=[];try{all=JSON.parse(localStorage.getItem('pt_certs_local')||'[]')}catch(_){}
+      all=all.filter(x=>x.codigo!==code).concat(row);try{localStorage.setItem('pt_certs_local',JSON.stringify(all))}catch(_){}
+      this.s.certs=[...(this.s.certs||[]).filter(x=>x.codigo!==code),row];this._persistOnly();return row;
+    },
+    verifyCertificate(code){
+      const c=String(code||'').trim().toUpperCase(), canonical=c.startsWith('PT-')?c:'PT-'+c;
+      let all=[];try{all=JSON.parse(localStorage.getItem('pt_certs_local')||'[]')}catch(_){}
+      const local=all.find(x=>x.codigo===canonical);
+      return this.api('certificado?codigo='+encodeURIComponent(canonical)).then(d=>d.ok?d:(local?{ok:true,valido:true,quien:String(local.alias).slice(0,3)+'***',curso:local.curso,fecha:local.fecha,local:true}:{ok:true,valido:false,local:true})).catch(()=>local?{ok:true,valido:true,quien:String(local.alias).slice(0,3)+'***',curso:local.curso,fecha:local.fecha,local:true}:{ok:true,valido:false,local:true});
+    },
+    chat(messages,modo){
+      return (async()=>{
+        if(modo!==3){
+          const d=await this.api('chat',{method:'POST',body:JSON.stringify({messages})});
+          if(d.ok&&d.respuesta)return d;
+        }
+        try{
+          const corpus=await this.data('data/corpus.json');
+          const text=String(messages?.filter(x=>x.role==='user').pop()?.content||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+          const terms=text.split(/[^a-z0-9+#.]+/).filter(x=>x.length>1);
+          const scored=(corpus.l||[]).map(x=>{const hay=(String(x.t||'')+' '+String(x.c||'')+' '+String(x.x||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');return [terms.reduce((n,t)=>n+(hay.includes(t)?1:0),0),x]}).filter(x=>x[0]>0).sort((a,b)=>b[0]-a[0]).slice(0,3);
+          const respuesta=scored.length?'🏠 Tutor local — contenido del currículo:\n\n'+scored.map(x=>'📖 '+x[1].t+' · '+x[1].c+'\n'+String(x[1].x||'').slice(0,1200)).join('\n\n'):'🏠 Tutor local: no encontré una coincidencia clara en el currículo. Probá con el nombre del lenguaje o concepto.';
+          return {ok:true,respuesta,backend:'local-rag'};
+        }catch(_){return{ok:false,error:'No se pudo cargar el corpus local.'}}
+      })();
+    },
+    proSinc(){if(!this.s.token||this.s.session_mode==='local')return Promise.resolve(!!this.s.pro);return this.api('pro').then(d=>{if(d.ok){this.s.pro=!!d.pro;this._persistOnly()}return!!this.s.pro})},
+    pintarNube(){const el=document.getElementById('estado-nube');if(!el)return;el.textContent=this.nubeOn?'backend: conectado ✅':'backend: no disponible · local ✅';},
     esc(s) {
       return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     },

@@ -22,7 +22,7 @@ export const prerender = true;
       cod = String(cod || '').trim().toUpperCase();
       if (!cod) { res.textContent = ''; return; }
       res.style.color = 'var(--muted)'; res.textContent = '⏳ Consultando el registro…';
-      PT.api('certificado?codigo=' + encodeURIComponent(cod)).then(d => {
+      PT.verifyCertificate(cod).then(d => {
         if (d.ok && d.valido) {
           res.style.color = 'var(--verde, #3fb950)';
           res.innerHTML = '✔ <b>Certificado VÁLIDO</b><br><span style="color:var(--tx)">' +

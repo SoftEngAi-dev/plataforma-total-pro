@@ -86,7 +86,7 @@ export const prerender = true;
         localStorage.setItem('pt_chat', JSON.stringify(H.slice(-40))); pintar(); return;
       }
       try {
-        const d = await PT.api('chat', { method: 'POST', body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
+        const d = await PT.chat([sistema(), ...H.slice(-16)], modo);
         think.remove();
         const txt = d.respuesta || d.error || '⚠ Respuesta vacía.';
         H.push({ role: 'assistant', content: txt });

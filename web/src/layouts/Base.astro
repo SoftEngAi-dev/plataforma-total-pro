@@ -5,7 +5,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' ó '/plataforma-tot
 const CANON = 'https://plataforma-total-web.pages.dev' + Astro.url.pathname.replace(/^\/plataforma-total-pro\/app\/?/, '/');
 const NAV = [
   ['🏠 Inicio', B + '/', 'inicio'],
-  ['📚 Aprender', B + '/aprender/index.html', 'aprender'],
+  ['📚 Aprender', B + '/aprender/', 'aprender'],
   ['🗺️ Rutas', B + '/rutas/', 'rutas'],
   ['💻 Laboratorio', B + '/lab/', 'lab'],
   ['🚀 Proyectos', B + '/proyectos/', 'proyectos'],
@@ -64,12 +64,13 @@ const NAV = [
           <button class="btn big" id="btn-login" style="padding:.45rem">Entrar / Crear cuenta</button>
           <div id="lg-msg" style="color:var(--muted);margin-top:.3rem"></div>
         </div>
-        <div>v5.0.0 · <span id="estado-nube">nube: desconectado</span></div>
+        <div>v5.1.0 · <span id="estado-nube">nube: desconectado</span></div>
         <div style="margin-top:.3rem"><a href="https://softengai-dev.github.io/plataforma-total-pro/">🌐 Portada</a> · <a href="https://github.com/SoftEngAi-dev/plataforma-total-pro/releases/latest/download/PlataformaTotal-Windows.exe">🪟 .exe</a></div>
       </div>
     </aside>
     <main><slot /></main>
   </div>
+  <script src={B + '/runtime-config.js'}></script>
   <script src={B + '/pt.js'} is:inline></script>
   <script is:inline define:vars={{ swUrl: B + '/sw.js' }}>
     // 📦 PWA: registra el service worker (offline real + instalación móvil)
