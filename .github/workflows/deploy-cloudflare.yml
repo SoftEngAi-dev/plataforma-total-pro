@@ -1,0 +1,45 @@
+name: ☁️ Deploy Cloudflare Web + API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - 'platform.json'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: \${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Instalar dependencias
+        working-directory: web
+        run: npm ci --no-audit --no-fund
+      - name: Construir runtime Cloudflare
+        working-directory: web
+        env:
+          ASTRO_BASE: /
+        run: npm run build
+      - name: Aplicar esquema D1
+        working-directory: web
+        env:
+          CLOUDFLARE_API_TOKEN: \${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler d1 execute plataforma --remote --file=./schema.sql
+      - name: Desplegar Pages
+        working-directory: web
+        env:
+          CLOUDFLARE_API_TOKEN: \${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler pages deploy dist --project-name plataforma-total-web
+      - name: Comprobar API publicada
+        run: |
+          curl -fsS https://plataforma-total-web.pages.dev/api/health
+          curl -fsS https://plataforma-total-web.pages.dev/api/catalog | grep -q '"courses":57'
