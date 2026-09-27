@@ -112,6 +112,16 @@ CURSOS = {c: [{"titulo": t, "contenido": cc} for (t, cc, q) in lec] for c, lec i
 QUIZZES = {c: {i: [{"p": p, "ops": list(ops), "ok": ok, "exp": exp} for (p, ops, ok, exp) in lec[i][2]]
                for i in range(len(lec))} for c, lec in _LECCIONES.items()}
 
+# Identificadores canónicos compartidos con la web.
+def _slug_curso(texto):
+    texto = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", texto.lower()).strip("-")
+
+def curso_slug(index, nombre):
+    return f"{index + 1:02d}-{_slug_curso(nombre)[:40]}"
+
+NAME_TO_INDEX = {nombre: i for i, nombre in enumerate(CURSOS.keys())}
+
 HOME = Path(os.path.expanduser("~"))
 APP_DIR = HOME / "PlataformaTotal"
 DATA_DIR = APP_DIR / "datos"
