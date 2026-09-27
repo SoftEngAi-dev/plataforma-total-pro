@@ -44,7 +44,8 @@ def generate(check=False):
    out.append({"t":tup[0],"x":tup[1],"q":qs})
   put(courses/f'{c["s"]}.json',{"n":c["n"],"free":bool(c["free"]),"lecciones":out})
  put(root/"corpus.json",{"v":4,"l":corpus_l,"q":corpus_q})
- put(ROOT/"web"/"public"/"offline-manifest.json",{"version":"5.1.0","free_courses":free,"stats":{"courses":57,"free_courses":len(free),"lessons":329,"quizzes":658}})
+ core=["aprender"]+[f"data/cursos/{s}.json" for s in free]
+ put(ROOT/"web"/"public"/"offline-manifest.json",{"version":"5.1.0","core":core,"free_courses":free,"stats":{"courses":57,"free_courses":len(free),"lessons":329,"quizzes":658}})
  print(f"✅ {'CHECK' if check else 'WRITE'} 57 cursos · {len(free)} FREE · 329 lecciones · 658 quizzes")
  if check and changed: print(*changed,sep="\n"); raise SystemExit(2)
  return changed
