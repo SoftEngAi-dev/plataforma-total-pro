@@ -10,6 +10,7 @@ Funciones:
   cert_registrar(token, codigo, curso) → True/False  (certificado verificable online)
 """
 import json
+import os
 import urllib.request
 import urllib.error
 import time
