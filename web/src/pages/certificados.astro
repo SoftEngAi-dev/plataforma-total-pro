@@ -8,18 +8,20 @@ export const prerender = true;
   <div id="zona"><p style="color:var(--muted)">Cargando…</p></div>
   <canvas id="cv" width="1200" height="850" style="max-width:100%;border-radius:.8rem;margin-top:1rem" hidden></canvas>
   <script is:inline>
-    PT.cargar();
+    PT.ready();
     const $ = s => document.querySelector(s);
     const genCodigo = (curso, alias) => {
       let h = 0; const str = curso + '|' + (alias || 'anon') + '|' + PT.hoy();
       for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) >>> 0;
       return 'PT-' + h.toString(36).toUpperCase().padStart(8, '0').slice(0, 8);
     };
-    fetch('data/indice.json').then(r => r.json()).then(IND => {
+    PT.data('data/indice.json').then(IND => {
       const s = PT.s;
       const listos = IND.map((c, i) => ({ ...c, i })).filter(c => {
         const l = (s.leidas[c.i] || []).length;
-        return c.free && l >= c.l;
+        const d = s.quiz_lessons || {};
+        const q = Object.keys(d).filter(k => k.startsWith(c.i + ':') && Number(d[k].correct || 0) >= Number(d[k].total || 0) && Number(d[k].total || 0) > 0).length;
+        return (c.free || PT.esPro()) && l >= c.l && q >= c.l;
       });
       if (!listos.length) {
         const casi = IND.map((c, i) => ({ ...c, i })).filter(c => c.free && (s.leidas[c.i] || []).length > 0);
