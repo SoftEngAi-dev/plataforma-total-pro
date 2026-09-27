@@ -8,6 +8,7 @@ on:
       - 'scripts/ensure_content.py'
       - 'platform.json'
       - '!docs/app/**'
+      - '.github/workflows/sync-pages-app.yml'
   workflow_dispatch:
 
 permissions:
