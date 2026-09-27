@@ -86,9 +86,7 @@ export const prerender = true;
         localStorage.setItem('pt_chat', JSON.stringify(H.slice(-40))); pintar(); return;
       }
       try {
-        const APIB = location.hostname.endsWith('github.io') ? 'https://plataforma-total-web.pages.dev/' : '';
-        const r = await fetch(APIB + 'api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
-        const d = await r.json();
+        const d = await PT.api('chat', { method: 'POST', body: JSON.stringify({ messages: [sistema(), ...H.slice(-16)] }) });
         think.remove();
         const txt = d.respuesta || d.error || '⚠ Respuesta vacía.';
         H.push({ role: 'assistant', content: txt });
