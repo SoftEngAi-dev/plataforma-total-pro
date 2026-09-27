@@ -47,7 +47,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           root = Path("docs/app")
-          routes = ["","aprender","rutas","lab","proyectos","chat","pomo","progreso","evaluacion","ingles","certificados","pro"]
+          routes = ["aprender","rutas","lab","proyectos","chat","pomo","progreso","evaluacion","ingles","certificados","pro"]
           for path in root.rglob("*.html"):
               s = path.read_text(encoding="utf-8")
               for route in routes:
