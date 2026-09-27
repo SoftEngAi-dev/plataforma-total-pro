@@ -16,7 +16,7 @@ export const prerender = true;
   <h2>🏅 Emblemas</h2>
   <div class="grid" id="emblemas"></div>
   <script is:inline>
-    await PT.ready(); await PT.syncPull();
+    async function boot() { await PT.ready(); await PT.syncPull();
     const s = PT.s;
     document.getElementById('n').textContent = PT.nivel();
     document.getElementById('xp').textContent = s.xp;
@@ -42,5 +42,7 @@ export const prerender = true;
       document.getElementById('emblemas').innerHTML = emb.map(([e, t, ok]) =>
         `<div class="card" style="text-align:center;${ok ? '' : 'opacity:.35'}"><div style="font-size:1.8rem">${e}</div><p style="font-size:.85rem;font-weight:700">${t}</p><p style="font-size:.75rem;color:var(--muted)">${ok ? '✅ conseguido' : '🔒'}</p></div>`).join('');
     });
+    }
+    boot();
   </script>
 </Base>
