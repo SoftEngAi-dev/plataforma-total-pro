@@ -51,9 +51,10 @@ jobs:
           for path in root.rglob("*.html"):
               s = path.read_text(encoding="utf-8")
               for route in routes:
-                  src = "/plataforma-total-pro/app/" + (route + "/" if route else "")
-                  dst = "/plataforma-total-pro/app/" + ("index.html" if not route else route + "/index.html")
-                  s = s.replace(src, dst)
+                  src = "/plataforma-total-pro/app/" + route + "/"
+                  dst = "/plataforma-total-pro/app/" + route + "/index.html"
+                  for quote in ('"', "'"):
+                      s = s.replace(src + quote, dst + quote)
               path.write_text(s, encoding="utf-8")
           PY
           touch docs/.nojekyll
