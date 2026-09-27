@@ -18,35 +18,35 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - name: Validar credenciales Cloudflare
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' }}
         run: |
           echo "Cloudflare no configurado: se omite el deploy. Configure CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID en Settings -> Secrets -> Actions."
       - uses: actions/checkout@v4
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
       - uses: actions/setup-node@v4
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         with:
           node-version: 22
       - name: Instalar dependencias
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         working-directory: web
         run: npm ci --no-audit --no-fund
       - name: Construir runtime Cloudflare
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         working-directory: web
         env:
           ASTRO_BASE: /
         run: npm run build
       - name: Aplicar esquema D1
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         working-directory: web
         run: npx wrangler d1 execute plataforma --remote --file=./schema.sql
       - name: Desplegar Pages
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         working-directory: web
         run: npx wrangler pages deploy dist --project-name plataforma-total-web
       - name: Comprobar API publicada
-        if: ${exprToken}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: |
           curl -fsS https://plataforma-total-web.pages.dev/api/health
           curl -fsS https://plataforma-total-web.pages.dev/api/catalog | grep -q '"courses":57'
