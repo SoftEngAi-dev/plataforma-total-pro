@@ -369,7 +369,7 @@ def nube_sincronizar():
     nuevos = 0
     for curso, _alumno, codigo, _f in db_certificados():
         if codigo and codigo not in enviados:
-            if sync_web.cert_registrar(tok, "PT-" + codigo.lstrip("PT-"), curso):
+            if sync_web.cert_registrar(tok, codigo if codigo.startswith("PT-") else "PT-" + codigo, curso):
                 enviados.add(codigo); nuevos += 1
 
     if not sync_web.push(tok, merged):
