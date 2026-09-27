@@ -471,7 +471,8 @@ class Handler(BaseHTTPRequestHandler):
                     "ok": True,
                     "service": "plataforma-total-local",
                     "version": "5.1.0",
-                    "mode": "local-first",
+                    "mode": "local",
+                    "runtime_mode": "local-first",
                     "stats": {
                         "courses": len(idx),
                         "free_courses": sum(1 for x in idx if x.get("free")),
