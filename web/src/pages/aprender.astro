@@ -7,7 +7,7 @@ export const prerender = true;
   <script is:inline>
     const $ = s => document.querySelector(s);
     let INDICE = [];
-    const B = location.pathname.replace(/\/aprender\/?$/, '') || '.';
+    const B = location.pathname.replace(/\/aprender(?:\/index\.html)?\/?$/, '') || '.';
 
     async function boot() {
       PT.cargar();
