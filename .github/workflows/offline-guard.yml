@@ -1,0 +1,25 @@
+name: 📴 Guardia Offline (contrato 100% offline de la PWA)
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/public/sw.js"
+      - "web/public/offline-manifest.json"
+      - "web/public/data/**"
+      - "scripts/ensure_content.py"
+      - "scripts/audit_offline.py"
+      - ".github/workflows/offline-guard.yml"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  auditar:
+    name: Auditoría del precaché offline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: 📴 Verificar contrato offline (10 núcleo + 18 core en disco)
+        run: python3 scripts/audit_offline.py
