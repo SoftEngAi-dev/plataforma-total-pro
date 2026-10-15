@@ -13,7 +13,7 @@
     "prebuild": "python ../scripts/ensure_content.py"
   },
   "dependencies": {
-    "astro": "^4.16.18"
+    "astro": "^7.3.5"
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^11.2.0",
