@@ -25,7 +25,7 @@ jobs:
         run: move dist\PlataformaTotal.exe PlataformaTotal-Windows.exe
 
       - name: 🏷️ Subir a la Release actual (la del ref usado al despachar)
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           files: PlataformaTotal-Windows.exe
